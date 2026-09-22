@@ -55,50 +55,92 @@
             pointer-events: none; user-select: none;
         }
 
-        /* Lava Lamp Background — organic morphing color blobs, toggled from Colorways Studio */
+        /* Lava Lamp Background — metaball blobs using an SVG "goo" filter so they merge
+           and separate with crisp edges, like real lava lamp wax, instead of fuzzy blur. */
         #motionBgContainer {
             position: fixed; inset: 0; z-index: 0; overflow: hidden;
-            pointer-events: none; opacity: 0; transition: opacity 0.7s ease;
+            pointer-events: none; opacity: 0; transition: opacity 0.9s ease;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.03), transparent 60%);
         }
-        body.motion-bg-on #motionBgContainer { opacity: 1; }
+        body.motion-bg-on #motionBgContainer { opacity: 0.9; }
+        .lava-goo-group {
+            position: absolute; inset: -15%;
+            filter: url(#lavaGoo);
+        }
         .motion-blob {
-            position: absolute; filter: blur(70px);
-            background: var(--motion-bg-color, #38bdf8); opacity: 0.38;
-            will-change: transform, border-radius; mix-blend-mode: screen;
+            position: absolute; border-radius: 50%;
+            background: var(--motion-bg-color, #38bdf8);
+            will-change: transform;
         }
-        .motion-blob.blob1 { width: 420px; height: 420px; top: -100px; left: -100px; animation: lavaBlob1 24s ease-in-out infinite; }
-        .motion-blob.blob2 { width: 380px; height: 380px; bottom: -160px; right: -90px; animation: lavaBlob2 30s ease-in-out infinite; }
-        .motion-blob.blob3 { width: 340px; height: 340px; top: 32%; left: 55%; animation: lavaBlob3 27s ease-in-out infinite; }
-        .motion-blob.blob4 { width: 300px; height: 300px; top: 58%; left: 8%; animation: lavaBlob4 33s ease-in-out infinite; }
+        .motion-blob.shade-light { background: var(--motion-bg-light, #7dd3fc); }
+        .motion-blob.shade-dark { background: var(--motion-bg-dark, #0c4a6e); }
 
-        @keyframes lavaBlob1 {
-            0%   { transform: translate(0, 0) scale(1); border-radius: 42% 58% 65% 35% / 45% 45% 55% 55%; }
-            25%  { transform: translate(60px, -160px) scale(1.18); border-radius: 60% 40% 30% 70% / 65% 35% 65% 35%; }
-            50%  { transform: translate(-40px, -260px) scale(0.88); border-radius: 35% 65% 55% 45% / 50% 60% 40% 50%; }
-            75%  { transform: translate(70px, -120px) scale(1.1); border-radius: 55% 45% 40% 60% / 40% 55% 45% 60%; }
-            100% { transform: translate(0, 0) scale(1); border-radius: 42% 58% 65% 35% / 45% 45% 55% 55%; }
+        .motion-blob.b1 { width: 190px; height: 190px; top: 78%; left: 12%; animation: lavaRise1 22s ease-in-out infinite alternate; }
+        .motion-blob.b2 { width: 240px; height: 240px; top: 85%; left: 32%; animation: lavaRise2 27s ease-in-out infinite alternate; }
+        .motion-blob.b3 { width: 160px; height: 160px; top: 90%; left: 55%; animation: lavaRise3 19s ease-in-out infinite alternate; }
+        .motion-blob.b4 { width: 220px; height: 220px; top: 82%; left: 70%; animation: lavaRise4 25s ease-in-out infinite alternate; }
+        .motion-blob.b5 { width: 150px; height: 150px; top: 95%; left: 20%; animation: lavaRise5 31s ease-in-out infinite alternate; }
+        .motion-blob.b6 { width: 200px; height: 200px; top: 88%; left: 85%; animation: lavaRise6 23s ease-in-out infinite alternate; }
+        .motion-blob.b7 { width: 130px; height: 130px; top: 100%; left: 45%; animation: lavaRise7 29s ease-in-out infinite alternate; }
+        .motion-blob.b8 { width: 175px; height: 175px; top: 92%; left: 4%; animation: lavaRise8 34s ease-in-out infinite alternate; }
+
+        @keyframes lavaRise1 {
+            0%   { transform: translate(0, 0) scale(1); }
+            30%  { transform: translate(30px, -260px) scale(1.15); }
+            55%  { transform: translate(-25px, -470px) scale(0.9); }
+            80%  { transform: translate(40px, -680px) scale(1.05); }
+            100% { transform: translate(0, -900px) scale(0.85); }
         }
-        @keyframes lavaBlob2 {
-            0%   { transform: translate(0, 0) scale(1); border-radius: 55% 45% 35% 65% / 40% 60% 40% 60%; }
-            25%  { transform: translate(-70px, 150px) scale(1.14); border-radius: 38% 62% 60% 40% / 55% 45% 55% 45%; }
-            50%  { transform: translate(50px, 240px) scale(0.9); border-radius: 65% 35% 45% 55% / 60% 40% 60% 40%; }
-            75%  { transform: translate(-30px, 110px) scale(1.08); border-radius: 45% 55% 50% 50% / 45% 55% 45% 55%; }
-            100% { transform: translate(0, 0) scale(1); border-radius: 55% 45% 35% 65% / 40% 60% 40% 60%; }
+        @keyframes lavaRise2 {
+            0%   { transform: translate(0, 0) scale(1); }
+            30%  { transform: translate(-40px, -240px) scale(0.92); }
+            55%  { transform: translate(35px, -430px) scale(1.12); }
+            80%  { transform: translate(-30px, -650px) scale(0.95); }
+            100% { transform: translate(0, -880px) scale(1.1); }
         }
-        @keyframes lavaBlob3 {
-            0%   { transform: translate(0, 0) scale(1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-            25%  { transform: translate(-90px, -140px) scale(0.85); border-radius: 40% 60% 65% 35% / 45% 55% 45% 55%; }
-            50%  { transform: translate(-40px, -260px) scale(1.2); border-radius: 50% 50% 40% 60% / 65% 35% 65% 35%; }
-            75%  { transform: translate(60px, -150px) scale(0.95); border-radius: 35% 65% 55% 45% / 50% 45% 55% 50%; }
-            100% { transform: translate(0, 0) scale(1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        @keyframes lavaRise3 {
+            0%   { transform: translate(0, 0) scale(1); }
+            30%  { transform: translate(25px, -280px) scale(1.2); }
+            55%  { transform: translate(-30px, -520px) scale(0.85); }
+            80%  { transform: translate(20px, -760px) scale(1.1); }
+            100% { transform: translate(0, -1000px) scale(0.9); }
         }
-        @keyframes lavaBlob4 {
-            0%   { transform: translate(0, 0) scale(1); border-radius: 45% 55% 60% 40% / 55% 45% 55% 45%; }
-            25%  { transform: translate(80px, -130px) scale(1.16); border-radius: 65% 35% 40% 60% / 40% 65% 35% 60%; }
-            50%  { transform: translate(30px, -220px) scale(0.9); border-radius: 40% 60% 55% 45% / 60% 40% 60% 40%; }
-            75%  { transform: translate(-50px, -100px) scale(1.1); border-radius: 55% 45% 45% 55% / 45% 55% 45% 55%; }
-            100% { transform: translate(0, 0) scale(1); border-radius: 45% 55% 60% 40% / 55% 45% 55% 45%; }
+        @keyframes lavaRise4 {
+            0%   { transform: translate(0, 0) scale(1); }
+            30%  { transform: translate(-35px, -250px) scale(1.08); }
+            55%  { transform: translate(30px, -460px) scale(0.9); }
+            80%  { transform: translate(-25px, -670px) scale(1.15); }
+            100% { transform: translate(0, -900px) scale(0.95); }
         }
+        @keyframes lavaRise5 {
+            0%   { transform: translate(0, 0) scale(1); }
+            30%  { transform: translate(20px, -300px) scale(0.88); }
+            55%  { transform: translate(-35px, -560px) scale(1.18); }
+            80%  { transform: translate(25px, -820px) scale(0.92); }
+            100% { transform: translate(0, -1080px) scale(1.05); }
+        }
+        @keyframes lavaRise6 {
+            0%   { transform: translate(0, 0) scale(1); }
+            30%  { transform: translate(-30px, -260px) scale(1.12); }
+            55%  { transform: translate(30px, -480px) scale(0.88); }
+            80%  { transform: translate(-20px, -700px) scale(1.08); }
+            100% { transform: translate(0, -930px) scale(0.9); }
+        }
+        @keyframes lavaRise7 {
+            0%   { transform: translate(0, 0) scale(1); }
+            30%  { transform: translate(35px, -320px) scale(0.9); }
+            55%  { transform: translate(-25px, -590px) scale(1.14); }
+            80%  { transform: translate(30px, -860px) scale(0.95); }
+            100% { transform: translate(0, -1140px) scale(1.1); }
+        }
+        @keyframes lavaRise8 {
+            0%   { transform: translate(0, 0) scale(1); }
+            30%  { transform: translate(-25px, -230px) scale(1.1); }
+            55%  { transform: translate(30px, -420px) scale(0.9); }
+            80%  { transform: translate(-30px, -610px) scale(1.12); }
+            100% { transform: translate(0, -820px) scale(0.95); }
+        }
+
         .motion-toggle-label {
             display: flex; align-items: center; gap: 8px; font-size: 0.85rem;
             color: var(--text-main); cursor: pointer;
@@ -925,13 +967,30 @@
     </style>
 </head>
 <body class="hide-cheat-apps">
+    <svg style="position:absolute; width:0; height:0;">
+        <defs>
+            <filter id="lavaGoo">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
+                <feColorMatrix in="blur" mode="matrix"
+                    values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
+                    result="goo" />
+                <feBlend in="SourceGraphic" in2="goo" />
+            </filter>
+        </defs>
+    </svg>
     <div id="motionBgContainer">
-        <div class="motion-blob blob1"></div>
-        <div class="motion-blob blob2"></div>
-        <div class="motion-blob blob3"></div>
-        <div class="motion-blob blob4"></div>
+        <div class="lava-goo-group">
+            <div class="motion-blob b1"></div>
+            <div class="motion-blob b2 shade-light"></div>
+            <div class="motion-blob b3"></div>
+            <div class="motion-blob b4 shade-dark"></div>
+            <div class="motion-blob b5 shade-light"></div>
+            <div class="motion-blob b6"></div>
+            <div class="motion-blob b7 shade-dark"></div>
+            <div class="motion-blob b8 shade-light"></div>
+        </div>
     </div>
-    <div class="version-tag">V2.6</div>
+    <div class="version-tag">V2.7</div>
 
     <div id="pwScrim" class="pw-scrim" onclick="closePasswordModal()"></div>
     <div id="pwPanel" class="pw-panel" onclick="event.stopPropagation()">
@@ -1718,6 +1777,7 @@
             });
             updateTint(Math.round(parseFloat(userTheme['--tint']) * 100), false);
             document.body.classList.toggle('motion-bg-on', userTheme.motionBgEnabled === true || userTheme.motionBgEnabled === 'true');
+            applyMotionColorShades(userTheme['--motion-bg-color']);
         }
 
         // Syncs the on-screen studio controls to match the stored theme.
@@ -1748,9 +1808,17 @@
             document.body.classList.toggle('motion-bg-on', userTheme.motionBgEnabled);
         }
 
+        // Derives lighter/darker variants of the chosen color so the blobs have visual
+        // depth instead of being one flat, muddy color.
+        function applyMotionColorShades(color) {
+            document.documentElement.style.setProperty('--motion-bg-color', color);
+            document.documentElement.style.setProperty('--motion-bg-light', shadeHex(color, 26));
+            document.documentElement.style.setProperty('--motion-bg-dark', shadeHex(color, -30));
+        }
+
         function updateMotionBgColor(color) {
             userTheme['--motion-bg-color'] = color;
-            document.documentElement.style.setProperty('--motion-bg-color', color);
+            applyMotionColorShades(color);
             localStorage.setItem('htla-theme', JSON.stringify(userTheme));
             const txt = document.getElementById('txtMotionColor');
             if (txt) txt.value = color;
@@ -1835,6 +1903,9 @@
         // only shown for real once cheatsUnlocked is true. Otherwise they're folded into a
         // single generic "Bug fixes and improvements" line for that version.
         const CHANGELOG = [
+            { version: "V2.7", entries: [
+                { text: "Rebuilt the Lava Lamp Background with a proper metaball \"goo\" effect so blobs merge and separate with crisp edges instead of looking like blurry low-res smears, plus more blobs and light/dark color depth", secret: false }
+            ]},
             { version: "V2.5", entries: [
                 { text: "Added 5 new fonts to Colorways Studio: Space Grotesk, Poppins, Bebas Neue, Caveat, and IBM Plex Mono", secret: false },
                 { text: "Added a Lava Lamp Background setting — pick a color and it warps and morphs across the screen behind everything", secret: false }
