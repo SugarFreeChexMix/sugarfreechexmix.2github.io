@@ -21,9 +21,13 @@
             --border: #334155;
             --radius: 16px;
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-scale: 1;
         }
     </style>
     <style>
+        html { font-size: calc(16px * var(--font-scale, 1)); }
+        ::selection { background: var(--accent); color: #0f172a; }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -46,6 +50,10 @@
             overflow-x: hidden;
             overflow-y: auto;
             position: relative;
+        }
+
+        body.gradient-bg-on {
+            background: linear-gradient(160deg, var(--bg-color) 0%, var(--card-bg) 150%);
         }
 
         .version-tag {
@@ -87,14 +95,16 @@
         .motion-blob.shade-light { background: var(--motion-bg-light, #7dd3fc); }
         .motion-blob.shade-dark { background: var(--motion-bg-dark, #0c4a6e); }
 
+        /* Animations fully pause (not just hidden) when the feature is off, so it costs
+           nothing in the background — this is the default state on every page load. */
+        body:not(.motion-bg-on) .motion-blob { animation-play-state: paused; }
+
         .motion-blob.b1 { width: 190px; height: 190px; top: 78%; left: 12%; animation: lavaRise1 22s ease-in-out infinite alternate; }
         .motion-blob.b2 { width: 240px; height: 240px; top: 85%; left: 32%; animation: lavaRise2 27s ease-in-out infinite alternate; }
         .motion-blob.b3 { width: 160px; height: 160px; top: 90%; left: 55%; animation: lavaRise3 19s ease-in-out infinite alternate; }
         .motion-blob.b4 { width: 220px; height: 220px; top: 82%; left: 70%; animation: lavaRise4 25s ease-in-out infinite alternate; }
         .motion-blob.b5 { width: 150px; height: 150px; top: 95%; left: 20%; animation: lavaRise5 31s ease-in-out infinite alternate; }
         .motion-blob.b6 { width: 200px; height: 200px; top: 88%; left: 85%; animation: lavaRise6 23s ease-in-out infinite alternate; }
-        .motion-blob.b7 { width: 130px; height: 130px; top: 100%; left: 45%; animation: lavaRise7 29s ease-in-out infinite alternate; }
-        .motion-blob.b8 { width: 175px; height: 175px; top: 92%; left: 4%; animation: lavaRise8 34s ease-in-out infinite alternate; }
 
         @keyframes lavaRise1 {
             0%   { transform: translate(0, 0) scale(1); }
@@ -138,20 +148,6 @@
             80%  { transform: translate(-20px, -700px) scale(1.08); }
             100% { transform: translate(0, -930px) scale(0.9); }
         }
-        @keyframes lavaRise7 {
-            0%   { transform: translate(0, 0) scale(1); }
-            30%  { transform: translate(35px, -320px) scale(0.9); }
-            55%  { transform: translate(-25px, -590px) scale(1.14); }
-            80%  { transform: translate(30px, -860px) scale(0.95); }
-            100% { transform: translate(0, -1140px) scale(1.1); }
-        }
-        @keyframes lavaRise8 {
-            0%   { transform: translate(0, 0) scale(1); }
-            30%  { transform: translate(-25px, -230px) scale(1.1); }
-            55%  { transform: translate(30px, -420px) scale(0.9); }
-            80%  { transform: translate(-30px, -610px) scale(1.12); }
-            100% { transform: translate(0, -820px) scale(0.95); }
-        }
 
         .motion-toggle-label {
             display: flex; align-items: center; gap: 8px; font-size: 0.85rem;
@@ -181,19 +177,20 @@
             gap: 20px;
         }
         .dashboard { order: 2; }
-        .side-dashboard, .side-calendar {
+        .side-col {
+            display: none; flex-direction: column; gap: 20px;
             max-width: 500px; width: 100%;
-            padding: 30px; text-align: left;
-            display: none;
-            max-height: 620px; overflow-y: auto;
         }
-        .side-dashboard { order: 3; }
-        .side-calendar { order: 1; }
-        body.advdash-open .side-dashboard,
-        body.advdash-open .side-calendar {
-            display: block;
+        .side-col-left { order: 1; }
+        .side-col-right { order: 3; }
+        body.advdash-open .side-col {
+            display: flex;
             animation: sideDashIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        .side-dashboard, .side-calendar {
+            width: 100%; padding: 30px; text-align: left;
+        }
+        .side-widget-panel { width: 100%; padding: 22px 24px; text-align: left; }
         @keyframes sideDashIn {
             from { opacity: 0; transform: translateX(16px); }
             to { opacity: 1; transform: translateX(0); }
@@ -278,9 +275,38 @@
         .cd-actions { display: flex; gap: 10px; margin-top: 6px; }
         .cd-actions .translator-btn { flex: 1; }
 
-        @media (max-width: 560px) {
-            .side-dashboard, .side-calendar { max-height: none; }
+        /* Shared divider + section title for the two Advanced Dashboard bonus widgets */
+        .side-widget-title {
+            font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;
+            color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
         }
+
+        /* Reminders checklist (Calendar panel) */
+        .reminders-input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .reminders-input-row .cd-input { flex-grow: 1; }
+        .reminders-input-row .theme-share-btn { flex-shrink: 0; }
+        .reminders-list { display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; }
+        .reminder-row {
+            display: flex; align-items: center; justify-content: space-between; gap: 8px;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 9px;
+            padding: 8px 10px;
+        }
+        .reminder-row.reminder-done { opacity: 0.55; }
+        .reminder-check-label { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-main); cursor: pointer; flex-grow: 1; min-width: 0; }
+        .reminder-check-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent-success); cursor: pointer; flex-shrink: 0; }
+        .reminder-check-label span { overflow-wrap: anywhere; }
+        .reminder-row.reminder-done .reminder-check-label span { text-decoration: line-through; }
+        .reminder-delete-btn { background: none; border: none; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; flex-shrink: 0; line-height: 1; }
+        .reminder-delete-btn:hover { color: #ef4444; }
+
+        /* Stopwatch (Live Stats panel) */
+        .stopwatch-display {
+            text-align: center; font-size: 2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+            color: var(--accent); background: rgba(56,189,248,0.08); border: 1px solid var(--border);
+            border-radius: calc(var(--radius) * 0.6); padding: 14px; margin-bottom: 12px;
+        }
+        .stopwatch-controls { display: flex; gap: 10px; }
+        .stopwatch-controls .translator-btn, .stopwatch-controls .theme-share-btn { flex: 1; text-align: center; }
 
         /* Day picker — "Different Schedule?" button + popup */
         .day-picker-btn {
@@ -606,6 +632,18 @@
         }
         .theme-share-btn:hover { background: var(--accent); color: #0f172a; border-color: var(--accent); }
         .theme-import-input { min-height: auto; padding: 11px 14px; font-size: 0.85rem; resize: none; }
+        .radius-preset-row { display: flex; gap: 8px; margin-top: 8px; }
+        .radius-preset-btn {
+            flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text-main);
+            padding: 8px 0; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease;
+            border-radius: 8px;
+        }
+        .radius-preset-btn:hover { background: var(--accent); color: #0f172a; border-color: var(--accent); }
+        .secret-code-group { margin-top: 20px; padding-top: 18px; border-top: 1px dashed var(--border); }
+        .secret-code-group .studio-row-inputs .cd-input { flex-grow: 1; }
+        .secret-code-msg { font-size: 0.78rem; margin-top: 9px; min-height: 16px; font-weight: 600; }
+        .secret-code-msg.secret-code-success { color: var(--accent-success); }
+        .secret-code-msg.secret-code-error { color: #ef4444; }
         .theme-preset-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; text-align: left; transition: all 0.2s ease; }
         .theme-preset-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--accent); }
         .studio-slider { width: 100%; accent-color: var(--accent); cursor: pointer; height: 6px; background: rgba(0,0,0,0.3); border-radius: 4px; }
@@ -1022,7 +1060,7 @@
     <svg style="position:absolute; width:0; height:0;">
         <defs>
             <filter id="lavaGoo">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur" />
                 <feColorMatrix in="blur" mode="matrix"
                     values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
                     result="goo" />
@@ -1038,11 +1076,9 @@
             <div class="motion-blob b4 shade-dark"></div>
             <div class="motion-blob b5 shade-light"></div>
             <div class="motion-blob b6"></div>
-            <div class="motion-blob b7 shade-dark"></div>
-            <div class="motion-blob b8 shade-light"></div>
         </div>
     </div>
-    <div class="version-tag">V2.9</div>
+    <div class="version-tag">V3.9</div>
     <button class="app-launcher-btn" onclick="openAppMenu()">APP</button>
 
     <div id="pwScrim" class="pw-scrim" onclick="closePasswordModal()"></div>
@@ -1132,28 +1168,50 @@
         <div id="dayPickerMenu" class="day-picker-menu"></div>
     </div>
 
-    <div id="sideCalendar" class="dashboard side-calendar">
-        <div class="side-dash-header">
-            <div class="side-dash-title">&#128197; Calendar</div>
-            <button class="app-nav-btn close-btn" onclick="toggleAdvancedDashboard()" aria-label="Close">&times;</button>
+    <div id="sideColLeft" class="side-col side-col-left">
+        <div id="sideCalendar" class="dashboard side-calendar">
+            <div class="side-dash-header">
+                <div class="side-dash-title">&#128197; Calendar</div>
+                <button class="app-nav-btn close-btn" onclick="toggleAdvancedDashboard()" aria-label="Close">&times;</button>
+            </div>
+            <div class="side-cal-header">
+                <button class="app-nav-btn" onclick="sideCalNavMonth(-1)" aria-label="Previous month">&larr;</button>
+                <div id="sideCalMonthLabel" class="side-cal-month-label"></div>
+                <button class="app-nav-btn" onclick="sideCalNavMonth(1)" aria-label="Next month">&rarr;</button>
+            </div>
+            <div id="sideCalGrid" class="side-cal-grid"></div>
+            <div class="side-cal-legend"><span class="side-cal-legend-dot"></span> Holiday</div>
+            <div class="side-cal-upcoming-title">Upcoming Holidays</div>
+            <div id="sideCalUpcoming"></div>
         </div>
-        <div class="side-cal-header">
-            <button class="app-nav-btn" onclick="sideCalNavMonth(-1)" aria-label="Previous month">&larr;</button>
-            <div id="sideCalMonthLabel" class="side-cal-month-label"></div>
-            <button class="app-nav-btn" onclick="sideCalNavMonth(1)" aria-label="Next month">&rarr;</button>
+
+        <div id="sideReminders" class="dashboard side-widget-panel">
+            <div class="side-widget-title">&#9989; Reminders</div>
+            <div class="reminders-input-row">
+                <input type="text" id="reminderInput" class="cd-input" placeholder="Add a reminder..." onkeydown="if(event.key==='Enter') addReminder();">
+                <button class="theme-share-btn" onclick="addReminder()">Add</button>
+            </div>
+            <div id="remindersList" class="reminders-list"></div>
         </div>
-        <div id="sideCalGrid" class="side-cal-grid"></div>
-        <div class="side-cal-legend"><span class="side-cal-legend-dot"></span> Holiday</div>
-        <div class="side-cal-upcoming-title">Upcoming Holidays</div>
-        <div id="sideCalUpcoming"></div>
     </div>
 
-    <div id="sideDashboard" class="dashboard side-dashboard">
-        <div class="side-dash-header">
-            <div class="side-dash-title">&#128202; Live Stats</div>
-            <button class="app-nav-btn close-btn" onclick="toggleAdvancedDashboard()" aria-label="Close">&times;</button>
+    <div id="sideColRight" class="side-col side-col-right">
+        <div id="sideDashboard" class="dashboard side-dashboard">
+            <div class="side-dash-header">
+                <div class="side-dash-title">&#128202; Live Stats</div>
+                <button class="app-nav-btn close-btn" onclick="toggleAdvancedDashboard()" aria-label="Close">&times;</button>
+            </div>
+            <div id="sideDashGrid" class="tc-grid side-dash-grid"></div>
         </div>
-        <div id="sideDashGrid" class="tc-grid side-dash-grid"></div>
+
+        <div id="sideStopwatch" class="dashboard side-widget-panel">
+            <div class="side-widget-title">&#9201; Stopwatch</div>
+            <div id="stopwatchDisplay" class="stopwatch-display">00:00.00</div>
+            <div class="stopwatch-controls">
+                <button id="stopwatchStartBtn" class="translator-btn" onclick="toggleStopwatch()">Start</button>
+                <button class="theme-share-btn" onclick="resetStopwatch()">Reset</button>
+            </div>
+        </div>
     </div>
 
     <div id="appScrim" class="app-scrim" onclick="closeAppMenu()"></div>
@@ -1312,6 +1370,11 @@
             return `${hrs}:${String(mins).padStart(2, '0')} ${suffix}`;
         }
 
+        // Tracks the schedule currently rendered as DOM rows, so updateDashboard() only
+        // rebuilds that list when the day/override actually changes instead of every second.
+        let lastRenderedDay = null;
+        let scheduleRowEls = [];
+
         function updateDashboard() {
             const now = new Date();
             const liveDay = now.getDay();
@@ -1333,9 +1396,13 @@
 
             const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
             dayTitle.innerText = isOverride ? `${days[currentDay]}'s Schedule (Using Today's Clock)` : `${days[currentDay]}'s Schedule`;
-            scheduleList.innerHTML = "";
 
             if (!schedule[currentDay]) {
+                if (lastRenderedDay !== currentDay) {
+                    scheduleList.innerHTML = "";
+                    scheduleRowEls = [];
+                    lastRenderedDay = currentDay;
+                }
                 statusBadge.className = "status-badge status-off";
                 statusBadge.innerText = "Weekend";
                 currentPeriodEl.innerText = "No School Today";
@@ -1346,20 +1413,29 @@
                 return;
             }
 
+            // Only rebuild the row elements when the selected day actually changes.
+            if (lastRenderedDay !== currentDay) {
+                scheduleList.innerHTML = "";
+                scheduleRowEls = schedule[currentDay].map(item => {
+                    const row = document.createElement("div");
+                    row.className = "schedule-row";
+                    row.innerHTML = `<span>${item.name}</span><span>${formatTime12(item.start)} - ${formatTime12(item.end)}</span>`;
+                    scheduleList.appendChild(row);
+                    return row;
+                });
+                lastRenderedDay = currentDay;
+            }
+
             // Use the SELECTED day's period list, but always compare against the real current
             // time — this is what makes "run a Friday schedule on Monday" actually work live.
             let activeItem = null;
-            schedule[currentDay].forEach(item => {
+            schedule[currentDay].forEach((item, i) => {
                 const startMins = timeToMinutes(item.start);
                 const endMins = timeToMinutes(item.end);
-                const row = document.createElement("div");
-                row.className = "schedule-row";
-                row.innerHTML = `<span>${item.name}</span><span>${formatTime12(item.start)} - ${formatTime12(item.end)}</span>`;
-                if (currentMin >= startMins && currentMin < endMins) {
-                    activeItem = item;
-                    row.className += " active-row";
-                }
-                scheduleList.appendChild(row);
+                const isActive = currentMin >= startMins && currentMin < endMins;
+                if (isActive) activeItem = item;
+                const row = scheduleRowEls[i];
+                if (row) row.className = "schedule-row" + (isActive ? " active-row" : "");
             });
 
             if (activeItem) {
@@ -1403,7 +1479,7 @@
         function toggleAdvancedDashboard() {
             advDashOpen = !advDashOpen;
             document.body.classList.toggle("advdash-open", advDashOpen);
-            if (advDashOpen) { updateSideDashboard(); initSideCalendar(); }
+            if (advDashOpen) { updateSideDashboard(); initSideCalendar(); updateStopwatchDisplay(); }
         }
 
         function updateSideDashboard() {
@@ -1476,6 +1552,7 @@
         function initSideCalendar() {
             sideCalViewDate = new Date();
             renderSideCalendar();
+            renderReminders();
         }
 
         function sideCalNavMonth(delta) {
@@ -1543,6 +1620,93 @@
                 const label = d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
                 return `<div class="side-cal-holiday-row"><div class="side-cal-holiday-name">${h.name}</div><div class="side-cal-holiday-date">${label}</div></div>`;
             }).join('');
+        }
+
+        // --- Reminders checklist (lives under Calendar in Advanced Dashboard) ---
+        let reminders = JSON.parse(localStorage.getItem('htla-reminders') || '[]');
+
+        function renderReminders() {
+            const list = document.getElementById('remindersList');
+            if (!list) return;
+            if (!reminders.length) {
+                list.innerHTML = `<div class="app-coming-note">No reminders yet.</div>`;
+                return;
+            }
+            list.innerHTML = reminders.map((r, i) => `
+                <div class="reminder-row${r.done ? ' reminder-done' : ''}">
+                    <label class="reminder-check-label">
+                        <input type="checkbox" ${r.done ? 'checked' : ''} onchange="toggleReminder(${i})">
+                        <span>${r.text}</span>
+                    </label>
+                    <button class="reminder-delete-btn" onclick="deleteReminder(${i})" aria-label="Delete reminder">&times;</button>
+                </div>
+            `).join('');
+        }
+
+        function addReminder() {
+            const input = document.getElementById('reminderInput');
+            const text = input.value.trim();
+            if (!text) return;
+            reminders.push({ text, done: false });
+            input.value = '';
+            saveReminders();
+            renderReminders();
+        }
+
+        function toggleReminder(i) {
+            if (!reminders[i]) return;
+            reminders[i].done = !reminders[i].done;
+            saveReminders();
+            renderReminders();
+        }
+
+        function deleteReminder(i) {
+            reminders.splice(i, 1);
+            saveReminders();
+            renderReminders();
+        }
+
+        function saveReminders() {
+            localStorage.setItem('htla-reminders', JSON.stringify(reminders));
+        }
+
+        // --- Stopwatch (lives under Live Stats in Advanced Dashboard) ---
+        let stopwatchRunning = false;
+        let stopwatchStartTime = 0;
+        let stopwatchElapsed = 0;
+        let stopwatchInterval = null;
+
+        function toggleStopwatch() {
+            if (stopwatchRunning) {
+                clearInterval(stopwatchInterval);
+                stopwatchElapsed += Date.now() - stopwatchStartTime;
+                stopwatchRunning = false;
+            } else {
+                stopwatchStartTime = Date.now();
+                stopwatchInterval = setInterval(updateStopwatchDisplay, 50);
+                stopwatchRunning = true;
+            }
+            const btn = document.getElementById('stopwatchStartBtn');
+            if (btn) btn.innerText = stopwatchRunning ? 'Pause' : 'Start';
+        }
+
+        function resetStopwatch() {
+            clearInterval(stopwatchInterval);
+            stopwatchRunning = false;
+            stopwatchElapsed = 0;
+            updateStopwatchDisplay();
+            const btn = document.getElementById('stopwatchStartBtn');
+            if (btn) btn.innerText = 'Start';
+        }
+
+        function updateStopwatchDisplay() {
+            const el = document.getElementById('stopwatchDisplay');
+            if (!el) return;
+            const totalMs = stopwatchElapsed + (stopwatchRunning ? Date.now() - stopwatchStartTime : 0);
+            const mins = Math.floor(totalMs / 60000);
+            const secs = Math.floor((totalMs % 60000) / 1000);
+            const cs = Math.floor((totalMs % 1000) / 10);
+            el.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${String(cs).padStart(2, '0')}`;
         }
 
         // --- "Different Schedule?" day picker ---
@@ -1854,6 +2018,10 @@
         }
 
         // --- KEYWORD TRACKING SEQUENCER (APP opens the menu, COL/GAME jump straight to a tool, TH unlocks/toggles cheats) ---
+        // TH_TRIGGER_ENABLED is a temporary kill switch: set to false to disable typing "th" to
+        // reach games/cheats without deleting any of the underlying unlock code. Flip back to
+        // true to restore it exactly as it was.
+        const TH_TRIGGER_ENABLED = false;
         let typedBuffer = "";
         let cheatAppsHidden = true; // hidden by default whenever the page loads
         let cheatsUnlocked = false;
@@ -1869,7 +2037,7 @@
                 quickOpenTool("customize", "theme", "Colorways Studio"); typedBuffer = "";
             } else if (typedBuffer.endsWith("GAME")) {
                 quickOpenTool("games", "game", "Chimp Dash"); typedBuffer = "";
-            } else if (typedBuffer.endsWith("TH")) {
+            } else if (TH_TRIGGER_ENABLED && typedBuffer.endsWith("TH")) {
                 handleThTrigger(); typedBuffer = "";
             }
         });
@@ -1946,10 +2114,10 @@
         // --- THEME COLORWAY STUDIO SCRIPT ---
         const DEFAULT_THEME = {
             '--accent': '#38bdf8', '--bg-color': '#0f172a', '--card-bg': '#1e293b',
-            '--accent-success': '#4ade80', '--accent-break': '#fbbf24',
+            '--accent-success': '#4ade80', '--accent-break': '#fbbf24', '--border': '#334155',
             '--font-family': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-            '--radius': '16px', '--tint': '0.95', '--shadow-intensity': '0.5',
-            '--motion-bg-color': '#38bdf8', 'motionBgEnabled': false
+            '--radius': '16px', '--tint': '0.95', '--shadow-intensity': '0.5', '--font-scale': '1',
+            '--motion-bg-color': '#38bdf8', 'motionBgEnabled': false, 'gradientBgEnabled': false
         };
         const userTheme = Object.assign({}, DEFAULT_THEME, JSON.parse(localStorage.getItem('htla-theme') || '{}'));
 
@@ -1960,6 +2128,7 @@
             });
             updateTint(Math.round(parseFloat(userTheme['--tint']) * 100), false);
             document.body.classList.toggle('motion-bg-on', userTheme.motionBgEnabled === true || userTheme.motionBgEnabled === 'true');
+            document.body.classList.toggle('gradient-bg-on', userTheme.gradientBgEnabled === true || userTheme.gradientBgEnabled === 'true');
             applyMotionColorShades(userTheme['--motion-bg-color']);
         }
 
@@ -1976,10 +2145,14 @@
             document.getElementById('txtSuccess').value = userTheme['--accent-success'];
             document.getElementById('cpBreak').value = userTheme['--accent-break'];
             document.getElementById('txtBreak').value = userTheme['--accent-break'];
+            document.getElementById('cpBorder').value = userTheme['--border'];
+            document.getElementById('txtBorder').value = userTheme['--border'];
             document.getElementById('selFont').value = userTheme['--font-family'];
             document.getElementById('rngRadius').value = parseInt(userTheme['--radius']);
             document.getElementById('rngTint').value = Math.round(parseFloat(userTheme['--tint']) * 100);
             document.getElementById('rngShadow').value = Math.round(parseFloat(userTheme['--shadow-intensity']) * 100);
+            document.getElementById('rngTextSize').value = Math.round(parseFloat(userTheme['--font-scale']) * 100);
+            document.getElementById('gradientBgToggle').checked = userTheme.gradientBgEnabled === true || userTheme.gradientBgEnabled === 'true';
             document.getElementById('motionBgToggle').checked = userTheme.motionBgEnabled === true || userTheme.motionBgEnabled === 'true';
             document.getElementById('cpMotionColor').value = userTheme['--motion-bg-color'];
             document.getElementById('txtMotionColor').value = userTheme['--motion-bg-color'];
@@ -1989,6 +2162,23 @@
             userTheme.motionBgEnabled = !!enabled;
             localStorage.setItem('htla-theme', JSON.stringify(userTheme));
             document.body.classList.toggle('motion-bg-on', userTheme.motionBgEnabled);
+        }
+
+        function toggleGradientBackground(enabled) {
+            userTheme.gradientBgEnabled = !!enabled;
+            localStorage.setItem('htla-theme', JSON.stringify(userTheme));
+            document.body.classList.toggle('gradient-bg-on', userTheme.gradientBgEnabled);
+        }
+
+        function updateTextSize(percent) {
+            const scale = (percent / 100).toFixed(2);
+            updateThemeProp('--font-scale', scale);
+        }
+
+        function setRadiusPreset(px) {
+            updateThemeProp('--radius', px + 'px');
+            const rng = document.getElementById('rngRadius');
+            if (rng) rng.value = px;
         }
 
         // Derives lighter/darker variants of the chosen color so the blobs have visual
@@ -2013,7 +2203,7 @@
             localStorage.setItem('htla-theme', JSON.stringify(userTheme));
             const syncMap = {
                 '--accent': 'txtAccent', '--bg-color': 'txtBg', '--card-bg': 'txtCard',
-                '--accent-success': 'txtSuccess', '--accent-break': 'txtBreak'
+                '--accent-success': 'txtSuccess', '--accent-break': 'txtBreak', '--border': 'txtBorder'
             };
             const targetId = syncMap[prop];
             if (targetId) { const el = document.getElementById(targetId); if (el) el.value = value; }
@@ -2081,11 +2271,125 @@
             }
         }
 
+        // --- SECRET COLORWAYS (unlocked via the code box at the bottom of Colorways Studio) ---
+        // Each entry sets every customizable theme property — base colors, border, success/break
+        // accents, font, corner radius, shadow depth, gradient background, and the lava lamp color
+        // — so a secret colorway is a complete, detailed look rather than just a couple of swapped
+        // colors. When Colorways Studio gains new customizable properties in future updates, extend
+        // these entries to set those too, so secret colorways stay fully up to date.
+        const SECRET_COLORWAYS = {
+            "NA!": {
+                name: "Baltimore Ravens",
+                "--bg-color": "#0a0612",
+                "--card-bg": "#1b0f3d",
+                "--border": "#9e7c0c",
+                "--accent": "#c9a227",
+                "--accent-success": "#e8e3d3",
+                "--accent-break": "#ffffff",
+                "--font-family": '"Oswald", sans-serif',
+                "--radius": "14px",
+                "--shadow-intensity": "0.65",
+                "--motion-bg-color": "#4b2e83",
+                "gradientBgEnabled": true
+            },
+            "PINK!": {
+                name: "Pink",
+                "--bg-color": "#1a0512",
+                "--card-bg": "#33102a",
+                "--border": "#ff4fa3",
+                "--accent": "#ff2d87",
+                "--accent-success": "#ffd6ec",
+                "--accent-break": "#ffffff",
+                "--font-family": '"Fredoka", sans-serif',
+                "--radius": "24px",
+                "--shadow-intensity": "0.55",
+                "--motion-bg-color": "#ff5fa8",
+                "gradientBgEnabled": true
+            },
+            "OIL!": {
+                name: "Edmonton Oilers",
+                "--bg-color": "#041028",
+                "--card-bg": "#0d2050",
+                "--border": "#fc4c02",
+                "--accent": "#ff6a1a",
+                "--accent-success": "#ffe0c2",
+                "--accent-break": "#ffffff",
+                "--font-family": '"Bebas Neue", sans-serif',
+                "--radius": "12px",
+                "--shadow-intensity": "0.6",
+                "--motion-bg-color": "#ff6a1a",
+                "gradientBgEnabled": true
+            }
+        };
+
+        function applySecretColorway(key) {
+            const cw = SECRET_COLORWAYS[key];
+            if (!cw) return false;
+            Object.keys(cw).forEach(prop => {
+                if (prop === "name") return;
+                if (prop === "gradientBgEnabled") { toggleGradientBackground(cw[prop]); return; }
+                if (prop === "--motion-bg-color") { updateMotionBgColor(cw[prop]); return; }
+                updateThemeProp(prop, cw[prop]);
+            });
+            syncStudioInputs();
+            return true;
+        }
+
+        function checkSecretCode() {
+            const input = document.getElementById('secretCodeInput');
+            const msg = document.getElementById('secretCodeMsg');
+            if (!input || !msg) return;
+            const raw = input.value.trim();
+            const code = raw.toUpperCase();
+            const match = Object.keys(SECRET_COLORWAYS).find(k => k.toUpperCase() === code);
+            if (match) {
+                applySecretColorway(match);
+                msg.textContent = `\u{1F513} Unlocked: ${SECRET_COLORWAYS[match].name} colorway!`;
+                msg.className = 'secret-code-msg secret-code-success';
+            } else {
+                msg.textContent = 'Invalid code.';
+                msg.className = 'secret-code-msg secret-code-error';
+            }
+            input.value = '';
+        }
+
         // --- CHANGE LOG (lives inside Customize > Change Log) ---
         // Entries marked "secret: true" mention games or the cheat-unlock system, and are
         // only shown for real once cheatsUnlocked is true. Otherwise they're folded into a
         // single generic "Bug fixes and improvements" line for that version.
         const CHANGELOG = [
+            { version: "V3.9", entries: [
+                { text: "Change Log entries about secret codes no longer spoil what they are or what they unlock", secret: false }
+            ]},
+            { version: "V3.8", entries: [
+                { text: "Added a new secret code", secret: false }
+            ]},
+            { version: "V3.7", entries: [
+                { text: "Adjusted a secret colorway's font for better readability", secret: false }
+            ]},
+            { version: "V3.6", entries: [
+                { text: "Added a new secret code", secret: false },
+                { text: "Added Comic Sans MS as a regular selectable font in Colorways Studio", secret: false }
+            ]},
+            { version: "V3.5", entries: [
+                { text: "Added a Secret Code box at the bottom of Colorways Studio for unlocking hidden colorways", secret: false }
+            ]},
+            { version: "V3.4", entries: [
+                { text: "Reminders and Stopwatch are now their own small panels stacked below Calendar and Live Stats, instead of being hidden inside them behind a scroll", secret: false }
+            ]},
+            { version: "V3.3", entries: [
+                { text: "Added to Colorways Studio: a custom border color picker, a Gradient Background toggle, a Text Size slider, and quick corner-style presets (Sharp/Soft/Round/Pill)", secret: false }
+            ]},
+            { version: "V3.2", entries: [
+                { text: "Added a Stopwatch under Live Stats and a checkable Reminders list under Calendar in Advanced Dashboard, filling the empty space under both panels", secret: false }
+            ]},
+            { version: "V3.1", entries: [
+                { text: "Temporarily disabled the \"th\" trigger for games/cheats — code is still there, just switched off for now", secret: true }
+            ]},
+            { version: "V3.0", entries: [
+                { text: "Performance pass: Lava Lamp Background now fully pauses (zero cost) when turned off, uses fewer blobs and less blur when on", secret: false },
+                { text: "The main schedule panel no longer rebuilds its entire period list every second — only when the day actually changes", secret: false }
+            ]},
             { version: "V2.9", entries: [
                 { text: "Added a custom Countdown card to Live Stats and Time Counter — pick a date (and optional time) and it counts down live with hours/min/sec and a % complete meter", secret: false }
             ]},
@@ -3834,6 +4138,15 @@ const COMMON_WORDS = [{"en":"hello","es":"hola","cat":"Greetings"},{"en":"goodby
                         </div>
                     </div>
                     <div class="studio-group">
+                        <label>Custom Border Color</label>
+                        <div class="studio-row-inputs">
+                            <div class="color-picker-wrapper">
+                                <input type="color" id="cpBorder" value="#334155" oninput="updateThemeProp('--border', this.value)">
+                            </div>
+                            <input type="text" id="txtBorder" class="studio-input-txt" value="#334155" readonly>
+                        </div>
+                    </div>
+                    <div class="studio-group">
                         <label>Typography Font</label>
                         <select id="selFont" class="studio-select" onchange="updateThemeProp('--font-family', this.value)">
                             <option value='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'>System Default Modern</option>
@@ -3846,7 +4159,15 @@ const COMMON_WORDS = [{"en":"hello","es":"hola","cat":"Greetings"},{"en":"goodby
                             <option value='"Bebas Neue", sans-serif'>Bebas Neue Condensed</option>
                             <option value='"Caveat", cursive'>Caveat Handwritten</option>
                             <option value='"IBM Plex Mono", monospace'>IBM Plex Technical Mono</option>
+                            <option value='"Comic Sans MS", "Comic Sans", cursive'>Comic Sans Playful</option>
                         </select>
+                    </div>
+                    <div class="studio-group">
+                        <label>Gradient Background</label>
+                        <label class="motion-toggle-label">
+                            <input type="checkbox" id="gradientBgToggle" onchange="toggleGradientBackground(this.checked)">
+                            Fade the page background from base to panel color
+                        </label>
                     </div>
                     <div class="studio-group">
                         <label>Lava Lamp Background</label>
@@ -3868,6 +4189,16 @@ const COMMON_WORDS = [{"en":"hello","es":"hola","cat":"Greetings"},{"en":"goodby
                     <div class="studio-group">
                         <label>Corner Rounding Radius</label>
                         <input type="range" id="rngRadius" class="studio-slider" min="0" max="32" value="16" oninput="updateThemeProp('--radius', this.value + 'px')">
+                        <div class="radius-preset-row">
+                            <button class="radius-preset-btn" onclick="setRadiusPreset(0)">Sharp</button>
+                            <button class="radius-preset-btn" onclick="setRadiusPreset(12)">Soft</button>
+                            <button class="radius-preset-btn" onclick="setRadiusPreset(20)">Round</button>
+                            <button class="radius-preset-btn" onclick="setRadiusPreset(32)">Pill</button>
+                        </div>
+                    </div>
+                    <div class="studio-group">
+                        <label>Text Size</label>
+                        <input type="range" id="rngTextSize" class="studio-slider" min="90" max="115" value="100" oninput="updateTextSize(this.value)">
                     </div>
                     <div class="studio-group">
                         <label>Shadow Intensity</label>
@@ -3884,6 +4215,15 @@ const COMMON_WORDS = [{"en":"hello","es":"hola","cat":"Greetings"},{"en":"goodby
                         </div>
                     </div>
                     <button class="studio-btn-reset" onclick="resetStudioDefaults()">Reset Custom Styles</button>
+
+                    <div class="studio-group secret-code-group">
+                        <label>Secret Code</label>
+                        <div class="studio-row-inputs">
+                            <input type="text" id="secretCodeInput" class="cd-input" placeholder="Enter code..." onkeydown="if(event.key==='Enter') checkSecretCode();">
+                            <button class="theme-share-btn" onclick="checkSecretCode()">Unlock</button>
+                        </div>
+                        <div id="secretCodeMsg" class="secret-code-msg"></div>
+                    </div>
                 </div>
             `,
             changelog: () => `
