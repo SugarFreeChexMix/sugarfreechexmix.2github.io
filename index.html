@@ -187,6 +187,13 @@
             display: flex;
             animation: sideDashIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        .side-notepad { display: flex; flex-direction: column; }
+        .notepad-text { flex: 1; width: 100%; min-height: 360px; resize: vertical; box-sizing: border-box; background: rgba(0,0,0,0.18); color: inherit; border: 1px solid var(--border); border-radius: calc(var(--radius) * 0.6); padding: 14px 16px; font-family: inherit; font-size: 1rem; line-height: 1.6; outline: none; transition: border-color .2s; }
+        .notepad-text:focus { border-color: var(--accent); }
+        .notepad-status { margin-top: 8px; font-size: 0.78rem; opacity: 0.55; text-align: right; }
+        #sideCalendar { display: none; }
+        body.left-calendar #sideCalendar { display: block; }
+        body.left-calendar #sideNotepad { display: none; }
         .side-dashboard, .side-calendar {
             width: 100%; padding: 30px; text-align: left;
         }
@@ -307,6 +314,79 @@
         }
         .stopwatch-controls { display: flex; gap: 10px; }
         .stopwatch-controls .translator-btn, .stopwatch-controls .theme-share-btn { flex: 1; text-align: center; }
+
+        /* ============================================================ */
+        /* LAYOUT SYSTEM — same data/functionality, different arrangement */
+        /* ============================================================ */
+        .layout-preset-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
+        .layout-preset-btn {
+            background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text-main);
+            padding: 10px 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer;
+            border-radius: 10px; transition: all 0.15s ease;
+        }
+        .layout-preset-btn:hover { background: rgba(255,255,255,0.08); border-color: var(--accent); }
+        .layout-preset-btn.active { background: var(--accent); color: #0f172a; border-color: var(--accent); }
+
+        /* --- Split View: no outer panel box; stats on the left, schedule boxed on the right --- */
+        body.layout-split #mainDashboard {
+            background: none; border: none; box-shadow: none; padding: 10px; text-align: left;
+            display: grid; grid-template-columns: 1fr 1.15fr; gap: 10px 26px; align-items: start;
+            grid-template-areas:
+                "title       title"
+                "status      countdown"
+                "period      countdown"
+                "timerange   countdown"
+                "progressbar countdown"
+                "progresstext schedule"
+                ".           schedule";
+        }
+        body.layout-split #mainDashboard > h1 { grid-area: title; text-align: center; margin-bottom: 4px; }
+        body.layout-split #mainDashboard > #statusBadge { grid-area: status; justify-self: start; }
+        body.layout-split #mainDashboard > #currentPeriod { grid-area: period; }
+        body.layout-split #mainDashboard > #timeRange { grid-area: timerange; }
+        body.layout-split #mainDashboard > .countdown-grid { grid-area: countdown; align-self: center; }
+        body.layout-split #mainDashboard > .progress-bar-container { grid-area: progressbar; }
+        body.layout-split #mainDashboard > #progressText { grid-area: progresstext; }
+        body.layout-split #mainDashboard > .schedule-preview {
+            grid-area: schedule; background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 18px;
+        }
+        @media (max-width: 640px) {
+            body.layout-split #mainDashboard {
+                grid-template-columns: 1fr;
+                grid-template-areas: "title" "status" "period" "timerange" "countdown" "progressbar" "progresstext" "schedule";
+            }
+        }
+
+        /* --- Banner Strip: everything above the schedule sits in one flowing horizontal line, no box at all --- */
+        body.layout-banner #mainDashboard {
+            background: none; border: none; box-shadow: none; padding: 10px 4px; text-align: left;
+            display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px;
+        }
+        body.layout-banner #mainDashboard > h1 {
+            flex: 0 0 100%; font-size: 1.25rem; padding-bottom: 10px; margin-bottom: 2px;
+            border-bottom: 2px solid var(--border);
+        }
+        body.layout-banner #mainDashboard > .countdown-grid { display: flex; gap: 10px; }
+        body.layout-banner #mainDashboard > .progress-bar-container,
+        body.layout-banner #mainDashboard > #progressText { flex: 0 0 100%; }
+        body.layout-banner #mainDashboard > #progressText { margin-top: -6px; }
+        body.layout-banner #mainDashboard > .schedule-preview {
+            flex: 0 0 100%; border-top: 1px dashed var(--border); padding-top: 16px; margin-top: 4px;
+        }
+
+        /* --- Stacked Cards: every section becomes its own small boxed card with gaps between them --- */
+        body.layout-stacked #mainDashboard {
+            background: none; border: none; box-shadow: none; padding: 0;
+            display: flex; flex-direction: column; gap: 14px;
+        }
+        body.layout-stacked #mainDashboard > * {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: calc(var(--radius) * 0.75); padding: 16px;
+        }
+        body.layout-stacked #mainDashboard > h1 { padding: 14px 16px; }
+        body.layout-stacked #mainDashboard > .progress-bar-container { padding: 10px 16px; }
+        body.layout-stacked #mainDashboard > #progressText { padding: 4px 16px 10px; border-top: none; margin-top: -14px; background: var(--card-bg); border-top-left-radius: 0; border-top-right-radius: 0; }
 
         /* Day picker — "Different Schedule?" button + popup */
         .day-picker-btn {
@@ -1078,7 +1158,7 @@
             <div class="motion-blob b6"></div>
         </div>
     </div>
-    <div class="version-tag">V3.9</div>
+    <div class="version-tag">V4.1</div>
     <button class="app-launcher-btn" onclick="openAppMenu()">APP</button>
 
     <div id="pwScrim" class="pw-scrim" onclick="closePasswordModal()"></div>
@@ -1132,7 +1212,7 @@
         </div>
     </div>
 
-    <div class="dashboard">
+    <div id="mainDashboard" class="dashboard">
         <h1>HTLA Bell Schedule</h1>
         <div id="statusBadge" class="status-badge status-off">Checking...</div>
         
@@ -1169,6 +1249,15 @@
     </div>
 
     <div id="sideColLeft" class="side-col side-col-left">
+        <div id="sideNotepad" class="dashboard side-calendar side-notepad">
+            <div class="side-dash-header">
+                <div class="side-dash-title">&#128221; Notepad</div>
+                <button class="app-nav-btn close-btn" onclick="toggleAdvancedDashboard()" aria-label="Close">&times;</button>
+            </div>
+            <textarea id="notepadText" class="notepad-text" placeholder="Jot something down... it saves automatically." spellcheck="true" oninput="saveNotepad()"></textarea>
+            <div id="notepadStatus" class="notepad-status">Saved</div>
+        </div>
+
         <div id="sideCalendar" class="dashboard side-calendar">
             <div class="side-dash-header">
                 <div class="side-dash-title">&#128197; Calendar</div>
@@ -1479,7 +1568,7 @@
         function toggleAdvancedDashboard() {
             advDashOpen = !advDashOpen;
             document.body.classList.toggle("advdash-open", advDashOpen);
-            if (advDashOpen) { updateSideDashboard(); initSideCalendar(); updateStopwatchDisplay(); }
+            if (advDashOpen) { updateSideDashboard(); initSideCalendar(); updateStopwatchDisplay(); loadNotepad(); }
         }
 
         function updateSideDashboard() {
@@ -1547,6 +1636,24 @@
 
         function holidayForDate(dateStr) {
             return HOLIDAYS.find(h => h.date === dateStr);
+        }
+
+        let notepadTimer = null;
+        function loadNotepad() {
+            const ta = document.getElementById("notepadText");
+            if (!ta) return;
+            try { ta.value = localStorage.getItem("htla-notes") || ""; } catch (e) {}
+        }
+        function saveNotepad() {
+            const ta = document.getElementById("notepadText");
+            const st = document.getElementById("notepadStatus");
+            if (!ta) return;
+            if (st) st.textContent = "Saving...";
+            clearTimeout(notepadTimer);
+            notepadTimer = setTimeout(() => {
+                try { localStorage.setItem("htla-notes", ta.value); } catch (e) {}
+                if (st) st.textContent = "Saved";
+            }, 300);
         }
 
         function initSideCalendar() {
@@ -2117,9 +2224,12 @@
             '--accent-success': '#4ade80', '--accent-break': '#fbbf24', '--border': '#334155',
             '--font-family': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
             '--radius': '16px', '--tint': '0.95', '--shadow-intensity': '0.5', '--font-scale': '1',
-            '--motion-bg-color': '#38bdf8', 'motionBgEnabled': false, 'gradientBgEnabled': false
+            '--motion-bg-color': '#38bdf8', 'motionBgEnabled': false, 'gradientBgEnabled': false,
+            'layout': 'classic', 'leftPanel': 'notepad'
         };
         const userTheme = Object.assign({}, DEFAULT_THEME, JSON.parse(localStorage.getItem('htla-theme') || '{}'));
+
+        const LAYOUT_NAMES = ['classic', 'split', 'banner', 'stacked'];
 
         function applyStoredTheme() {
             const root = document.documentElement;
@@ -2130,6 +2240,9 @@
             document.body.classList.toggle('motion-bg-on', userTheme.motionBgEnabled === true || userTheme.motionBgEnabled === 'true');
             document.body.classList.toggle('gradient-bg-on', userTheme.gradientBgEnabled === true || userTheme.gradientBgEnabled === 'true');
             applyMotionColorShades(userTheme['--motion-bg-color']);
+            LAYOUT_NAMES.forEach(l => document.body.classList.remove('layout-' + l));
+            document.body.classList.add('layout-' + (userTheme.layout || 'classic'));
+            document.body.classList.toggle('left-calendar', userTheme.leftPanel === 'calendar');
         }
 
         // Syncs the on-screen studio controls to match the stored theme.
@@ -2156,6 +2269,15 @@
             document.getElementById('motionBgToggle').checked = userTheme.motionBgEnabled === true || userTheme.motionBgEnabled === 'true';
             document.getElementById('cpMotionColor').value = userTheme['--motion-bg-color'];
             document.getElementById('txtMotionColor').value = userTheme['--motion-bg-color'];
+            ['notepad', 'calendar'].forEach(m => {
+                const b = document.getElementById('leftPanelBtn-' + m);
+                if (b) b.classList.toggle('active', m === (userTheme.leftPanel || 'notepad'));
+            });
+            const currentLayout = userTheme.layout || 'classic';
+            LAYOUT_NAMES.forEach(l => {
+                const btn = document.getElementById('layoutBtn-' + l);
+                if (btn) btn.classList.toggle('active', l === currentLayout);
+            });
         }
 
         function toggleMotionBackground(enabled) {
@@ -2168,6 +2290,32 @@
             userTheme.gradientBgEnabled = !!enabled;
             localStorage.setItem('htla-theme', JSON.stringify(userTheme));
             document.body.classList.toggle('gradient-bg-on', userTheme.gradientBgEnabled);
+        }
+
+        // Switches the main schedule panel's structural layout — same data and functionality,
+        // just arranged differently (or not boxed into a single panel at all).
+        function setLayout(layoutName) {
+            if (!LAYOUT_NAMES.includes(layoutName)) return;
+            userTheme.layout = layoutName;
+            localStorage.setItem('htla-theme', JSON.stringify(userTheme));
+            LAYOUT_NAMES.forEach(l => document.body.classList.remove('layout-' + l));
+            document.body.classList.add('layout-' + layoutName);
+            LAYOUT_NAMES.forEach(l => {
+                const btn = document.getElementById('layoutBtn-' + l);
+                if (btn) btn.classList.toggle('active', l === layoutName);
+            });
+        }
+
+        // Chooses what the left Advanced Dashboard panel shows: Notepad (default) or Calendar.
+        function setLeftPanel(mode) {
+            if (mode !== 'notepad' && mode !== 'calendar') return;
+            userTheme.leftPanel = mode;
+            localStorage.setItem('htla-theme', JSON.stringify(userTheme));
+            document.body.classList.toggle('left-calendar', mode === 'calendar');
+            ['notepad', 'calendar'].forEach(m => {
+                const b = document.getElementById('leftPanelBtn-' + m);
+                if (b) b.classList.toggle('active', m === mode);
+            });
         }
 
         function updateTextSize(percent) {
@@ -2358,6 +2506,12 @@
         // only shown for real once cheatsUnlocked is true. Otherwise they're folded into a
         // single generic "Bug fixes and improvements" line for that version.
         const CHANGELOG = [
+            { version: "V4.1", entries: [
+                { text: "The Advanced Dashboard's left panel is now a Notepad that saves automatically; switch back to the Calendar anytime in Colorways Studio", secret: false }
+            ]},
+            { version: "V4.0", entries: [
+                { text: "Added a Layout picker to Colorways Studio with 3 new arrangements for the main schedule — Split View, Banner Strip, and Stacked Cards — alongside the original Classic Panel, all showing the same live data", secret: false }
+            ]},
             { version: "V3.9", entries: [
                 { text: "Change Log entries about secret codes no longer spoil what they are or what they unlock", secret: false }
             ]},
@@ -4161,6 +4315,22 @@ const COMMON_WORDS = [{"en":"hello","es":"hola","cat":"Greetings"},{"en":"goodby
                             <option value='"IBM Plex Mono", monospace'>IBM Plex Technical Mono</option>
                             <option value='"Comic Sans MS", "Comic Sans", cursive'>Comic Sans Playful</option>
                         </select>
+                    </div>
+                    <div class="studio-group">
+                        <label>Advanced Dashboard Left Panel</label>
+                        <div class="layout-preset-row">
+                            <button id="leftPanelBtn-notepad" class="layout-preset-btn" onclick="setLeftPanel('notepad')">Notepad</button>
+                            <button id="leftPanelBtn-calendar" class="layout-preset-btn" onclick="setLeftPanel('calendar')">Calendar</button>
+                        </div>
+                    </div>
+                    <div class="studio-group">
+                        <label>Layout</label>
+                        <div class="layout-preset-row">
+                            <button id="layoutBtn-classic" class="layout-preset-btn" onclick="setLayout('classic')">Classic Panel</button>
+                            <button id="layoutBtn-split" class="layout-preset-btn" onclick="setLayout('split')">Split View</button>
+                            <button id="layoutBtn-banner" class="layout-preset-btn" onclick="setLayout('banner')">Banner Strip</button>
+                            <button id="layoutBtn-stacked" class="layout-preset-btn" onclick="setLayout('stacked')">Stacked Cards</button>
+                        </div>
                     </div>
                     <div class="studio-group">
                         <label>Gradient Background</label>
