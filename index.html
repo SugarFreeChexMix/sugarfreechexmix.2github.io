@@ -778,6 +778,166 @@ h1.cn-title { font-size: 1.9rem; }
   .cn-main { padding: 10px 12px 0; }
   .cn-btn { font-size: 0.85rem; padding: 0 8px; }
 }
+
+/* ---------- Unlocked mode (beta) ---------- */
+.cn-title { display: flex; align-items: center; justify-content: center; gap: 2px; }
+.beta {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--present);
+  color: #fff;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.cn-tile.locked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: var(--cn-tile);
+  box-shadow: inset 0 0 0 2px var(--filled);
+  color: var(--sub);
+}
+.cn-tile.locked svg { width: 20px; height: 20px; fill: currentColor; }
+.cn-tile.locked .lk { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em; line-height: 1.05; }
+
+.card.mg { max-width: 460px; padding: 20px 20px 18px; text-align: center; }
+.card.mg h2 { padding-right: 24px; }
+.mg-info { margin: 0 0 14px; font-size: 0.9rem; color: var(--sub); }
+.mg-body { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.mg-reveal {
+  margin-top: 14px;
+  padding: 8px 14px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.mg-kb { width: 100%; display: flex; flex-direction: column; gap: 6px; }
+.mg-kr { display: flex; justify-content: center; gap: 5px; }
+.mg-key {
+  flex: 1;
+  max-width: 40px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: var(--key);
+  color: var(--key-text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+.mg-key.wide { flex: 1.5; max-width: 62px; font-size: 0.7rem; }
+.mg-key:active { transform: scale(0.94); }
+.mg-key[data-state="correct"] { background: var(--correct); color: #fff; }
+.mg-key[data-state="present"] { background: var(--present); color: #fff; }
+.mg-key[data-state="absent"] { background: var(--absent); color: #fff; }
+
+.mg-wgrid { --ms: min(46px, calc((100vw - 96px) / var(--n))); display: flex; flex-direction: column; gap: 5px; }
+.mg-row { display: flex; justify-content: center; gap: 5px; }
+.mg-cell {
+  display: grid;
+  place-items: center;
+  width: var(--ms);
+  height: var(--ms);
+  border: 2px solid var(--border);
+  font-size: calc(var(--ms) * 0.55);
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: border-color 0.2s;
+}
+.mg-cell[data-state="tbd"] { border-color: var(--filled); }
+.mg-cell[data-state="correct"] { background: var(--correct); border-color: var(--correct); color: #fff; }
+.mg-cell[data-state="present"] { background: var(--present); border-color: var(--present); color: #fff; }
+.mg-cell[data-state="absent"] { background: var(--absent); border-color: var(--absent); color: #fff; }
+
+.mg-slots, .mg-bank { max-width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.mg-slot, .mg-atile {
+  width: min(44px, calc((100vw - 110px) / var(--n)));
+  height: 48px;
+  padding: 0;
+  border-radius: 6px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, opacity 0.15s, transform 0.1s;
+}
+.mg-slot { border: 2px solid var(--filled); background: none; color: var(--text); }
+.mg-slot.ok { background: var(--correct); border-color: var(--correct); color: #fff; }
+.mg-atile { border: 0; background: var(--cn-tile); color: var(--cn-text); }
+.mg-atile:active:not(.used) { transform: scale(0.94); }
+.mg-atile.used { opacity: 0.2; cursor: default; }
+
+.mg-sgrid {
+  --ss: min(48px, calc((100vw - 96px) / var(--n)));
+  display: grid;
+  grid-template-columns: repeat(var(--n), var(--ss));
+  gap: 2px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.mg-scell {
+  display: grid;
+  place-items: center;
+  width: var(--ss);
+  height: var(--ss);
+  border-radius: 6px;
+  background: var(--cn-tile);
+  color: var(--cn-text);
+  font-size: calc(var(--ss) * 0.5);
+  font-weight: 700;
+  transition: background-color 0.12s, color 0.12s;
+}
+.mg-scell.pick { background: var(--cn-sel); color: var(--cn-sel-text); }
+.mg-scell.bad { background: #c0392b; color: #fff; }
+.mg-scell.found { background: var(--correct); color: #fff; }
+
+.mg-cluebar {
+  width: 100%;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--cn-tile);
+  font-size: 0.9rem;
+  line-height: 1.25;
+}
+.mg-xgrid { display: grid; gap: 3px; }
+.mg-xblank { width: var(--cs); height: var(--cs); }
+.mg-xcell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--cs);
+  height: var(--cs);
+  border: 2px solid var(--filled);
+  border-radius: 4px;
+  font-size: calc(var(--cs) * 0.52);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.mg-xcell.act { background: var(--cn-tile); }
+.mg-xcell.sel { border-color: var(--present); background: var(--cn-sel); color: var(--cn-sel-text); }
+.mg-xcell.ok { background: var(--correct); border-color: var(--correct); color: #fff; }
+.mg-xnum { position: absolute; top: 1px; left: 3px; font-size: 0.5rem; font-style: normal; font-weight: 700; opacity: 0.8; }
 </style>
 </head>
 <body>
@@ -858,8 +1018,11 @@ h1.cn-title { font-size: 1.9rem; }
         <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
       </button>
     </div>
-    <h1 class="cn-title">Connections<span class="inf">&#8734;</span></h1>
+    <h1 class="cn-title">Connections<span class="inf">&#8734;</span><span class="beta hidden" id="cnBeta">Beta</span></h1>
     <div class="hr">
+      <button class="icon-btn" id="cnSettingsBtn" aria-label="Settings">
+        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      </button>
       <button class="icon-btn" id="cnStatsBtn" aria-label="Statistics">
         <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"/></svg>
       </button>
@@ -912,6 +1075,37 @@ h1.cn-title { font-size: 1.9rem; }
   </div>
 </div>
 
+<!-- connections settings -->
+<div class="modal" id="cnSettingsModal" aria-hidden="true">
+  <div class="card">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <h2>Settings</h2>
+    <div class="setting">
+      <div>
+        <div class="name">Unlocked Mode <span class="beta">Beta</span></div>
+        <div class="desc">One word in each group is locked. Win a mini-game to open it.</div>
+      </div>
+      <button class="switch" id="cnUnlockSwitch" role="switch" aria-checked="false" aria-label="Unlocked Mode"></button>
+    </div>
+    <p class="fine">Each mode keeps its own game and stats.</p>
+  </div>
+</div>
+
+<!-- mini-game for a locked word -->
+<div class="modal" id="mgModal" aria-hidden="true">
+  <div class="card mg">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <h2 id="mgTitle">Wordle</h2>
+    <p class="mg-info" id="mgInfo"></p>
+    <div class="mg-body" id="mgBody"></div>
+    <button class="mg-reveal" id="mgReveal">Reveal word</button>
+  </div>
+</div>
+
 <!-- connections help -->
 <div class="modal" id="cnHelpModal" aria-hidden="true">
   <div class="card help">
@@ -927,6 +1121,7 @@ h1.cn-title { font-size: 1.9rem; }
       <li>Watch out for words that could fit in more than one group.</li>
     </ul>
     <hr>
+    <p class="note"><b>Unlocked Mode (beta):</b> turn it on in settings. One word in each group is locked. Tap it to play a mini-game (Wordle, Anagram, Word Search or Crossword) and open it.</p>
     <p class="note">There's no daily limit. Hit <b>Next Puzzle</b> when you finish for a new one.</p>
   </div>
 </div>
@@ -2063,9 +2258,13 @@ const CN_MAX_MISTAKES = 4;
 const cnBoard = $('#cnBoard');
 const cnStatsModal = $('#cnStatsModal');
 const cnHelpModal = $('#cnHelpModal');
+const cnSettingsModal = $('#cnSettingsModal');
 
 let cn = null;
-let cnStats = Object.assign({ played: 0, wins: 0, streak: 0, maxStreak: 0, dist: [0, 0, 0, 0] }, store.get('cn-stats', {}));
+const CN_KEYS = { n: { game: 'cn-game', stats: 'cn-stats' }, u: { game: 'cn-game-u', stats: 'cn-stats-u' } };
+const loadCnStats = key => Object.assign({ played: 0, wins: 0, streak: 0, maxStreak: 0, dist: [0, 0, 0, 0] }, store.get(key, {}));
+const cnStatsAll = { n: loadCnStats('cn-stats'), u: loadCnStats('cn-stats-u') };
+let cnSettings = Object.assign({ unlock: false }, store.get('cn-settings', {}));
 let cnBusy = false;
 let cnTimer = null;
 
@@ -2094,23 +2293,36 @@ function cnPick() {
   return id;
 }
 
-function cnFresh() {
+// adds the pieces that aren't saved: the current picks and, in Unlocked mode, which words are locked
+function cnAttach(game, mode) {
+  return Object.assign({ selected: [], opened: [], reveals: 0 }, game, {
+    mode,
+    locks: mode === 'u' ? cnMakeLocks(game.id) : {}
+  });
+}
+
+function cnFresh(mode) {
   const id = cnPick();
   const words = [].concat(...PUZZLES[id].map(g => g.words));
-  return { id, order: shuffled(words), selected: [], solved: [], mistakes: 0, tried: [], guesses: [], status: 'playing' };
+  return cnAttach({ id, order: shuffled(words), solved: [], mistakes: 0, tried: [], guesses: [], status: 'playing' }, mode);
 }
 
 function cnSave() {
-  store.set('cn-game', {
+  store.set(CN_KEYS[cn.mode].game, {
     id: cn.id,
     order: cn.order,
     solved: cn.solved,
     mistakes: cn.mistakes,
     tried: cn.tried,
     guesses: cn.guesses,
+    opened: cn.opened,
+    reveals: cn.reveals,
     status: cn.status
   });
 }
+
+const cnIsLocked = word => !!cn.locks[word] && !cn.opened.includes(word);
+const cnLocksLeft = () => cn.order.filter(cnIsLocked).length;
 
 function cnBanner(gi) {
   const group = PUZZLES[cn.id][gi];
@@ -2130,9 +2342,16 @@ function cnRender() {
   cn.solved.forEach(gi => cnBoard.appendChild(cnBanner(gi)));
   cn.order.forEach(word => {
     const tile = document.createElement('button');
-    tile.className = 'cn-tile' + (cn.selected.includes(word) ? ' sel' : '');
+    const locked = cnIsLocked(word);
+    tile.className = 'cn-tile' + (cn.selected.includes(word) ? ' sel' : '') + (locked ? ' locked' : '');
     tile.dataset.word = word;
-    tile.textContent = word;
+    if (locked) {
+      tile.innerHTML = '<svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6z"/></svg>';
+      tile.appendChild(el('span', 'lk', MG_NAMES[cn.locks[word].type]));
+      tile.setAttribute('aria-label', 'Locked word. ' + MG_NAMES[cn.locks[word].type]);
+    } else {
+      tile.textContent = word;
+    }
     tile.style.setProperty('--n', Math.max(5, word.length));
     cnBoard.appendChild(tile);
   });
@@ -2217,6 +2436,10 @@ function cnSolveGroup(gi) {
 function cnToggle(tile) {
   if (cnBusy || cn.status !== 'playing') return;
   const word = tile.dataset.word;
+  if (cnIsLocked(word)) {
+    mgOpen(word);
+    return;
+  }
   const at = cn.selected.indexOf(word);
   if (at >= 0) {
     cn.selected.splice(at, 1);
@@ -2271,12 +2494,7 @@ async function cnSubmit() {
     await cnBounce(picked);
     cnSolveGroup(hit);
     cnSave();
-    // once three are found the last one is obvious, so reveal it for the player
-    if (cn.solved.length === 3) {
-      await sleep(700);
-      cnSolveGroup([0, 1, 2, 3].find(g => !cn.solved.includes(g)));
-    }
-    if (cn.solved.length === 4) cnWin();
+    await cnAutoFinish();
   } else {
     if (Math.max(...counts) === 3) toast('One away...', 1400);
     play('error');
@@ -2288,6 +2506,34 @@ async function cnSubmit() {
     cnSave();
     if (cn.mistakes >= CN_MAX_MISTAKES) await cnLose();
   }
+  cnBusy = false;
+}
+
+// once three groups are found the last is obvious, so it is revealed (unless it still has a locked word)
+async function cnAutoFinish() {
+  if (cn.solved.length === 3 && cnLocksLeft() === 0) {
+    await sleep(700);
+    cnSolveGroup([0, 1, 2, 3].find(g => !cn.solved.includes(g)));
+  }
+  if (cn.solved.length === 4) cnWin();
+}
+
+async function cnUnlock(word, revealed) {
+  if (cn.status !== 'playing' || cn.opened.includes(word)) return;
+  cnBusy = true;
+  cn.opened.push(word);
+  if (revealed) cn.reveals++;
+  cnSave();
+  cnRender();
+  const tile = cnBoard.querySelector('.cn-tile[data-word="' + word + '"]');
+  if (tile && !reduceMotion) {
+    tile.animate(
+      [{ transform: 'rotateY(90deg) scale(0.9)' }, { transform: 'rotateY(0) scale(1)' }],
+      { duration: 450, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }
+    );
+  }
+  await sleep(reduceMotion ? 0 : 450);
+  await cnAutoFinish();
   cnBusy = false;
 }
 
@@ -2319,6 +2565,7 @@ async function cnLose() {
 }
 
 function cnRecord(won) {
+  const cnStats = cnStatsAll[cn.mode];
   cnStats.played++;
   if (won) {
     cnStats.wins++;
@@ -2328,17 +2575,18 @@ function cnRecord(won) {
   } else {
     cnStats.streak = 0;
   }
-  store.set('cn-stats', cnStats);
+  store.set(CN_KEYS[cn.mode].stats, cnStats);
 }
 
 /* connections stats and sharing */
 
 function cnRenderStats() {
+  const cnStats = cnStatsAll[cn.mode];
   $('#cnPlayed').textContent = cnStats.played;
   $('#cnWin').textContent = cnStats.played ? Math.round(cnStats.wins / cnStats.played * 100) : 0;
   $('#cnStreak').textContent = cnStats.streak;
   $('#cnMax').textContent = cnStats.maxStreak;
-  $('#cnPuzzleLabel').textContent = 'Puzzle #' + (cn.id + 1);
+  $('#cnPuzzleLabel').textContent = 'Puzzle #' + (cn.id + 1) + (cn.mode === 'u' ? ' \u00B7 Unlocked (beta)' : '');
 
   const line = $('#cnResultLine');
   if (cn.status === 'won') {
@@ -2385,7 +2633,9 @@ function cnOpenStats() {
 
 function cnShareText() {
   const rows = cn.guesses.map(g => g.map(x => CN_EMOJI[x]).join('')).join('\n');
-  return 'Connections ∞\nPuzzle #' + (cn.id + 1) + '\n' + rows;
+  const head = 'Connections ∞' + (cn.mode === 'u' ? ' Unlocked (beta)' : '') + '\nPuzzle #' + (cn.id + 1) + '\n';
+  const peeks = cn.mode === 'u' && cn.reveals ? '\n🔓 ' + cn.reveals + (cn.reveals === 1 ? ' reveal' : ' reveals') : '';
+  return head + rows + peeks;
 }
 
 async function copyText(text) {
@@ -2412,7 +2662,7 @@ async function cnNewPuzzle() {
 
   const out = cnBoard.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: 'ease-in', fill: 'forwards' });
   await out.finished;
-  cn = cnFresh();
+  cn = cnFresh(cn.mode);
   cnRender();
   cnSave();
   out.cancel();
@@ -2432,27 +2682,68 @@ function cnValid(s) {
   if (left.size !== s.order.length) return false;
   if (!PUZZLES[s.id].every((g, gi) => s.solved.includes(gi) || g.words.every(w => left.has(w)))) return false;
   if (!Number.isInteger(s.mistakes) || s.mistakes < 0 || s.mistakes > CN_MAX_MISTAKES) return false;
+  if (s.opened !== undefined && !Array.isArray(s.opened)) return false;
+  if (s.reveals !== undefined && !Number.isInteger(s.reveals)) return false;
   return ['playing', 'won', 'lost'].includes(s.status);
+}
+
+// reads a saved game for a mode, or starts a new one
+function cnLoad(mode) {
+  const saved = store.get(CN_KEYS[mode].game, null);
+  if (!cnValid(saved)) {
+    const game = cnFresh(mode);
+    cn = game;
+    cnSave();
+    return game;
+  }
+  const game = cnAttach(saved, mode);
+  game.opened = game.opened.filter(w => typeof w === 'string');
+  // a game that was cut off while revealing the answers gets finished
+  if (game.status !== 'playing' || game.solved.length === 4) {
+    [0, 1, 2, 3].forEach(g => { if (!game.solved.includes(g)) game.solved.push(g); });
+    game.order = [];
+    if (game.status === 'playing') game.status = 'won';
+  }
+  return game;
+}
+
+function cnSyncMode() {
+  const on = cn.mode === 'u';
+  $('#cnUnlockSwitch').setAttribute('aria-checked', on);
+  $('#cnBeta').classList.toggle('hidden', !on);
+  $('.cn-sub').textContent = on ? 'Unlock the words, then make four groups!' : 'Create four groups of four!';
+}
+
+async function cnSetMode(on) {
+  const mode = on ? 'u' : 'n';
+  if (cnBusy || cn.mode === mode) return;
+  cnBusy = true;
+  clearTimeout(cnTimer);
+  cnSettings.unlock = on;
+  store.set('cn-settings', cnSettings);
+  closeModal(cnSettingsModal);
+  clearToasts();
+  cnSave();
+  const out = cnBoard.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: 'ease-in', fill: 'forwards' });
+  await out.finished;
+  cn = cnLoad(mode);
+  cnRender();
+  cnSyncMode();
+  out.cancel();
+  await cnBoard.animate(
+    [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'translateY(0)' }],
+    { duration: 300, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }
+  ).finished;
+  cnBusy = false;
 }
 
 function initConnections() {
   const dots = $('#cnDots');
   for (let i = 0; i < CN_MAX_MISTAKES; i++) dots.appendChild(document.createElement('span'));
 
-  const saved = store.get('cn-game', null);
-  if (cnValid(saved)) {
-    cn = Object.assign({ selected: [] }, saved);
-    // a game that was cut off while revealing the answers gets finished
-    if (cn.status !== 'playing' || cn.solved.length === 4) {
-      [0, 1, 2, 3].forEach(g => { if (!cn.solved.includes(g)) cn.solved.push(g); });
-      cn.order = [];
-      if (cn.status === 'playing') cn.status = 'won';
-    }
-  } else {
-    cn = cnFresh();
-    cnSave();
-  }
+  cn = cnLoad(cnSettings.unlock ? 'u' : 'n');
   cnRender();
+  cnSyncMode();
 
   cnBoard.addEventListener('click', e => {
     const tile = e.target.closest('.cn-tile');
@@ -2467,6 +2758,9 @@ function initConnections() {
   $('#cnShareBtn').addEventListener('click', cnShare);
   $('#cnStatsBtn').addEventListener('click', cnOpenStats);
   $('#cnHelpBtn').addEventListener('click', () => openModal(cnHelpModal));
+  $('#cnSettingsBtn').addEventListener('click', () => openModal(cnSettingsModal));
+  $('#cnUnlockSwitch').addEventListener('click', () => cnSetMode(cn.mode !== 'u'));
+  mgRevealBtn.addEventListener('click', mgRevealClick);
 }
 
 /* =====================================================================
@@ -2482,7 +2776,8 @@ const APP_IDS = { hub: 'hub', wordle: 'wordleApp', conn: 'connApp' };
 function renderHub() {
   const wordlePlayed = [4, 5, 6, 7].reduce((n, len) => n + loadStats(len).played, 0);
   $('#chipWordle').textContent = wordlePlayed ? 'Played ' + wordlePlayed : 'New';
-  $('#chipConn').textContent = cnStats.played ? 'Played ' + cnStats.played : 'New';
+  const connPlayed = cnStatsAll.n.played + cnStatsAll.u.played;
+  $('#chipConn').textContent = connPlayed ? 'Played ' + connPlayed : 'New';
 }
 
 function enterWordle() {
@@ -2534,6 +2829,758 @@ function initHub() {
     settings.light = !settings.light;
     saveSettings();
   });
+}
+
+/* =====================================================================
+   Unlocked mode (beta): locked words and the mini-games that open them
+   ===================================================================== */
+
+const CROSS_TARGETS = [
+  'FETA|Salty Greek cheese', 'CREEPER|Green Minecraft mob that explodes', 'HUMMUS|Chickpea dip',
+  'WAFFLE|Breakfast treat with a grid pattern', 'SALMON|Pink fish that swims upstream', 'POODLE|Curly-haired dog',
+  'AUGUST|Month after July', 'TRUMPET|Brass instrument with three valves', 'MAPLE|Tree that gives syrup',
+  'BRAZIL|Biggest country in South America', 'HOCKEY|Sport played on ice with a puck', "MARGE|Homer Simpson's wife",
+  'SHEEP|Animal that gives wool', 'GOOGLE|Popular search engine', 'KITCHEN|Room where you cook',
+  'TRIANGLE|Shape with three sides', 'HISTORY|School class about the past', 'SCARF|Wraps around your neck in winter',
+  'DIAMOND|Hard, shiny gem', 'SATURN|Planet with big rings', 'BANANA|Long yellow fruit',
+  'YACHT|Fancy boat', 'KIDNEY|Organ that filters blood', 'LIZARD|Small reptile with four legs',
+  'SLICE|A piece of pizza', 'TEMPO|Speed of the music', 'PITCHER|Baseball player who throws the ball',
+  'AUTUMN|Another word for fall', 'MONOPOLY|Board game with Boardwalk and Park Place', 'PYTHON|Big snake or a coding language',
+  'BAGUETTE|Long French bread', 'FIREFOX|Browser with a fox logo', 'VIOLET|Purple flower',
+  'MOZART|Composer who wrote The Magic Flute', 'APOLLO|NASA moon program', 'WRENCH|Tool for turning bolts',
+  'DENIM|Fabric used for jeans', 'COCO|Pixar movie about music and the Day of the Dead', 'OUNCE|One sixteenth of a pound',
+  'LOBSTER|Red sea creature with big claws', 'THYME|Herb that sounds like a time', 'GARFIELD|Orange cat who loves lasagna',
+  'HULU|Streaming site with a green logo'
+];
+
+const CROSS_BANK = [
+  'CAT|Pet that purrs', 'MOON|Lights up the night sky', 'STAR|Twinkles at night', 'TREE|Has branches and leaves',
+  'RAIN|Water falling from clouds', 'SNOW|Cold white flakes', 'WIND|Moving air', 'FIRE|Hot and flickering',
+  'WATER|You drink it', 'EARTH|Our planet', 'OCEAN|Big body of salt water', 'RIVER|Flows to the sea',
+  'LAKE|Water surrounded by land', 'HILL|Smaller than a mountain', 'ROAD|Cars drive on it', 'TRAIN|Runs on tracks',
+  'PLANE|Flies in the sky', 'BOAT|Floats on water', 'HOUSE|Where people live', 'DOOR|You open it to go in',
+  'CLOCK|Tells the time', 'CHAIR|You sit on it', 'TABLE|Dinner goes on it', 'BOOK|You read it',
+  'PAPER|Thin sheet to write on', 'PENCIL|Write with it, then erase', 'BREAD|Toast starts as this', 'CHEESE|Made from milk',
+  'APPLE|Red or green fruit', 'GRAPE|Wine starts with it', 'LEMON|Sour yellow fruit', 'PEACH|Fuzzy summer fruit',
+  'PIZZA|Round Italian pie', 'PASTA|Spaghetti or penne', 'RICE|Small white grains', 'SOUP|Eaten with a spoon',
+  'SALAD|Bowl of greens', 'SUGAR|Sweet white stuff', 'HONEY|Made by bees', 'BUTTER|Spread for toast',
+  'MILK|Cows give it', 'JUICE|Squeezed from fruit', 'COFFEE|Morning drink with caffeine', 'SMILE|Happy look',
+  'HAPPY|Feeling good', 'ANGRY|Very mad', 'SLEEP|Rest at night', 'DREAM|Seen while sleeping',
+  'MUSIC|Songs and beats', 'PIANO|Instrument with keys', 'DRUM|You hit it for a beat', 'SONG|Sung tune',
+  'DANCE|Move to the beat', 'PAINT|Color for walls', 'COLOR|Red, blue or green', 'GREEN|Color of grass',
+  'BLACK|Color of coal', 'WHITE|Color of snow', 'BROWN|Color of chocolate', 'ROBOT|Machine that can move',
+  'PHONE|You call with it', 'SCREEN|Shows a picture', 'MOUSE|Small rodent or computer tool', 'LIGHT|Opposite of dark',
+  'NIGHT|When it is dark', 'SUMMER|Hottest season', 'WINTER|Coldest season', 'SPRING|Season for flowers',
+  'BEACH|Sandy shore', 'SAND|Found on a beach', 'SHELL|Home of a snail', 'FISH|Swims in water',
+  'WHALE|Biggest ocean animal', 'SHARK|Fish with sharp teeth', 'EAGLE|Bird of prey', 'HORSE|You can ride it',
+  'TIGER|Big striped cat', 'LION|King of the jungle', 'BEAR|Sleeps all winter', 'ZEBRA|Striped animal',
+  'SNAKE|Slithering reptile', 'FROG|Hops and croaks', 'DUCK|Quacks', 'GOAT|Climbs hills and eats anything',
+  'SPIDER|Has eight legs and a web', 'WORM|Wiggles in the dirt', 'FLOWER|Blooms in spring', 'ROSE|Red flower with thorns',
+  'GRASS|Green lawn', 'LEAF|Part of a tree', 'SEED|A plant starts as this', 'NURSE|Works at a hospital',
+  'PILOT|Flies a plane', 'CHEF|Cooks for a living', 'KING|Wears a crown', 'QUEEN|Rules a kingdom',
+  'PRINCE|Son of a king', 'CASTLE|Where a king lives', 'KNIGHT|Wears armor', 'DRAGON|Fire-breathing monster',
+  'GHOST|Spooky spirit', 'WITCH|Rides a broom', 'MAGIC|Tricks with a wand', 'GAME|Played for fun',
+  'SOCCER|Sport with a round ball and goals', 'TENNIS|Played with rackets', 'GOLF|Played with clubs', 'SWIM|Move through water',
+  'JUMP|Leave the ground', 'SCHOOL|Where kids learn', 'MATH|Class with numbers', 'SCIENCE|Class with experiments',
+  'ANIMAL|Dog or cat, for example', 'PLANET|Orbits a star', 'SPACE|Where the stars are', 'ROCKET|Blasts off',
+  'TOWER|Tall, narrow building', 'BRIDGE|Crosses a river', 'STREET|City road', 'GARDEN|Where flowers grow',
+  'FOREST|Lots of trees', 'DESERT|Dry and sandy', 'ISLAND|Land with water all around', 'MOUNTAIN|Very tall hill',
+  'PIRATE|Sails the seas looking for treasure', 'TREASURE|Gold and jewels', 'CANDY|Sweet treat', 'COOKIE|Baked sweet snack',
+  'CAKE|Birthday dessert', 'PIE|Apple dessert', 'TOAST|Browned bread', 'SANDWICH|Two slices with a filling',
+  'PARTY|Fun gathering', 'GIFT|Present', 'SHIRT|Worn on your top half', 'SHOES|Worn on your feet',
+  'HAT|Worn on your head', 'SOCKS|Worn inside shoes', 'COAT|Warm outer layer', 'GLOVE|Worn on a hand',
+  'MIRROR|Shows your reflection', 'WINDOW|Glass you look through', 'STAIRS|Steps up to the next floor', 'LADDER|Climb it to reach high places'
+];
+
+const MG_NAMES = { wordle: 'Wordle', anagram: 'Anagram', search: 'Word Search', crossword: 'Crossword' };
+const MG_FIT = {
+  wordle: w => w.length >= 4 && w.length <= 7,
+  anagram: w => w.length >= 4 && w.length <= 8,
+  search: w => w.length >= 3 && w.length <= 7
+};
+const MG_PERMS = [
+  ['wordle', 'anagram', 'search'], ['wordle', 'search', 'anagram'], ['anagram', 'wordle', 'search'],
+  ['anagram', 'search', 'wordle'], ['search', 'wordle', 'anagram'], ['search', 'anagram', 'wordle']
+];
+
+const splitEntry = s => { const [word, clue] = s.split('|'); return { word, clue }; };
+const CROSS_T = CROSS_TARGETS.map(splitEntry);
+const CROSS_B = CROSS_BANK.map(splitEntry);
+
+function mulberry32(seed) {
+  return function () {
+    seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function seededShuffle(list, rand) {
+  const a = list.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function wordSeed(id, word) {
+  let h = id * 1000;
+  for (const ch of word) h = (h * 31 + ch.charCodeAt(0)) | 0;
+  return h;
+}
+
+// every puzzle gets four locks, one per group: the crossword word is fixed, the rest are picked by a seed
+function cnMakeLocks(id) {
+  const rand = mulberry32(id * 7919 + 13);
+  const groups = PUZZLES[id];
+  const cross = CROSS_T[id];
+  const crossGroup = groups.findIndex(g => g.words.includes(cross.word));
+  const others = [0, 1, 2, 3].filter(g => g !== crossGroup);
+  const locks = {};
+  locks[cross.word] = { type: 'crossword', group: crossGroup, clue: cross.clue };
+
+  for (const order of seededShuffle(MG_PERMS, rand)) {
+    const pools = others.map((g, i) => groups[g].words.filter(MG_FIT[order[i]]));
+    if (pools.some(p => !p.length)) continue;
+    others.forEach((g, i) => {
+      const pool = pools[i];
+      locks[pool[Math.floor(rand() * pool.length)]] = { type: order[i], group: g };
+    });
+    return locks;
+  }
+  throw new Error('no lock layout for puzzle ' + id);
+}
+
+/* ---------- shared bits ---------- */
+
+const mgModal = $('#mgModal');
+const mgBody = $('#mgBody');
+const mgInfo = $('#mgInfo');
+const mgTitle = $('#mgTitle');
+const mgRevealBtn = $('#mgReveal');
+let mg = null;
+let mgArmTimer = null;
+
+function mgActive() {
+  return !!mg && !mg.done && mgModal.classList.contains('open');
+}
+
+function el(tag, cls, text) {
+  const node = document.createElement(tag);
+  if (cls) node.className = cls;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+function mgKeyboard(m, withEnter) {
+  const kb = el('div', 'mg-kb');
+  m.keys = {};
+  ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'].forEach((letters, i) => {
+    const row = el('div', 'mg-kr');
+    const add = (key, label, wide) => {
+      const b = el('button', 'mg-key' + (wide ? ' wide' : ''), label);
+      b.dataset.key = key;
+      b.tabIndex = -1;
+      row.appendChild(b);
+      return b;
+    };
+    if (i === 2 && withEnter) add('enter', 'Enter', true);
+    for (const ch of letters) m.keys[ch] = add(ch, ch);
+    if (i === 2) add('back', '⌫', true);
+    kb.appendChild(row);
+  });
+  kb.addEventListener('click', e => {
+    const k = e.target.closest('.mg-key');
+    if (k && mgActive()) m.onKey(k.dataset.key);
+  });
+  return kb;
+}
+
+async function mgShake(node) {
+  if (reduceMotion) return;
+  const dx = [0, -2, 4, -6, 6, -6, 6, -4, 2, 0];
+  await node.animate(
+    dx.map((x, i) => ({ transform: 'translateX(' + x + 'px)', offset: i / (dx.length - 1) })),
+    { duration: 450, easing: 'ease-in-out' }
+  ).finished;
+}
+
+function mgOpen(word) {
+  const lock = cn.locks[word];
+  clearTimeout(mgArmTimer);
+  mg = { word, type: lock.type, done: false, onKey: null, reveal: null, armed: false };
+  mgTitle.textContent = MG_NAMES[lock.type];
+  mgBody.innerHTML = '';
+  mgRevealBtn.textContent = 'Reveal word';
+  const build = { wordle: mgWordle, anagram: mgAnagram, search: mgSearch, crossword: mgCrossword };
+  build[lock.type](mg, lock);
+  openModal(mgModal);
+}
+
+async function mgFinish(revealed) {
+  if (!mg || mg.done) return;
+  mg.done = true;
+  const word = mg.word;
+  play(revealed ? 'hint' : 'win');
+  await sleep(revealed ? 1100 : 800);
+  closeModal(mgModal);
+  cnUnlock(word, revealed);
+}
+
+function mgRevealClick() {
+  if (!mgActive()) return;
+  if (!mg.armed) {
+    mg.armed = true;
+    mgRevealBtn.textContent = 'Tap again to reveal';
+    clearTimeout(mgArmTimer);
+    mgArmTimer = setTimeout(() => {
+      if (mg) mg.armed = false;
+      mgRevealBtn.textContent = 'Reveal word';
+    }, 2500);
+    return;
+  }
+  clearTimeout(mgArmTimer);
+  mg.reveal();
+  mgFinish(true);
+}
+
+document.addEventListener('keydown', e => {
+  if (!mgActive() || !mg.onKey || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    mg.onKey('enter');
+  } else if (e.key === 'Backspace') {
+    mg.onKey('back');
+  } else if (/^[a-zA-Z]$/.test(e.key)) {
+    mg.onKey(e.key.toLowerCase());
+  }
+});
+
+/* ---------- wordle ---------- */
+
+function mgWordle(m) {
+  const len = m.word.length;
+  const answer = m.word.toLowerCase();
+  const valid = wordsFor(len).valid;
+  mgInfo.textContent = 'Guess the ' + len + '-letter word in 6 tries.';
+
+  const grid = el('div', 'mg-wgrid');
+  grid.style.setProperty('--n', len);
+  const rows = [];
+  for (let r = 0; r < 6; r++) {
+    const row = el('div', 'mg-row');
+    const cells = [];
+    for (let c = 0; c < len; c++) {
+      const cell = el('div', 'mg-cell');
+      row.appendChild(cell);
+      cells.push(cell);
+    }
+    grid.appendChild(row);
+    rows.push({ row, cells });
+  }
+  mgBody.append(grid, mgKeyboard(m, true));
+
+  let r = 0;
+  let cur = '';
+  let busy = false;
+
+  const paint = () => {
+    rows[r].cells.forEach((cell, i) => {
+      cell.textContent = cur[i] || '';
+      cell.dataset.state = cur[i] ? 'tbd' : '';
+    });
+  };
+
+  const rank = { absent: 1, present: 2, correct: 3 };
+  const colorKey = (ch, state) => {
+    const k = m.keys[ch];
+    if (!k) return;
+    if (!k.dataset.state || rank[state] > rank[k.dataset.state]) k.dataset.state = state;
+  };
+
+  const fill = (rowIndex, word, result) => {
+    rows[rowIndex].cells.forEach((cell, i) => {
+      cell.textContent = word[i];
+      cell.dataset.state = result[i];
+    });
+  };
+
+  async function submit() {
+    if (cur.length < len) {
+      toast('Not enough letters');
+      await mgShake(rows[r].row);
+      return;
+    }
+    if (cur !== answer && !valid.has(cur)) {
+      toast('Not in word list');
+      await mgShake(rows[r].row);
+      return;
+    }
+    busy = true;
+    const guess = cur;
+    const result = evaluate(guess, answer);
+    const mine = rows[r];
+    for (let i = 0; i < len; i++) {
+      const cell = mine.cells[i];
+      if (!reduceMotion) {
+        await cell.animate([{ transform: 'scaleY(1)' }, { transform: 'scaleY(0)' }], { duration: 140, easing: 'ease-in' }).finished;
+      }
+      cell.dataset.state = result[i];
+      if (!reduceMotion) {
+        cell.animate([{ transform: 'scaleY(0)' }, { transform: 'scaleY(1)' }], { duration: 140, easing: 'ease-out' });
+        await sleep(110);
+      }
+    }
+    result.forEach((state, i) => colorKey(guess[i], state));
+    if (guess === answer) {
+      if (!reduceMotion) {
+        mine.cells.forEach((cell, i) => cell.animate(
+          [{ transform: 'translateY(0)' }, { transform: 'translateY(-10px)' }, { transform: 'translateY(0)' }],
+          { duration: 400, delay: i * 70, easing: 'ease-in-out' }
+        ));
+      }
+      mgFinish(false);
+      return;
+    }
+    r++;
+    cur = '';
+    if (r === 6) {
+      toast(answer.toUpperCase(), 2000);
+      mgFinish(true);
+      return;
+    }
+    busy = false;
+  }
+
+  m.onKey = key => {
+    if (busy) return;
+    if (key === 'enter') submit();
+    else if (key === 'back') { cur = cur.slice(0, -1); paint(); }
+    else if (cur.length < len) { cur += key; paint(); }
+  };
+
+  m.reveal = () => {
+    busy = true;
+    if (r < 6) fill(r, answer, Array(len).fill('correct'));
+  };
+}
+
+/* ---------- anagram ---------- */
+
+function mgAnagram(m) {
+  const word = m.word;
+  const len = word.length;
+  const rand = mulberry32(wordSeed(cn.id, word));
+  let letters = word.split('');
+  for (let tries = 0; tries < 12; tries++) {
+    letters = seededShuffle(word.split(''), rand);
+    if (letters.join('') !== word) break;
+  }
+  mgInfo.textContent = 'Unscramble the ' + len + ' letters to spell the word.';
+
+  const slots = el('div', 'mg-slots');
+  const bank = el('div', 'mg-bank');
+  slots.style.setProperty('--n', len);
+  bank.style.setProperty('--n', len);
+  const slotEls = [];
+  for (let i = 0; i < len; i++) {
+    const s = el('button', 'mg-slot');
+    s.dataset.i = i;
+    slots.appendChild(s);
+    slotEls.push(s);
+  }
+  const tileEls = letters.map((ch, i) => {
+    const t = el('button', 'mg-atile', ch);
+    t.dataset.i = i;
+    bank.appendChild(t);
+    return t;
+  });
+  mgBody.append(slots, bank);
+
+  const picked = [];
+  let busy = false;
+
+  const paint = () => {
+    slotEls.forEach((s, i) => { s.textContent = picked[i] !== undefined ? letters[picked[i]] : ''; });
+    tileEls.forEach((t, i) => t.classList.toggle('used', picked.includes(i)));
+  };
+
+  async function check() {
+    if (picked.length < len) return;
+    const text = picked.map(i => letters[i]).join('');
+    busy = true;
+    if (text === word) {
+      slotEls.forEach(s => s.classList.add('ok'));
+      if (!reduceMotion) {
+        slotEls.forEach((s, i) => s.animate(
+          [{ transform: 'translateY(0)' }, { transform: 'translateY(-8px)' }, { transform: 'translateY(0)' }],
+          { duration: 350, delay: i * 60, easing: 'ease-in-out' }
+        ));
+      }
+      mgFinish(false);
+      return;
+    }
+    await mgShake(slots);
+    picked.length = 0;
+    paint();
+    busy = false;
+  }
+
+  const add = i => {
+    if (busy || picked.includes(i) || picked.length >= len) return;
+    picked.push(i);
+    paint();
+    play('key');
+    check();
+  };
+
+  bank.addEventListener('click', e => {
+    const t = e.target.closest('.mg-atile');
+    if (t) add(+t.dataset.i);
+  });
+  slots.addEventListener('click', e => {
+    const s = e.target.closest('.mg-slot');
+    if (!s || busy) return;
+    const at = +s.dataset.i;
+    if (at < picked.length) { picked.splice(at, 1); paint(); }
+  });
+
+  m.onKey = key => {
+    if (busy) return;
+    if (key === 'back') { picked.pop(); paint(); return; }
+    if (key.length !== 1) return;
+    const i = letters.findIndex((ch, n) => ch.toLowerCase() === key && !picked.includes(n));
+    if (i >= 0) add(i);
+  };
+
+  m.reveal = () => {
+    busy = true;
+    slotEls.forEach((s, i) => { s.textContent = word[i]; s.classList.add('ok'); });
+    tileEls.forEach(t => t.classList.add('used'));
+  };
+}
+
+/* ---------- word search ---------- */
+
+const SEARCH_DIRS = [[0, 1], [1, 0], [1, 1], [-1, 1], [0, -1], [-1, 0], [-1, -1], [1, -1]];
+const FILLER = 'EEEEEAAAAIIIOOOUUTTTNNNRRRSSSLLLDDCCHHMMPPBBGGYYFKWVXZJQ';
+
+function searchCount(grid, N, word) {
+  let found = 0;
+  for (let r = 0; r < N; r++) {
+    for (let c = 0; c < N; c++) {
+      for (const [dr, dc] of SEARCH_DIRS) {
+        let ok = true;
+        for (let k = 0; k < word.length && ok; k++) {
+          const rr = r + dr * k;
+          const cc = c + dc * k;
+          if (rr < 0 || cc < 0 || rr >= N || cc >= N || grid[rr][cc] !== word[k]) ok = false;
+        }
+        if (ok) found++;
+      }
+    }
+  }
+  return found;
+}
+
+function searchGrid(word, rand, N) {
+  for (let tries = 0; tries < 40; tries++) {
+    const grid = Array.from({ length: N }, () => Array(N).fill(''));
+    const [dr, dc] = SEARCH_DIRS[Math.floor(rand() * 8)];
+    const spots = [];
+    for (let r = 0; r < N; r++) {
+      for (let c = 0; c < N; c++) {
+        const er = r + dr * (word.length - 1);
+        const ec = c + dc * (word.length - 1);
+        if (er >= 0 && ec >= 0 && er < N && ec < N) spots.push([r, c]);
+      }
+    }
+    const [sr, sc] = spots[Math.floor(rand() * spots.length)];
+    for (let k = 0; k < word.length; k++) grid[sr + dr * k][sc + dc * k] = word[k];
+    for (let r = 0; r < N; r++) {
+      for (let c = 0; c < N; c++) {
+        if (!grid[r][c]) grid[r][c] = FILLER[Math.floor(rand() * FILLER.length)];
+      }
+    }
+    // the hidden word should only appear once
+    if (searchCount(grid, N, word) === 1) return { grid, start: [sr, sc], dir: [dr, dc] };
+  }
+  throw new Error('could not build a grid for ' + word);
+}
+
+function mgSearch(m) {
+  const word = m.word;
+  const N = 7;
+  const rand = mulberry32(wordSeed(cn.id, word));
+  const made = searchGrid(word, rand, N);
+  mgInfo.textContent = 'Find the hidden ' + word.length + '-letter word. Drag across the letters.';
+
+  const gridEl = el('div', 'mg-sgrid');
+  gridEl.style.setProperty('--n', N);
+  const cellEls = [];
+  for (let r = 0; r < N; r++) {
+    for (let c = 0; c < N; c++) {
+      const cell = el('div', 'mg-scell', made.grid[r][c]);
+      cell.dataset.r = r;
+      cell.dataset.c = c;
+      gridEl.appendChild(cell);
+      cellEls.push(cell);
+    }
+  }
+  mgBody.appendChild(gridEl);
+
+  const at = (r, c) => cellEls[r * N + c];
+  let anchor = null;
+  let end = null;
+  let dragging = false;
+
+  const lineBetween = (a, b) => {
+    const dr = b.r - a.r;
+    const dc = b.c - a.c;
+    if (!(dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc))) return null;
+    const n = Math.max(Math.abs(dr), Math.abs(dc)) + 1;
+    const sr = Math.sign(dr);
+    const sc = Math.sign(dc);
+    return Array.from({ length: n }, (_, k) => ({ r: a.r + sr * k, c: a.c + sc * k }));
+  };
+
+  const show = line => {
+    cellEls.forEach(c => c.classList.remove('pick'));
+    if (line) line.forEach(p => at(p.r, p.c).classList.add('pick'));
+  };
+
+  const cellFromEvent = e => {
+    const rect = gridEl.getBoundingClientRect();
+    if (rect.width) {
+      const c = Math.floor((e.clientX - rect.left) / rect.width * N);
+      const r = Math.floor((e.clientY - rect.top) / rect.height * N);
+      if (r >= 0 && c >= 0 && r < N && c < N) return { r, c };
+      return null;
+    }
+    const t = e.target.closest && e.target.closest('.mg-scell');
+    return t ? { r: +t.dataset.r, c: +t.dataset.c } : null;
+  };
+
+  async function judge(line) {
+    const text = line.map(p => made.grid[p.r][p.c]).join('');
+    if (text === word || text.split('').reverse().join('') === word) {
+      line.forEach(p => at(p.r, p.c).classList.add('found'));
+      show(null);
+      line.forEach(p => at(p.r, p.c).classList.add('found'));
+      if (!reduceMotion) {
+        line.forEach((p, i) => at(p.r, p.c).animate(
+          [{ transform: 'scale(1)' }, { transform: 'scale(1.18)' }, { transform: 'scale(1)' }],
+          { duration: 350, delay: i * 50, easing: 'ease-in-out' }
+        ));
+      }
+      mgFinish(false);
+      return;
+    }
+    line.forEach(p => at(p.r, p.c).classList.add('bad'));
+    await sleep(260);
+    line.forEach(p => at(p.r, p.c).classList.remove('bad'));
+    show(null);
+  }
+
+  gridEl.addEventListener('pointerdown', e => {
+    if (!mgActive()) return;
+    const cell = cellFromEvent(e);
+    if (!cell) return;
+    e.preventDefault();
+    if (anchor && (anchor.r !== cell.r || anchor.c !== cell.c)) {
+      const line = lineBetween(anchor, cell);
+      if (line) {
+        anchor = null;
+        judge(line);
+        return;
+      }
+    }
+    anchor = cell;
+    end = cell;
+    dragging = true;
+    show([cell]);
+    play('key');
+  });
+
+  gridEl.addEventListener('pointermove', e => {
+    if (!dragging || !mgActive()) return;
+    const cell = cellFromEvent(e);
+    if (!cell) return;
+    const line = lineBetween(anchor, cell);
+    if (line) {
+      end = cell;
+      show(line);
+    }
+  });
+
+  const release = () => {
+    if (!dragging) return;
+    dragging = false;
+    if (anchor && end && (anchor.r !== end.r || anchor.c !== end.c)) {
+      const line = lineBetween(anchor, end);
+      anchor = null;
+      if (line) judge(line);
+    }
+  };
+  gridEl.addEventListener('pointerup', release);
+  gridEl.addEventListener('pointercancel', () => { dragging = false; });
+
+  m.reveal = () => {
+    show(null);
+    const [sr, sc] = made.start;
+    const [dr, dc] = made.dir;
+    for (let k = 0; k < word.length; k++) at(sr + dr * k, sc + dc * k).classList.add('found');
+  };
+}
+
+/* ---------- crossword ---------- */
+
+// lays the locked word across, then hangs a few short words down through some of its letters
+function crossLayout(id, word, clue) {
+  const rand = mulberry32(wordSeed(id, word) + 5);
+  const taken = new Set([].concat(...PUZZLES[id].map(g => g.words)));
+  const options = [];
+  for (let c = 0; c < word.length; c++) {
+    for (const b of CROSS_B) {
+      if (taken.has(b.word) || b.word === word || b.word.length < 3 || b.word.length > 6) continue;
+      for (let k = 0; k < b.word.length; k++) {
+        if (b.word[k] === word[c]) options.push({ c, k, b });
+      }
+    }
+  }
+  const picks = [];
+  for (const o of seededShuffle(options, rand)) {
+    if (picks.length === 3) break;
+    if (picks.every(p => Math.abs(p.c - o.c) >= 2 && p.b !== o.b)) picks.push(o);
+  }
+  const top = Math.max(0, ...picks.map(p => p.k));
+  const height = Math.max(top + 1, ...picks.map(p => top - p.k + p.b.word.length));
+  const entries = [{ dir: 'across', r: top, c: 0, word, clue }];
+  picks.sort((a, b) => a.c - b.c).forEach(p => {
+    entries.push({ dir: 'down', r: top - p.k, c: p.c, word: p.b.word, clue: p.b.clue });
+  });
+  // number the starting squares in reading order
+  const starts = [];
+  entries.forEach(e => { if (!starts.some(s => s.r === e.r && s.c === e.c)) starts.push({ r: e.r, c: e.c }); });
+  starts.sort((a, b) => a.r - b.r || a.c - b.c);
+  entries.forEach(e => { e.num = starts.findIndex(s => s.r === e.r && s.c === e.c) + 1; });
+  return { entries, width: word.length, height, top };
+}
+
+function mgCrossword(m, lock) {
+  const word = m.word;
+  const lay = crossLayout(cn.id, word, lock.clue);
+  mgInfo.textContent = 'Fill in the across word. The down words can help.';
+
+  const cs = Math.max(26, Math.min(44, Math.floor((Math.min(window.innerWidth, 500) - 72) / lay.width) - 3, Math.floor((window.innerHeight - 420) / lay.height) - 3));
+  const clueBar = el('div', 'mg-cluebar');
+  const gridEl = el('div', 'mg-xgrid');
+  gridEl.style.setProperty('--cs', cs + 'px');
+  gridEl.style.gridTemplateColumns = 'repeat(' + lay.width + ', var(--cs))';
+
+  const cells = {};
+  const key = (r, c) => r + ',' + c;
+  lay.entries.forEach(e => {
+    for (let k = 0; k < e.word.length; k++) {
+      const r = e.dir === 'down' ? e.r + k : e.r;
+      const c = e.dir === 'across' ? e.c + k : e.c;
+      if (!cells[key(r, c)]) cells[key(r, c)] = { r, c, letter: '', answer: e.word[k], el: null, entries: {} };
+      cells[key(r, c)].entries[e.dir] = e;
+    }
+  });
+  for (let r = 0; r < lay.height; r++) {
+    for (let c = 0; c < lay.width; c++) {
+      const cell = cells[key(r, c)];
+      if (!cell) { gridEl.appendChild(el('div', 'mg-xblank')); continue; }
+      const node = el('div', 'mg-xcell');
+      node.dataset.r = r;
+      node.dataset.c = c;
+      const start = lay.entries.find(e => e.r === r && e.c === c);
+      if (start) node.appendChild(el('i', 'mg-xnum', start.num));
+      node.appendChild(el('span', 'mg-xl'));
+      cell.el = node;
+      gridEl.appendChild(node);
+    }
+  }
+  mgBody.append(clueBar, gridEl, mgKeyboard(m, false));
+
+  const first = cells[key(lay.top, 0)];
+  let sel = first;
+  let dir = 'across';
+
+  const cellsOf = e => Array.from({ length: e.word.length }, (_, k) =>
+    cells[key(e.dir === 'down' ? e.r + k : e.r, e.dir === 'across' ? e.c + k : e.c)]);
+
+  const entryNow = () => sel.entries[dir] || sel.entries[dir === 'across' ? 'down' : 'across'];
+
+  const paint = () => {
+    const now = entryNow();
+    dir = now.dir;
+    Object.values(cells).forEach(c => {
+      c.el.classList.remove('act', 'sel');
+      c.el.querySelector('.mg-xl').textContent = c.letter;
+    });
+    cellsOf(now).forEach(c => c.el.classList.add('act'));
+    sel.el.classList.add('sel');
+    clueBar.textContent = now.num + ' ' + (now.dir === 'across' ? 'Across' : 'Down') + ': ' + now.clue;
+    lay.entries.forEach(e => {
+      const done = cellsOf(e).every(c => c.letter === c.answer);
+      cellsOf(e).forEach(c => { if (done) c.el.classList.add('ok'); });
+    });
+  };
+
+  const step = (cell, delta) => {
+    const now = entryNow();
+    const list = cellsOf(now);
+    const i = list.indexOf(cell) + delta;
+    return list[i] || cell;
+  };
+
+  gridEl.addEventListener('click', e => {
+    const node = e.target.closest('.mg-xcell');
+    if (!node || !mgActive()) return;
+    const cell = cells[key(+node.dataset.r, +node.dataset.c)];
+    if (cell === sel) {
+      const other = dir === 'across' ? 'down' : 'across';
+      if (cell.entries[other]) dir = other;
+    } else {
+      sel = cell;
+      if (!cell.entries[dir]) dir = dir === 'across' ? 'down' : 'across';
+    }
+    paint();
+  });
+
+  m.onKey = k => {
+    if (k === 'enter') return;
+    if (k === 'back') {
+      if (sel.letter) sel.letter = '';
+      else { sel = step(sel, -1); sel.letter = ''; }
+      paint();
+      return;
+    }
+    sel.letter = k.toUpperCase();
+    sel = step(sel, 1);
+    paint();
+    const across = cellsOf(lay.entries[0]);
+    if (across.every(c => c.letter === c.answer)) {
+      if (!reduceMotion) {
+        across.forEach((c, i) => c.el.animate(
+          [{ transform: 'translateY(0)' }, { transform: 'translateY(-8px)' }, { transform: 'translateY(0)' }],
+          { duration: 350, delay: i * 60, easing: 'ease-in-out' }
+        ));
+      }
+      mgFinish(false);
+    }
+  };
+
+  m.reveal = () => {
+    cellsOf(lay.entries[0]).forEach(c => { c.letter = c.answer; });
+    paint();
+  };
+
+  paint();
 }
 
 init();
