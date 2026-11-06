@@ -69,6 +69,66 @@
      "clue": "Sport played on ice"
     }
    ]
+  },
+  "2026-11-06": {
+   "groups": [
+    {
+     "title": "Thing You Need To Camp With",
+     "words": [
+      "TENT",
+      "SLEEPING BAG",
+      "FOOD",
+      "WATER"
+     ]
+    },
+    {
+     "title": "Sports played with a ball",
+     "words": [
+      "FOOTBALL",
+      "SOCCER",
+      "RUGBY",
+      "TENNIS"
+     ]
+    },
+    {
+     "title": "Type of Jokes",
+     "words": [
+      "KNOCK KNOCK",
+      "NOT",
+      "ONE-LINER",
+      "OBSERVATIONAL"
+     ]
+    },
+    {
+     "title": "Sports Played Without a Ball",
+     "words": [
+      "HOCKEY",
+      "WATER POLO",
+      "RUNNING",
+      "POLE VAULTING"
+     ]
+    }
+   ],
+   "hidden": false,
+   "locks": [
+    {
+     "word": "TENT",
+     "type": "wordle"
+    },
+    {
+     "word": "FOOTBALL",
+     "type": "anagram"
+    },
+    {
+     "word": "NOT",
+     "type": "search"
+    },
+    {
+     "word": "HOCKEY",
+     "type": "crossword",
+     "clue": "Sport played on ice"
+    }
+   ]
   }
  }
 }
