@@ -968,6 +968,413 @@ h1.cn-title { font-size: 1.9rem; }
 .burst-dot { position: fixed; width: 7px; height: 7px; border-radius: 50%; }
 
 .mg-scell.found, .mg-slot.ok, .mg-xcell.ok { box-shadow: 0 0 14px rgba(106, 170, 100, 0.55); }
+
+/* ---------- Sudoku ---------- */
+:root {
+  --sd-sel: #2f5d8a;
+  --sd-peer: #1c2530;
+  --sd-same: #36506e;
+  --sd-line: #6b6b6e;
+  --sd-user: #6fb3ff;
+  --sd-err: #ff6b6b;
+  --sd-err-bg: rgba(224, 80, 80, 0.28);
+}
+:root.light {
+  --sd-sel: #a9cdf2;
+  --sd-peer: #eaf1f8;
+  --sd-same: #c4d9ee;
+  --sd-line: #666;
+  --sd-user: #1a5fb4;
+  --sd-err: #c01c28;
+  --sd-err-bg: rgba(224, 80, 80, 0.22);
+}
+h1.sd-title { font-size: 1.9rem; }
+.hub-inner { max-width: 900px; }
+.hub-art-sd { display: grid; grid-template-columns: repeat(3, 26px); gap: 3px; }
+.hub-art-sd i {
+  display: grid;
+  place-items: center;
+  height: 26px;
+  border-radius: 3px;
+  background: var(--border);
+  color: var(--sub);
+  font-size: 0.85rem;
+  font-style: normal;
+}
+.hub-art-sd i.u { background: var(--sd-sel); color: var(--text); }
+.app.on .hub-card:nth-child(3) { animation-delay: 0.16s; }
+
+.sd-main {
+  --sd: clamp(240px, min(calc(100vw - 24px), calc(100vh - 51px - var(--dock) - 270px)), 460px);
+  --sd: clamp(240px, min(calc(100vw - 24px), calc(100dvh - 51px - var(--dock) - 270px)), 460px);
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 8px 12px 0;
+  height: calc(100vh - 51px - var(--dock));
+  height: calc(100dvh - 51px - var(--dock));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.sd-diff { display: flex; gap: 6px; }
+.sd-diff button {
+  height: 30px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--sub);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
+}
+.sd-diff button:active { transform: scale(0.95); }
+.sd-diff button.on { background: var(--text); border-color: var(--text); color: var(--bg); }
+.sd-info { display: flex; justify-content: space-between; width: var(--sd); font-size: 0.9rem; color: var(--sub); }
+.sd-info b { color: var(--text); }
+.sd-time { font-variant-numeric: tabular-nums; }
+
+.sd-board {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  width: var(--sd);
+  height: var(--sd);
+  border: 2px solid var(--sd-line);
+  container-type: inline-size;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.sd-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 5.4cqw;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.sd-cell:nth-child(9n + 3), .sd-cell:nth-child(9n + 6) { border-right: 2px solid var(--sd-line); }
+.sd-cell:nth-child(n + 19):nth-child(-n + 27), .sd-cell:nth-child(n + 46):nth-child(-n + 54) { border-bottom: 2px solid var(--sd-line); }
+.sd-cell.peer { background: var(--sd-peer); }
+.sd-cell.same { background: var(--sd-same); }
+.sd-cell.sel { background: var(--sd-sel); }
+.sd-cell.err { background: var(--sd-err-bg); }
+.sd-cell .v { font-weight: 500; line-height: 1; }
+.sd-cell.user .v { color: var(--sd-user); }
+.sd-cell.given .v { font-weight: 700; }
+.sd-cell.err .v { color: var(--sd-err); }
+.sd-notes {
+  position: absolute;
+  inset: 2px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  font-size: 2.2cqw;
+  color: var(--sub);
+  line-height: 1;
+}
+.sd-notes i { display: grid; place-items: center; font-style: normal; font-weight: 700; }
+
+.sd-tools { display: flex; justify-content: center; gap: 8px; width: var(--sd); }
+.sd-tool {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0 5px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--text);
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s, opacity 0.2s, transform 0.1s;
+}
+.sd-tool svg { width: 22px; height: 22px; fill: currentColor; }
+.sd-tool:active:not(:disabled) { transform: scale(0.94); }
+.sd-tool:disabled { opacity: 0.3; cursor: default; }
+.sd-tool.on { background: var(--border); }
+.sd-flag {
+  position: absolute;
+  top: 1px;
+  right: calc(50% - 30px);
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: var(--border);
+  color: var(--sub);
+  font-size: 0.55rem;
+  font-style: normal;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: background-color 0.2s, color 0.2s;
+}
+.sd-tool.on .sd-flag { background: var(--text); color: var(--bg); }
+
+.sd-pad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 5px; width: var(--sd); }
+.sd-num {
+  height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: var(--cn-tile);
+  color: var(--sd-user);
+  font-size: 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s, background-color 0.2s;
+}
+.sd-num:active:not(:disabled) { transform: scale(0.92); }
+.sd-num:disabled { opacity: 0.2; cursor: default; }
+
+.sd-best { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.sd-best div { display: flex; justify-content: space-between; padding: 8px 12px; border-radius: 4px; background: var(--border); font-size: 0.95rem; }
+.sd-best div.mine { background: var(--correct); color: #fff; }
+.sd-best b { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 380px) { .sd-num { height: 42px; font-size: 1.3rem; } }
+
+/* ---------- Mini Crossword ---------- */
+:root {
+  --mc-block: #2c2c2e;
+  --mc-pick: #ffda00;
+}
+:root.light { --mc-block: #151515; }
+h1.mc-title { font-size: 1.6rem; }
+.hub-cards { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.hub-art-mc { display: grid; grid-template-columns: repeat(3, 26px); gap: 3px; }
+.hub-art-mc i { height: 26px; border-radius: 3px; background: var(--border); }
+.hub-art-mc i.k { background: var(--mc-block); box-shadow: inset 0 0 0 1px var(--filled); }
+.hub-art-mc i.u { background: var(--mc-pick); }
+.app.on .hub-card:nth-child(4) { animation-delay: 0.24s; }
+
+.mc-main {
+  --mc: clamp(220px, min(calc(100vw - 24px), calc(100vh - 51px - var(--dock) - 400px)), 380px);
+  --mc: clamp(220px, min(calc(100vw - 24px), calc(100dvh - 51px - var(--dock) - 400px)), 380px);
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 6px 12px 0;
+  height: calc(100vh - 51px - var(--dock));
+  height: calc(100dvh - 51px - var(--dock));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.mc-time { font-size: 0.9rem; color: var(--sub); font-variant-numeric: tabular-nums; }
+.mc-cluebar {
+  display: flex;
+  align-items: stretch;
+  width: var(--mc);
+  min-height: 52px;
+  border-radius: 6px;
+  background: var(--sd-sel);
+  overflow: hidden;
+}
+.mc-arrow {
+  flex: none;
+  width: 38px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font-size: 1.7rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.mc-arrow:active { background: rgba(128, 128, 128, 0.3); }
+.mc-clue {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 2px;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+.mc-clue b { flex: none; min-width: 26px; text-align: center; }
+.mc-clue span { transition: opacity 0.15s; }
+
+.mc-board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  width: var(--mc);
+  height: var(--mc);
+  border: 2px solid var(--sd-line);
+  container-type: inline-size;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.mc-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--sd-line);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+.mc-cell.blk { background: var(--mc-block); cursor: default; }
+.mc-cell.word { background: var(--sd-sel); }
+.mc-cell.sel { background: var(--mc-pick); color: #000; }
+.mc-cell .n { position: absolute; top: 2px; left: 4px; font-size: 3.4cqw; font-weight: 700; opacity: 0.85; }
+.mc-cell .l { font-size: 10.5cqw; font-weight: 600; text-transform: uppercase; line-height: 1; }
+.mc-cell.rev .l { color: var(--sd-user); }
+.mc-cell.sel.rev .l { color: #1a4f9c; }
+.mc-cell.bad { background: var(--sd-err-bg); }
+.mc-cell.bad .l { color: var(--sd-err); text-decoration: line-through; }
+.mc-cell.sel.bad { background: var(--mc-pick); }
+
+.mc-tools { display: flex; justify-content: center; gap: 8px; width: var(--mc); }
+.mc-kb { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 6px; }
+
+.mc-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+.mc-list button {
+  display: flex;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--border);
+  color: var(--text);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+}
+.mc-list b { flex: none; min-width: 20px; }
+.mc-list button.done { opacity: 0.45; }
+
+/* ---------- daily puzzles and the editor ---------- */
+.hl { gap: 2px; }
+.card.daily { max-width: 440px; }
+.daily-today {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--border);
+  text-align: center;
+}
+.daily-today b { font-size: 1.15rem; }
+.daily-today .st { font-size: 0.85rem; color: var(--sub); }
+.daily-today .btn { align-self: center; min-width: 160px; flex: none; }
+.next-daily { margin: 12px 0 0; text-align: center; font-size: 0.85rem; color: var(--sub); font-variant-numeric: tabular-nums; }
+.daily-sub { margin-top: 4px; }
+.daily-list { display: flex; flex-direction: column; gap: 6px; max-height: 34vh; overflow-y: auto; margin-bottom: 8px; }
+.daily-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--border);
+  color: var(--text);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.15s, background-color 0.2s;
+}
+.daily-row:active { transform: scale(0.98); }
+.daily-row .st { font-size: 0.8rem; color: var(--sub); }
+.daily-row.won .st { color: var(--correct); font-weight: 700; }
+.daily-empty { padding: 10px; text-align: center; font-size: 0.85rem; color: var(--muted); }
+.daily-random { display: block; margin: 4px auto 0; padding: 8px 14px; border: 0; background: none; color: var(--muted); font-size: 0.8rem; text-decoration: underline; cursor: pointer; }
+
+h1.ed-title { font-size: 1.7rem; }
+.ed-main { width: 100%; max-width: 520px; margin: 0 auto; padding: 14px 16px calc(var(--dock) + 16px); height: calc(100vh - 51px); height: calc(100dvh - 51px); overflow-y: auto; }
+.ed-main h2 { margin: 0 0 6px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.04em; text-align: left; }
+.ed-note { margin: 0 0 12px; font-size: 0.85rem; color: var(--sub); }
+.ed-label { display: block; margin-bottom: 10px; font-size: 0.78rem; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: 0.05em; }
+.ed-input {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--filled);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+.ed-input:focus { outline: none; border-color: var(--text); }
+.ed-word { text-transform: lowercase; letter-spacing: 0.2em; font-size: 1.2rem; font-weight: 700; }
+.ed-wide { width: 100%; flex: none; margin-top: 4px; }
+.ed-help { margin-top: 14px; font-size: 0.85rem; color: var(--sub); }
+.ed-help summary { cursor: pointer; }
+.ed-help ol { margin: 8px 0 0; padding-left: 20px; line-height: 1.5; }
+.ed-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.8rem; color: var(--sub); }
+.ed-link { padding: 4px 6px; border: 0; background: none; color: var(--text); font-size: 0.8rem; text-decoration: underline; cursor: pointer; }
+.ed-tabs { display: flex; gap: 4px; margin-bottom: 14px; }
+.ed-tabs button { flex: 1; height: 36px; border: 1px solid var(--border); border-radius: 999px; background: none; color: var(--sub); font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+.ed-tabs button.on { background: var(--text); border-color: var(--text); color: var(--bg); }
+.ed-prev { display: flex; justify-content: center; gap: 5px; min-height: 52px; margin: 6px 0 4px; }
+.ed-prev .mg-cell { --ms: 46px; }
+.ed-msg { min-height: 1.3em; margin: 6px 0; font-size: 0.85rem; text-align: center; color: var(--sub); }
+.ed-msg.bad { color: var(--sd-err); }
+.ed-msg.good { color: var(--correct); }
+.ed-row { display: flex; gap: 8px; margin-top: 6px; }
+.ed-row .btn { flex: 1; }
+.ed-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.ed-grid input {
+  width: 100%;
+  height: 58px;
+  padding: 0 4px;
+  border: 1px solid var(--filled);
+  border-radius: 6px;
+  background: var(--cn-tile);
+  color: var(--cn-text);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+}
+.ed-grid input:focus { outline: none; border-color: var(--text); }
+.ed-board { margin-bottom: 10px; }
+.ed-board .cn-tile { font-size: 0.85rem; }
+.ed-board .cn-group { position: relative; }
+.ed-board .cn-group .x { position: absolute; top: 4px; right: 8px; padding: 2px 6px; border: 0; background: none; color: #000; font-size: 1rem; cursor: pointer; }
+.ed-maker { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; padding: 12px; border-radius: 8px; background: var(--border); }
+.ed-colors { display: flex; gap: 8px; }
+.ed-colors button { flex: 1; height: 34px; border: 3px solid transparent; border-radius: 6px; cursor: pointer; transition: transform 0.1s, border-color 0.15s, opacity 0.2s; }
+.ed-colors button.c0 { background: var(--cn-y); }
+.ed-colors button.c1 { background: var(--cn-g); }
+.ed-colors button.c2 { background: var(--cn-b); }
+.ed-colors button.c3 { background: var(--cn-p); }
+.ed-colors button.on { border-color: var(--text); transform: scale(1.06); }
+.ed-colors button:disabled { opacity: 0.2; cursor: default; }
+.ed-list { display: flex; flex-direction: column; gap: 8px; }
+.ed-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 8px; background: var(--border); }
+.ed-item .top { display: flex; justify-content: space-between; gap: 8px; font-size: 0.9rem; }
+.ed-item .tag { padding: 2px 8px; border-radius: 999px; background: var(--filled); color: #fff; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
+.ed-item .tag.soon { background: var(--present); }
+.ed-item .tag.live { background: var(--correct); }
+.ed-item .what { font-size: 0.85rem; color: var(--sub); overflow-wrap: anywhere; }
+.ed-item .acts { display: flex; gap: 6px; }
+.ed-item .acts button { flex: 1; height: 32px; border: 1px solid var(--filled); border-radius: 999px; background: none; color: var(--text); font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+.ed-item .acts button.armed { background: #c0392b; border-color: #c0392b; color: #fff; }
+.ed-board { --cn-h: 54px; }
+#edApp .btn:disabled { opacity: 0.35; cursor: default; }
 </style>
 </head>
 <body>
@@ -977,6 +1384,9 @@ h1.cn-title { font-size: 1.9rem; }
   <div class="hl">
     <button class="icon-btn" id="helpBtn" aria-label="How to play">
       <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+    </button>
+    <button class="icon-btn" id="wDailyBtn" aria-label="Daily puzzle">
+      <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
     </button>
   </div>
   <h1>Wordle<span class="inf">&#8734;</span></h1>
@@ -1036,6 +1446,30 @@ h1.cn-title { font-size: 1.9rem; }
         <div class="hub-desc">Sort 16 words into 4 hidden groups. Don't make 4 mistakes.</div>
         <div class="hub-chip" id="chipConn">New</div>
       </button>
+      <button class="hub-card" data-app="sudoku">
+        <div class="hub-art">
+          <div class="hub-art-sd">
+            <i>5</i><i>3</i><i class="u">4</i>
+            <i>6</i><i class="u">7</i><i>2</i>
+            <i class="u">1</i><i>9</i><i>8</i>
+          </div>
+        </div>
+        <div class="hub-name">Sudoku</div>
+        <div class="hub-desc">Fill the grid so every row, column and box has 1 to 9.</div>
+        <div class="hub-chip" id="chipSudoku">New</div>
+      </button>
+      <button class="hub-card" data-app="mini">
+        <div class="hub-art">
+          <div class="hub-art-mc">
+            <i class="u"></i><i></i><i class="k"></i>
+            <i></i><i></i><i></i>
+            <i class="k"></i><i></i><i></i>
+          </div>
+        </div>
+        <div class="hub-name">Mini Crossword</div>
+        <div class="hub-desc">A quick 5x5 crossword. Race the clock and beat your best time.</div>
+        <div class="hub-chip" id="chipMini">New</div>
+      </button>
     </div>
   </div>
 </div>
@@ -1046,6 +1480,9 @@ h1.cn-title { font-size: 1.9rem; }
     <div class="hl">
       <button class="icon-btn" id="cnHelpBtn" aria-label="How to play">
         <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+      </button>
+      <button class="icon-btn" id="cnDailyBtn" aria-label="Daily puzzle">
+        <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
       </button>
     </div>
     <h1 class="cn-title">Connections<span class="inf">&#8734;</span><span class="beta hidden" id="cnBeta">Beta</span></h1>
@@ -1154,6 +1591,271 @@ h1.cn-title { font-size: 1.9rem; }
     <p class="note"><b>Unlocked Mode (beta):</b> turn it on in settings. One word in each group is locked. Tap it to play a mini-game (Wordle, Anagram, Word Search or Crossword) and open it.</p>
     <p class="note">There's no daily limit. Hit <b>Next Puzzle</b> when you finish for a new one.</p>
   </div>
+</div>
+<!-- sudoku -->
+<div class="app" id="sdApp">
+  <header>
+    <div class="hl">
+      <button class="icon-btn" id="sdHelpBtn" aria-label="How to play">
+        <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+      </button>
+    </div>
+    <h1 class="sd-title">Sudoku<span class="inf">&#8734;</span></h1>
+    <div class="hr">
+      <button class="icon-btn" id="sdStatsBtn" aria-label="Statistics">
+        <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"/></svg>
+      </button>
+    </div>
+  </header>
+  <main class="sd-main">
+    <div class="sd-diff" id="sdDiff">
+      <button data-diff="easy">Easy</button>
+      <button data-diff="medium">Medium</button>
+      <button data-diff="hard">Hard</button>
+    </div>
+    <div class="sd-info">
+      <span>Mistakes: <b id="sdMist">0</b></span>
+      <span class="sd-time" id="sdTimer">0:00</span>
+    </div>
+    <div class="sd-board" id="sdBoard"></div>
+    <div class="sd-tools">
+      <button class="sd-tool" id="sdUndo"><svg viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg><span>Undo</span></button>
+      <button class="sd-tool" id="sdErase"><svg viewBox="0 0 24 24"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"/></svg><span>Erase</span></button>
+      <button class="sd-tool" id="sdNotes" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg><span>Notes</span><i class="sd-flag" id="sdNotesFlag">off</i></button>
+      <button class="sd-tool" id="sdHint"><svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg><span>Hint</span></button>
+    </div>
+    <div class="sd-pad" id="sdPad"></div>
+  </main>
+</div>
+
+<!-- sudoku stats -->
+<div class="modal" id="sdStatsModal" aria-hidden="true">
+  <div class="card">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <p class="result-line" id="sdResultLine"></p>
+    <h2>Statistics</h2>
+    <p class="len-label" id="sdLabel"></p>
+    <div class="stats-row">
+      <div class="stat"><div class="num" id="sdSolved">0</div><div class="lbl">Solved</div></div>
+      <div class="stat"><div class="num" id="sdBest">-</div><div class="lbl">Best Time</div></div>
+      <div class="stat"><div class="num" id="sdAvg">-</div><div class="lbl">Average</div></div>
+      <div class="stat"><div class="num" id="sdPerfect">0</div><div class="lbl">No Mistakes</div></div>
+    </div>
+    <h2>Best Times</h2>
+    <div class="sd-best" id="sdBestList"></div>
+    <div class="end-footer hidden" id="sdEndFooter">
+      <button class="btn btn-ghost" id="sdShareBtn">Share
+        <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+      </button>
+      <button class="btn btn-main" id="sdAgainBtn">Play Again</button>
+    </div>
+  </div>
+</div>
+
+<!-- sudoku help -->
+<div class="modal" id="sdHelpModal" aria-hidden="true">
+  <div class="card help">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <h2 class="big">How To Play</h2>
+    <p>Fill the grid so every row, column and 3x3 box has the numbers 1 to 9 once.</p>
+    <ul>
+      <li>Tap a square, then tap a number. You can also use your keyboard.</li>
+      <li>A wrong number turns red and adds a mistake. Erase it and try again.</li>
+      <li>Turn on <b>Notes</b> to jot small pencil marks instead of a number.</li>
+      <li>Stuck? <b>Hint</b> fills in one square for you.</li>
+    </ul>
+    <hr>
+    <p class="note">Keys: 1-9 place a number, arrows move, Backspace erases, <b>N</b> toggles notes, <b>U</b> undoes, <b>H</b> gives a hint.</p>
+  </div>
+</div>
+<!-- mini crossword -->
+<div class="app" id="mcApp">
+  <header>
+    <div class="hl">
+      <button class="icon-btn" id="mcHelpBtn" aria-label="How to play">
+        <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+      </button>
+    </div>
+    <h1 class="mc-title">Mini Crossword<span class="inf">&#8734;</span></h1>
+    <div class="hr">
+      <button class="icon-btn" id="mcStatsBtn" aria-label="Statistics">
+        <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"/></svg>
+      </button>
+    </div>
+  </header>
+  <main class="mc-main">
+    <div class="mc-time" id="mcTimer">0:00</div>
+    <div class="mc-cluebar">
+      <button class="mc-arrow" id="mcPrev" aria-label="Previous clue">&#8249;</button>
+      <div class="mc-clue" id="mcClue"></div>
+      <button class="mc-arrow" id="mcNext" aria-label="Next clue">&#8250;</button>
+    </div>
+    <div class="mc-board" id="mcBoard"></div>
+    <div class="mc-tools">
+      <button class="sd-tool" id="mcCheck"><svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg><span>Check</span></button>
+      <button class="sd-tool" id="mcReveal"><svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg><span>Reveal</span></button>
+      <button class="sd-tool" id="mcList"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg><span>Clues</span></button>
+      <button class="sd-tool" id="mcNew"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg><span>New</span></button>
+    </div>
+    <div class="mc-kb" id="mcKb"></div>
+  </main>
+</div>
+
+<!-- mini crossword stats -->
+<div class="modal" id="mcStatsModal" aria-hidden="true">
+  <div class="card">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <p class="result-line" id="mcResultLine"></p>
+    <h2>Statistics</h2>
+    <div class="stats-row">
+      <div class="stat"><div class="num" id="mcSolved">0</div><div class="lbl">Solved</div></div>
+      <div class="stat"><div class="num" id="mcBest">-</div><div class="lbl">Best Time</div></div>
+      <div class="stat"><div class="num" id="mcAvg">-</div><div class="lbl">Average</div></div>
+      <div class="stat"><div class="num" id="mcClean">0</div><div class="lbl">No Help</div></div>
+    </div>
+    <div class="end-footer hidden" id="mcEndFooter">
+      <button class="btn btn-ghost" id="mcShareBtn">Share
+        <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+      </button>
+      <button class="btn btn-main" id="mcAgainBtn">Play Again</button>
+    </div>
+  </div>
+</div>
+
+<!-- mini crossword clue list -->
+<div class="modal" id="mcCluesModal" aria-hidden="true">
+  <div class="card">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <h2>Across</h2>
+    <div class="mc-list" id="mcAcross"></div>
+    <h2>Down</h2>
+    <div class="mc-list" id="mcDown"></div>
+  </div>
+</div>
+
+<!-- mini crossword help -->
+<div class="modal" id="mcHelpModal" aria-hidden="true">
+  <div class="card help">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <h2 class="big">How To Play</h2>
+    <p>Fill the little crossword using the clues. Words run across and down.</p>
+    <ul>
+      <li>Tap a square to pick it. Tap it again to switch between across and down.</li>
+      <li>Type with the keyboard below or your own keyboard.</li>
+      <li><b>Check</b> marks any wrong letters in red. <b>Reveal</b> fills in the whole word you're on.</li>
+      <li>The timer starts right away, so go fast!</li>
+    </ul>
+    <hr>
+    <p class="note">Keys: arrows move, Space or Tab switches clues, Backspace erases.</p>
+  </div>
+</div>
+<!-- daily puzzles -->
+<div class="modal" id="dailyModal" aria-hidden="true">
+  <div class="card daily">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <h2 id="dailyTitle">Daily</h2>
+    <div class="daily-today" id="dailyToday"></div>
+    <h2 class="daily-sub">Archive</h2>
+    <div class="daily-list" id="dailyList"></div>
+    <button class="daily-random" id="dailyRandom">Play random puzzles</button>
+  </div>
+</div>
+<!-- editor for posting daily puzzles -->
+<div class="app" id="edApp">
+  <header>
+    <div class="hl"></div>
+    <h1 class="ed-title">Editor</h1>
+    <div class="hr"></div>
+  </header>
+  <main class="ed-main">
+    <section id="edConnect">
+      <h2>Connect to GitHub</h2>
+      <p class="ed-note">Paste a token so this page can save puzzles to your repo. It stays in this browser only.</p>
+      <label class="ed-label">Token<input class="ed-input" id="edToken" type="password" autocomplete="off" placeholder="github_pat_..."></label>
+      <label class="ed-label">GitHub username<input class="ed-input" id="edOwner" autocomplete="off"></label>
+      <label class="ed-label">Repo name<input class="ed-input" id="edRepo" autocomplete="off"></label>
+      <label class="ed-label">File name<input class="ed-input" id="edPath" autocomplete="off"></label>
+      <button class="btn btn-main ed-wide" id="edSaveConn">Connect</button>
+      <details class="ed-help">
+        <summary>How do I make a token?</summary>
+        <ol>
+          <li>On GitHub, go to Settings, then Developer settings, then Personal access tokens, then Fine-grained tokens.</li>
+          <li>Tap Generate new token and give it any name.</li>
+          <li>Under Repository access, pick Only select repositories and choose this repo.</li>
+          <li>Under Permissions, set Contents to Read and write.</li>
+          <li>Generate it, copy it, and paste it above.</li>
+        </ol>
+      </details>
+    </section>
+
+    <section id="edWork" class="hidden">
+      <div class="ed-bar">
+        <span id="edWho"></span>
+        <span><button class="ed-link" id="edRefresh">Refresh</button> <button class="ed-link" id="edDisconnect">Disconnect</button></span>
+      </div>
+      <div class="ed-tabs" id="edTabs">
+        <button data-tab="wordle" class="on">Wordle</button>
+        <button data-tab="conn">Connections</button>
+        <button data-tab="list">Schedule</button>
+      </div>
+
+      <div id="edTabWordle">
+        <label class="ed-label">Date<input class="ed-input" id="edWDate" type="date"></label>
+        <label class="ed-label">Word (4 to 7 letters)<input class="ed-input ed-word" id="edWWord" maxlength="7" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+        <div class="ed-prev" id="edWPrev"></div>
+        <p class="ed-msg" id="edWMsg"></p>
+        <div class="ed-row">
+          <button class="btn btn-ghost" id="edWClear">Clear</button>
+          <button class="btn btn-main" id="edWPost">Post</button>
+        </div>
+      </div>
+
+      <div id="edTabConn" class="hidden">
+        <label class="ed-label">Date<input class="ed-input" id="edCDate" type="date"></label>
+        <div id="edCStep1">
+          <p class="ed-note">Type 16 words, one per box.</p>
+          <div class="ed-grid" id="edCInputs"></div>
+          <p class="ed-msg" id="edCMsg1"></p>
+          <div class="ed-row">
+            <button class="btn btn-ghost" id="edCClear">Clear</button>
+            <button class="btn btn-main" id="edCNext">Make groups</button>
+          </div>
+        </div>
+        <div id="edCStep2" class="hidden">
+          <p class="ed-note" id="edCHint">Tap 4 words that go together.</p>
+          <div class="cn-board ed-board" id="edCBoard"></div>
+          <div class="ed-maker hidden" id="edCMaker">
+            <div class="ed-colors" id="edCColors">
+              <button data-c="0" class="c0"></button><button data-c="1" class="c1"></button><button data-c="2" class="c2"></button><button data-c="3" class="c3"></button>
+            </div>
+            <input class="ed-input" id="edCTitle" maxlength="40" placeholder="Group name" autocomplete="off">
+            <button class="btn btn-main" id="edCAdd">Add group</button>
+          </div>
+          <p class="ed-msg" id="edCMsg2"></p>
+          <div class="ed-row">
+            <button class="btn btn-ghost" id="edCBack">Back to words</button>
+            <button class="btn btn-main" id="edCPost">Post</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="edTabList" class="hidden">
+        <div class="ed-list" id="edList"></div>
+      </div>
+    </section>
+  </main>
 </div>
 
 <!-- stats -->
@@ -1542,6 +2244,10 @@ function freshState(bumpRound = true) {
 }
 
 function saveGame() {
+  if (state.daily) {
+    store.set('dw-' + state.daily, { guesses: state.guesses, status: state.status, hard: state.hard });
+    return;
+  }
   store.set('iw-game', {
     len: state.len,
     answer: state.answer,
@@ -1614,14 +2320,15 @@ function renderControls() {
   const over = state.status !== 'playing';
   const left = MAX_HINTS - state.hints.length;
   $('#hintLeft').textContent = left;
-  $('#hintBtn').disabled = over || left <= 0;
-  $('#roundLabel').textContent = 'Round ' + round + ' · ' + state.len + ' letters';
+  $('#hintBtn').disabled = over || left <= 0 || !!state.daily;
+  $('#roundLabel').textContent = state.daily ? 'Daily · ' + niceDate(state.daily) : 'Round ' + round + ' · ' + state.len + ' letters';
+  $('#againBtn').textContent = state.daily ? 'Archive' : 'Play Again';
 
   const skip = $('#skipBtn');
   clearTimeout(skipTimer);
   skip.classList.remove('armed');
   skip.classList.toggle('next', over);
-  skip.textContent = over ? 'Next word' : 'Skip';
+  skip.textContent = state.daily ? 'Archive' : over ? 'Next word' : 'Skip';
 }
 
 /* ---------- animations ---------- */
@@ -1915,6 +2622,10 @@ function useHint() {
 
 function skipRound() {
   if (busy) return;
+  if (state.daily) {
+    openDaily('wordle');
+    return;
+  }
   if (state.status !== 'playing') {
     newGame();
     return;
@@ -1950,6 +2661,10 @@ function skipRound() {
 /* ---------- stats ---------- */
 
 function recordResult(won) {
+  if (state.daily) {
+    stats = dailyRecord('w', won, state.guesses.length - 1, state.daily);
+    return;
+  }
   stats.played++;
   if (won) {
     stats.wins++;
@@ -1967,7 +2682,7 @@ function renderStats() {
   $('#sWin').textContent = stats.played ? Math.round(stats.wins / stats.played * 100) : 0;
   $('#sStreak').textContent = stats.streak;
   $('#sMax').textContent = stats.maxStreak;
-  $('#lenLabel').textContent = state.len + '-letter words';
+  $('#lenLabel').textContent = state.daily ? 'Daily · ' + niceDate(state.daily) : state.len + '-letter words';
 
   const over = state.status !== 'playing';
   const line = $('#resultLine');
@@ -1987,6 +2702,7 @@ function renderStats() {
     lookup.textContent = 'Look up ' + state.answer.toUpperCase() + ' ↗';
   }
   $('#endFooter').classList.toggle('hidden', !over);
+  $('#wNext').classList.toggle('hidden', !(state.daily && over));
 
   const dist = $('#dist');
   dist.innerHTML = '';
@@ -2039,8 +2755,8 @@ function shareText() {
   const grid = state.guesses
     .map(g => evaluate(g, state.answer).map(r => emoji[r]).join(''))
     .join('\n');
-  let head = 'Wordle ∞ ' + score + '/' + ROWS + (state.hard ? '*' : '');
-  if (state.len !== 5) head += ' · ' + state.len + ' letters';
+  let head = state.daily ? 'Wordle Daily · ' + niceDate(state.daily) + ' ' + score + '/' + ROWS + (state.hard ? '*' : '') : 'Wordle ∞ ' + score + '/' + ROWS + (state.hard ? '*' : '');
+  if (state.len !== 5 && !state.daily) head += ' · ' + state.len + ' letters';
   if (state.hints.length) head += ' 💡';
   return head + '\n\n' + grid;
 }
@@ -2100,6 +2816,11 @@ function startRound(bumpRound) {
 
 async function newGame() {
   if (busy) return;
+  if (state.daily) {
+    closeModal(statsModal);
+    openDaily('wordle');
+    return;
+  }
   busy = true;
   clearTimeout(statsTimer);
   closeModal(statsModal);
@@ -2155,6 +2876,10 @@ function toggleHard() {
 
 function setLength(len) {
   if (busy || len === settings.len) return;
+  if (state.daily) {
+    toast('The daily puzzle sets its own word length', 1800);
+    return;
+  }
   settings.len = len;
   saveSettings();
   if (state.status === 'playing' && state.guesses.length === 0) {
@@ -2338,6 +3063,10 @@ function cnFresh(mode) {
 }
 
 function cnSave() {
+  if (cn.mode === 'd') {
+    store.set('dc-' + cn.daily, { order: cn.order, solved: cn.solved, mistakes: cn.mistakes, tried: cn.tried, guesses: cn.guesses, status: cn.status });
+    return;
+  }
   store.set(CN_KEYS[cn.mode].game, {
     id: cn.id,
     order: cn.order,
@@ -2648,6 +3377,10 @@ async function cnLose() {
 }
 
 function cnRecord(won) {
+  if (cn.mode === 'd') {
+    dailyRecord('c', won, Math.min(cn.mistakes, 3), cn.daily);
+    return;
+  }
   const cnStats = cnStatsAll[cn.mode];
   cnStats.played++;
   if (won) {
@@ -2664,12 +3397,13 @@ function cnRecord(won) {
 /* connections stats and sharing */
 
 function cnRenderStats() {
-  const cnStats = cnStatsAll[cn.mode];
+  const cnStats = cn.mode === 'd' ? dailyStats('c') : cnStatsAll[cn.mode];
+  $('#cnNextDaily').classList.toggle('hidden', !(cn.mode === 'd' && cn.status !== 'playing'));
   $('#cnPlayed').textContent = cnStats.played;
   $('#cnWin').textContent = cnStats.played ? Math.round(cnStats.wins / cnStats.played * 100) : 0;
   $('#cnStreak').textContent = cnStats.streak;
   $('#cnMax').textContent = cnStats.maxStreak;
-  $('#cnPuzzleLabel').textContent = 'Puzzle #' + (cn.id + 1) + (cn.mode === 'u' ? ' \u00B7 Unlocked (beta)' : '');
+  $('#cnPuzzleLabel').textContent = cn.mode === 'd' ? 'Daily \u00B7 ' + niceDate(cn.daily) : 'Puzzle #' + (cn.id + 1) + (cn.mode === 'u' ? ' \u00B7 Unlocked (beta)' : '');
 
   const line = $('#cnResultLine');
   if (cn.status === 'won') {
@@ -2716,7 +3450,7 @@ function cnOpenStats() {
 
 function cnShareText() {
   const rows = cn.guesses.map(g => g.map(x => CN_EMOJI[x]).join('')).join('\n');
-  const head = 'Connections ∞' + (cn.mode === 'u' ? ' Unlocked (beta)' : '') + '\nPuzzle #' + (cn.id + 1) + '\n';
+  const head = cn.mode === 'd' ? 'Connections Daily \u00B7 ' + niceDate(cn.daily) + '\n' : 'Connections ∞' + (cn.mode === 'u' ? ' Unlocked (beta)' : '') + '\nPuzzle #' + (cn.id + 1) + '\n';
   const peeks = cn.mode === 'u' && cn.reveals ? '\n🔓 ' + cn.reveals + (cn.reveals === 1 ? ' reveal' : ' reveals') : '';
   return head + rows + peeks;
 }
@@ -2736,6 +3470,11 @@ async function cnShare() {
 }
 
 async function cnNewPuzzle() {
+  if (cn.mode === 'd') {
+    closeModal(cnStatsModal);
+    openDaily('connections');
+    return;
+  }
   if (cnBusy) return;
   cnBusy = true;
   clearTimeout(cnTimer);
@@ -2789,9 +3528,12 @@ function cnLoad(mode) {
 
 function cnSyncMode() {
   const on = cn.mode === 'u';
-  $('#cnUnlockSwitch').setAttribute('aria-checked', on);
+  const daily = cn.mode === 'd';
+  $('#cnUnlockSwitch').setAttribute('aria-checked', cnSettings.unlock);
   $('#cnBeta').classList.toggle('hidden', !on);
-  $('.cn-sub').textContent = on ? 'Unlock the words, then make four groups!' : 'Create four groups of four!';
+  $('.cn-sub').textContent = daily ? 'Daily Connections \u00B7 ' + niceDate(cn.daily) : on ? 'Unlock the words, then make four groups!' : 'Create four groups of four!';
+  $('#cnNext').textContent = daily ? 'Archive' : 'Next Puzzle';
+  $('#cnAgainBtn').textContent = daily ? 'Archive' : 'Play Again';
 }
 
 async function cnSetMode(on) {
@@ -2836,7 +3578,7 @@ function initConnections() {
   $('#cnStatsBtn').addEventListener('click', cnOpenStats);
   $('#cnHelpBtn').addEventListener('click', () => openModal(cnHelpModal));
   $('#cnSettingsBtn').addEventListener('click', () => openModal(cnSettingsModal));
-  $('#cnUnlockSwitch').addEventListener('click', () => cnSetMode(cn.mode !== 'u'));
+  $('#cnUnlockSwitch').addEventListener('click', () => cnSetMode(!cnSettings.unlock));
   mgRevealBtn.addEventListener('click', mgRevealClick);
 }
 
@@ -2848,13 +3590,16 @@ let activeApp = 'hub';
 let wordleEntered = false;
 let connEntered = false;
 
-const APP_IDS = { hub: 'hub', wordle: 'wordleApp', conn: 'connApp' };
+const APP_IDS = { hub: 'hub', wordle: 'wordleApp', conn: 'connApp', sudoku: 'sdApp', mini: 'mcApp', editor: 'edApp' };
 
 function renderHub() {
   const wordlePlayed = [4, 5, 6, 7].reduce((n, len) => n + loadStats(len).played, 0);
   $('#chipWordle').textContent = wordlePlayed ? 'Played ' + wordlePlayed : 'New';
   const connPlayed = cnStatsAll.n.played + cnStatsAll.u.played;
   $('#chipConn').textContent = connPlayed ? 'Played ' + connPlayed : 'New';
+  const sudokuSolved = SD_DIFFS.reduce((n, d) => n + sdStats.solved[d], 0);
+  $('#chipSudoku').textContent = sudokuSolved ? 'Solved ' + sudokuSolved : 'New';
+  $('#chipMini').textContent = mcStats.solved ? 'Solved ' + mcStats.solved : 'New';
 }
 
 function enterWordle() {
@@ -2886,6 +3631,8 @@ function showApp(name) {
   stopConfetti();
   clearTimeout(statsTimer);
   clearTimeout(cnTimer);
+  clearTimeout(sdStatsTimer);
+  clearTimeout(mcStatsTimer);
   activeApp = name;
   Object.keys(APP_IDS).forEach(key => {
     document.getElementById(APP_IDS[key]).classList.toggle('on', key === name);
@@ -2894,6 +3641,9 @@ function showApp(name) {
   if (name === 'hub') renderHub();
   if (name === 'wordle') enterWordle();
   if (name === 'conn') enterConn();
+  if (name === 'sudoku') enterSudoku();
+  if (name === 'mini') enterMini();
+  if (name === 'editor') enterEditor();
 }
 
 function initHub() {
@@ -3700,9 +4450,1997 @@ function mgCrossword(m, lock) {
   paint();
 }
 
+/* =====================================================================
+   Sudoku
+   ===================================================================== */
+
+const SD_DIFFS = ['easy', 'medium', 'hard'];
+const SD_CLUES = { easy: 40, medium: 32, hard: 26 };
+const SD_NAMES = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
+
+const sdBoard = $('#sdBoard');
+const sdStatsModal = $('#sdStatsModal');
+const sdHelpModal = $('#sdHelpModal');
+
+const sdRow = i => Math.floor(i / 9);
+const sdCol = i => i % 9;
+const sdBox = i => Math.floor(sdRow(i) / 3) * 3 + Math.floor(sdCol(i) / 3);
+const sdPeers = Array.from({ length: 81 }, (_, i) =>
+  Array.from({ length: 81 }, (_, j) => j).filter(j => j !== i && (sdRow(j) === sdRow(i) || sdCol(j) === sdCol(i) || sdBox(j) === sdBox(i))));
+
+let sd = null;
+let sdSel = -1;
+let sdNotesOn = false;
+let sdHistory = [];
+let sdTimerId = null;
+let sdStatsTimer = null;
+let sdLastPlaced = 0;
+const sdCells = [];
+let sdStats = Object.assign({ solved: { easy: 0, medium: 0, hard: 0 }, best: {}, total: { easy: 0, medium: 0, hard: 0 }, perfect: 0 }, store.get('sd-stats', {}));
+let sdDiff = store.get('sd-diff', 'easy');
+if (!SD_DIFFS.includes(sdDiff)) sdDiff = 'easy';
+
+/* making puzzles */
+
+const sdBits = n => { let c = 0; while (n) { c += n & 1; n >>= 1; } return c; };
+
+// backtracking search that always tries the square with the fewest options.
+// returns how many solutions it found (up to limit) and the first one
+function sdSearch(start, limit, randomize) {
+  const rows = Array(9).fill(0);
+  const cols = Array(9).fill(0);
+  const boxes = Array(9).fill(0);
+  const work = start.slice();
+  work.forEach((v, i) => {
+    if (v) {
+      const bit = 1 << v;
+      rows[sdRow(i)] |= bit;
+      cols[sdCol(i)] |= bit;
+      boxes[sdBox(i)] |= bit;
+    }
+  });
+  let count = 0;
+  let first = null;
+
+  function go() {
+    let best = -1;
+    let bestMask = 0;
+    let bestN = 10;
+    for (let i = 0; i < 81; i++) {
+      if (work[i]) continue;
+      const mask = ~(rows[sdRow(i)] | cols[sdCol(i)] | boxes[sdBox(i)]) & 0x3FE;
+      const n = sdBits(mask);
+      if (n < bestN) {
+        best = i;
+        bestMask = mask;
+        bestN = n;
+        if (n === 0) return false;
+      }
+    }
+    if (best < 0) {
+      count++;
+      if (!first) first = work.slice();
+      return count >= limit;
+    }
+    let digits = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(v => bestMask & (1 << v));
+    if (randomize) digits = shuffled(digits);
+    for (const v of digits) {
+      const bit = 1 << v;
+      work[best] = v;
+      rows[sdRow(best)] |= bit;
+      cols[sdCol(best)] |= bit;
+      boxes[sdBox(best)] |= bit;
+      const stop = go();
+      rows[sdRow(best)] &= ~bit;
+      cols[sdCol(best)] &= ~bit;
+      boxes[sdBox(best)] &= ~bit;
+      work[best] = 0;
+      if (stop) return true;
+    }
+    return false;
+  }
+
+  go();
+  return { count, first };
+}
+
+// takes numbers out of a finished grid one at a time, keeping only removals that leave a single solution
+function sdMake(diff) {
+  const solution = sdSearch(Array(81).fill(0), 1, true).first;
+  const puzzle = solution.slice();
+  let clues = 81;
+  for (const i of shuffled(Array.from({ length: 81 }, (_, n) => n))) {
+    if (clues <= SD_CLUES[diff]) break;
+    const keep = puzzle[i];
+    puzzle[i] = 0;
+    if (sdSearch(puzzle, 2, false).count === 1) clues--;
+    else puzzle[i] = keep;
+  }
+  return {
+    diff, puzzle, solution,
+    vals: puzzle.slice(),
+    notes: Array(81).fill(0),
+    hinted: [],
+    mistakes: 0, hints: 0, secs: 0,
+    status: 'playing'
+  };
+}
+
+/* saving */
+
+const sdKey = diff => 'sd-game-' + diff;
+
+function sdSave() {
+  store.set(sdKey(sd.diff), sd);
+}
+
+function sdValid(s, diff) {
+  if (!s || s.diff !== diff) return false;
+  const nine = a => Array.isArray(a) && a.length === 81;
+  if (!nine(s.puzzle) || !nine(s.solution) || !nine(s.vals) || !nine(s.notes)) return false;
+  if (!s.solution.every(v => Number.isInteger(v) && v >= 1 && v <= 9)) return false;
+  if (!s.puzzle.every((v, i) => v === 0 || v === s.solution[i])) return false;
+  if (!s.vals.every((v, i) => Number.isInteger(v) && v >= 0 && v <= 9 && (s.puzzle[i] === 0 || v === s.puzzle[i]))) return false;
+  if (!s.notes.every(v => Number.isInteger(v) && v >= 0 && v < 1024)) return false;
+  if (!Number.isInteger(s.mistakes) || !Number.isInteger(s.hints) || !Number.isInteger(s.secs)) return false;
+  if (!Array.isArray(s.hinted)) return false;
+  return ['playing', 'won'].includes(s.status);
+}
+
+function sdLoad(diff) {
+  const saved = store.get(sdKey(diff), null);
+  if (sdValid(saved, diff)) return saved;
+  const fresh = sdMake(diff);
+  store.set(sdKey(diff), fresh);
+  return fresh;
+}
+
+/* drawing */
+
+const fmtTime = secs => Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
+
+function sdBuild() {
+  sdBoard.innerHTML = '';
+  for (let i = 0; i < 81; i++) {
+    const cell = el('div', 'sd-cell');
+    cell.dataset.i = i;
+    cell.appendChild(el('span', 'v'));
+    const notes = el('div', 'sd-notes');
+    for (let n = 1; n <= 9; n++) notes.appendChild(el('i'));
+    cell.appendChild(notes);
+    sdBoard.appendChild(cell);
+    sdCells.push(cell);
+  }
+  const pad = $('#sdPad');
+  for (let n = 1; n <= 9; n++) {
+    const b = el('button', 'sd-num', n);
+    b.dataset.n = n;
+    pad.appendChild(b);
+  }
+}
+
+function sdPaint() {
+  const picked = sdSel >= 0 ? sd.vals[sdSel] : 0;
+  const counts = Array(10).fill(0);
+  for (let i = 0; i < 81; i++) {
+    const v = sd.vals[i];
+    const cell = sdCells[i];
+    if (v === sd.solution[i]) counts[v]++;
+    const wrong = v !== 0 && v !== sd.solution[i];
+    cell.classList.toggle('sel', i === sdSel);
+    cell.classList.toggle('peer', sdSel >= 0 && i !== sdSel && sdPeers[sdSel].includes(i));
+    cell.classList.toggle('same', picked !== 0 && i !== sdSel && v === picked);
+    cell.classList.toggle('given', sd.puzzle[i] !== 0);
+    cell.classList.toggle('user', sd.puzzle[i] === 0 && v !== 0);
+    cell.classList.toggle('err', wrong);
+    cell.firstChild.textContent = v || '';
+    const noteEls = cell.lastChild.children;
+    for (let n = 0; n < 9; n++) noteEls[n].textContent = !v && (sd.notes[i] & (1 << (n + 1))) ? n + 1 : '';
+  }
+  document.querySelectorAll('#sdPad .sd-num').forEach(b => { b.disabled = counts[+b.dataset.n] >= 9 || sd.status !== 'playing'; });
+  $('#sdMist').textContent = sd.mistakes;
+  $('#sdTimer').textContent = fmtTime(sd.secs);
+  $('#sdNotes').classList.toggle('on', sdNotesOn);
+  $('#sdNotes').setAttribute('aria-pressed', sdNotesOn);
+  $('#sdNotesFlag').textContent = sdNotesOn ? 'on' : 'off';
+  const playing = sd.status === 'playing';
+  $('#sdUndo').disabled = !playing || !sdHistory.length;
+  $('#sdErase').disabled = !playing;
+  $('#sdHint').disabled = !playing;
+  document.querySelectorAll('#sdDiff button').forEach(b => b.classList.toggle('on', b.dataset.diff === sd.diff));
+}
+
+function sdWave(cells, step = 35) {
+  if (reduceMotion) return;
+  cells.forEach((i, k) => sdCells[i].animate(
+    [{ transform: 'scale(1)' }, { transform: 'scale(1.16)', offset: 0.4 }, { transform: 'scale(1)' }],
+    { duration: 420, delay: k * step, easing: 'ease-in-out' }
+  ));
+}
+
+/* playing */
+
+function sdEditable(i) {
+  return sd.status === 'playing' && i >= 0 && sd.puzzle[i] === 0;
+}
+
+function sdRemember() {
+  sdHistory.push({ vals: sd.vals.slice(), notes: sd.notes.slice() });
+  if (sdHistory.length > 200) sdHistory.shift();
+}
+
+function sdSelect(i) {
+  sdSel = i;
+  sdPaint();
+}
+
+// puts a number in a square and deals with everything that follows from it
+function sdSet(i, n, byHint) {
+  sdRemember();
+  sd.vals[i] = n;
+  sd.notes[i] = 0;
+  sdLastPlaced = i;
+  if (n !== sd.solution[i]) {
+    sd.mistakes++;
+    play('error');
+    sdPaint();
+    if (!reduceMotion) {
+      const dx = [0, -3, 5, -5, 3, 0];
+      sdCells[i].animate(dx.map((x, k) => ({ transform: 'translateX(' + x + 'px)', offset: k / 5 })), { duration: 320 });
+    }
+    sdSave();
+    return;
+  }
+  sdPeers[i].forEach(j => { sd.notes[j] &= ~(1 << n); });
+  if (byHint) sd.hinted.push(i);
+  play('key');
+  sdPaint();
+  sdCells[i].animate(
+    [{ transform: 'scale(0.6)', opacity: 0.4 }, { transform: 'scale(1.12)', opacity: 1, offset: 0.6 }, { transform: 'scale(1)' }],
+    { duration: 240, easing: 'ease-out' }
+  );
+  // a row, column or box that just got finished ripples outward from the new number
+  const units = [
+    Array.from({ length: 9 }, (_, k) => sdRow(i) * 9 + k),
+    Array.from({ length: 9 }, (_, k) => k * 9 + sdCol(i)),
+    Array.from({ length: 81 }, (_, k) => k).filter(k => sdBox(k) === sdBox(i))
+  ];
+  units.forEach(unit => {
+    if (unit.every(k => sd.vals[k] === sd.solution[k])) {
+      sdWave(unit.slice().sort((a, b) => Math.abs(a - i) - Math.abs(b - i)), 40);
+    }
+  });
+  sdSave();
+  if (sd.vals.every((v, k) => v === sd.solution[k])) sdWin();
+}
+
+function sdPlace(n) {
+  if (!sdEditable(sdSel)) return;
+  if (sdNotesOn) {
+    if (sd.vals[sdSel]) return;
+    sdRemember();
+    sd.notes[sdSel] ^= 1 << n;
+    sdPaint();
+    sdSave();
+    return;
+  }
+  if (sd.vals[sdSel] === n) return;
+  sdSet(sdSel, n, false);
+}
+
+function sdErase() {
+  if (!sdEditable(sdSel) || (!sd.vals[sdSel] && !sd.notes[sdSel])) return;
+  sdRemember();
+  sd.vals[sdSel] = 0;
+  sd.notes[sdSel] = 0;
+  sdPaint();
+  sdSave();
+}
+
+function sdUndo() {
+  if (sd.status !== 'playing' || !sdHistory.length) return;
+  const last = sdHistory.pop();
+  sd.vals = last.vals;
+  sd.notes = last.notes;
+  sdPaint();
+  sdSave();
+}
+
+function sdHint() {
+  if (sd.status !== 'playing') return;
+  const open = i => sd.vals[i] !== sd.solution[i];
+  let target = sdSel >= 0 && sdEditable(sdSel) && open(sdSel) ? sdSel : -1;
+  if (target < 0) {
+    const options = sd.vals.map((_, i) => i).filter(i => sd.puzzle[i] === 0 && open(i));
+    if (!options.length) return;
+    target = options[Math.floor(Math.random() * options.length)];
+  }
+  sd.hints++;
+  sdSel = target;
+  sdSet(target, sd.solution[target], true);
+}
+
+function sdToggleNotes() {
+  sdNotesOn = !sdNotesOn;
+  sdPaint();
+}
+
+function sdMove(dr, dc) {
+  const from = sdSel < 0 ? 40 : sdSel;
+  const r = Math.min(8, Math.max(0, sdRow(from) + dr));
+  const c = Math.min(8, Math.max(0, sdCol(from) + dc));
+  sdSelect(r * 9 + c);
+}
+
+/* winning and stats */
+
+function sdWin() {
+  sd.status = 'won';
+  sdSave();
+  const d = sd.diff;
+  sdStats.solved[d]++;
+  sdStats.total[d] += sd.secs;
+  if (!sdStats.best[d] || sd.secs < sdStats.best[d]) sdStats.best[d] = sd.secs;
+  if (sd.mistakes === 0) sdStats.perfect++;
+  store.set('sd-stats', sdStats);
+  sdPaint();
+  const wave = Array.from({ length: 81 }, (_, i) => i).sort((a, b) =>
+    (Math.abs(sdRow(a) - sdRow(sdLastPlaced)) + Math.abs(sdCol(a) - sdCol(sdLastPlaced))) -
+    (Math.abs(sdRow(b) - sdRow(sdLastPlaced)) + Math.abs(sdCol(b) - sdCol(sdLastPlaced))));
+  sdWave(wave, 18);
+  toast(sd.mistakes === 0 ? 'Perfect!' : 'Solved!', 1800);
+  launchConfetti();
+  play('win');
+  sdStatsTimer = setTimeout(sdOpenStats, 2000);
+}
+
+function sdRenderStats() {
+  const d = sd.diff;
+  const solved = sdStats.solved[d];
+  $('#sdLabel').textContent = SD_NAMES[d];
+  $('#sdSolved').textContent = solved;
+  $('#sdBest').textContent = sdStats.best[d] ? fmtTime(sdStats.best[d]) : '-';
+  $('#sdAvg').textContent = solved ? fmtTime(Math.round(sdStats.total[d] / solved)) : '-';
+  $('#sdPerfect').textContent = sdStats.perfect;
+  const line = $('#sdResultLine');
+  if (sd.status === 'won') {
+    const bits = ['Solved in ' + fmtTime(sd.secs)];
+    bits.push(sd.mistakes ? sd.mistakes + (sd.mistakes === 1 ? ' mistake' : ' mistakes') : 'no mistakes');
+    if (sd.hints) bits.push(sd.hints + (sd.hints === 1 ? ' hint' : ' hints'));
+    line.textContent = bits.join(' · ');
+  } else {
+    line.textContent = '';
+  }
+  $('#sdEndFooter').classList.toggle('hidden', sd.status !== 'won');
+  const list = $('#sdBestList');
+  list.innerHTML = '';
+  SD_DIFFS.forEach(k => {
+    const row = el('div', k === d ? 'mine' : '');
+    row.appendChild(el('span', '', SD_NAMES[k]));
+    row.appendChild(el('b', '', sdStats.best[k] ? fmtTime(sdStats.best[k]) : '-'));
+    list.appendChild(row);
+  });
+}
+
+function sdOpenStats() {
+  clearTimeout(sdStatsTimer);
+  if (activeApp !== 'sudoku') return;
+  sdRenderStats();
+  openModal(sdStatsModal);
+}
+
+async function sdShare() {
+  await copyText('Sudoku ∞ ' + SD_NAMES[sd.diff] + '\n⏱ ' + fmtTime(sd.secs) + '  ❌ ' + sd.mistakes + (sd.hints ? '  💡 ' + sd.hints : ''));
+  toast('Copied results to clipboard', 1500);
+}
+
+let sdBusy = false;
+
+// swaps the board for another game with a quick ripple of squares
+async function sdSwitch(next) {
+  if (sdBusy) return;
+  sdBusy = true;
+  clearTimeout(sdStatsTimer);
+  closeModal(sdStatsModal);
+  clearToasts();
+  stopConfetti();
+  if (!reduceMotion) {
+    await sdBoard.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'ease-in', fill: 'forwards' }).finished;
+  }
+  sd = next();
+  sdDiff = sd.diff;
+  store.set('sd-diff', sdDiff);
+  sdSel = -1;
+  sdHistory = [];
+  sdPaint();
+  sdSave();
+  sdBoard.getAnimations().forEach(a => a.cancel());
+  if (!reduceMotion) {
+    sdCells.forEach((c, i) => c.animate(
+      [{ opacity: 0, transform: 'scale(0.85)' }, { opacity: 1, transform: 'scale(1)' }],
+      { duration: 380, delay: (sdRow(i) + sdCol(i)) * 22, easing: 'cubic-bezier(0.2, 0.9, 0.3, 1.1)', fill: 'backwards' }
+    ));
+  }
+  sdBusy = false;
+}
+
+function enterSudoku() {
+  if (sdEntered) return;
+  sdEntered = true;
+  if (sd.status === 'won') {
+    sdStatsTimer = setTimeout(sdOpenStats, 500);
+  } else if (!store.get('sd-seen-help', false)) {
+    store.set('sd-seen-help', true);
+    setTimeout(() => { if (activeApp === 'sudoku') openModal(sdHelpModal); }, 450);
+  }
+}
+let sdEntered = false;
+
+function initSudoku() {
+  sdBuild();
+  sd = sdLoad(sdDiff);
+  sdPaint();
+
+  sdBoard.addEventListener('click', e => {
+    const cell = e.target.closest('.sd-cell');
+    if (cell && !sdBusy) sdSelect(+cell.dataset.i);
+  });
+  $('#sdPad').addEventListener('click', e => {
+    const b = e.target.closest('.sd-num');
+    if (b && !sdBusy) sdPlace(+b.dataset.n);
+  });
+  $('#sdUndo').addEventListener('click', sdUndo);
+  $('#sdErase').addEventListener('click', sdErase);
+  $('#sdHint').addEventListener('click', sdHint);
+  $('#sdNotes').addEventListener('click', sdToggleNotes);
+  $('#sdDiff').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (b && b.dataset.diff !== sd.diff) sdSwitch(() => sdLoad(b.dataset.diff));
+  });
+  $('#sdStatsBtn').addEventListener('click', sdOpenStats);
+  $('#sdHelpBtn').addEventListener('click', () => openModal(sdHelpModal));
+  $('#sdAgainBtn').addEventListener('click', () => sdSwitch(() => sdMake(sd.diff)));
+  $('#sdShareBtn').addEventListener('click', sdShare);
+
+  document.addEventListener('keydown', e => {
+    if (activeApp !== 'sudoku' || modalIsOpen() || sdBusy || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (/^[1-9]$/.test(e.key)) sdPlace(+e.key);
+    else if (e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') sdErase();
+    else if (e.key === 'ArrowUp') { e.preventDefault(); sdMove(-1, 0); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); sdMove(1, 0); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); sdMove(0, -1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); sdMove(0, 1); }
+    else if (e.key === 'n' || e.key === 'N') sdToggleNotes();
+    else if (e.key === 'u' || e.key === 'U') sdUndo();
+    else if (e.key === 'h' || e.key === 'H') sdHint();
+  });
+
+  // the clock only runs while the game is on screen and nothing is covering it
+  sdTimerId = setInterval(() => {
+    if (activeApp !== 'sudoku' || sd.status !== 'playing' || document.hidden || modalIsOpen()) return;
+    sd.secs++;
+    $('#sdTimer').textContent = fmtTime(sd.secs);
+    if (sd.secs % 5 === 0) sdSave();
+  }, 1000);
+}
+// 5x5 mini crosswords: each row is five letters, # is a black square
+const MINI_PUZZLES = [ "RADIO|O#I#U|BRAIN|O#R#C|THYME", "DRAFT|I###O|ZEBRA|Z###S|YACHT", "PHONE|E#T#A|A#T#G|C#E#L|HORSE", "PIANO|U#L#C|PLATE|I#R#A|LEMON", "SPORT|P###E|APPLE|C###T|EARTH", "SPOON|T#T#O|A#T#R|R#E#T|EARTH", "REALM|O#N#A|BAKER|O#L#G|THEME", "OPERA|R###N|BLANK|I###L|TRADE", "TABLE|O#O#A|W#A#G|E#R#L|LADLE", "FROST|R#R#O|ELBOW|S#I#E|HOTEL", "SCENE|H###A|EMBER|E###T|PEACH", "STAGE|O#P#A|C#P#G|K#L#L|SCENE", "SALSA|U#L#L|PLAZA|E#M#R|REALM", "CARGO|H###C|EAGLE|S###A|TRAIN", "SHOES|L#T#O|I#T#U|D#E#T|EARTH", "METAL|E#I#U|LEMON|O#E#C|NORTH", "TIGER|U###A|LEMON|I###C|PEACH", "CANDY|R#U#O|U#R#U|S#S#T|TEETH", "FLOOR|O#L#I|CHILD|U#V#G|SCENE", "TORCH|O###E|OPERA|T###R|HABIT", "STAND|K#R#I|I#R#N|R#O#E|TOWER", "GIANT|U#N#H|EAGLE|S#R#M|THYME", "BEACH|R###O|OTTER|W###S|NOISE", "MARCH|A#O#U|N#U#M|G#T#A|OCEAN", "CORAL|O#E#E|ALARM|C#L#O|HUMAN", "CHALK|O###A|ANGRY|S###A|TRACK", "LASER|E#P#O|V#E#U|E#E#T|LADLE", "FLOUR|R#L#A|ONION|S#V#C|TEETH", "PAINT|O###O|IGLOO|N###T|TEACH", "GRAIN|L#P#O|A#P#V|S#L#E|STEEL", "STORM|W#P#O|OCEAN|R#R#E|DIARY", "VOICE|I###A|RIVER|U###T|SOUTH", "SHORE|N#N#A|A#I#R|I#O#T|LUNCH", "LIGHT|A#U#H|SKATE|E#R#M|RIDGE", "PIZZA|A###N|SHARK|T###L|APPLE", "WATCH|O#R#O|R#A#U|L#I#S|DANCE", "CRASH|O#L#U|REALM|A#R#A|LEMON", "GRAPE|R###A|EMBER|E###T|NORTH", "DREAM|R#A#A|E#G#P|S#L#L|SCENE", "STEAM|C#L#E|ORBIT|U#O#A|TOWEL", "RIDER|O###A|BREAD|O###I|TEMPO", "SALAD|N#A#O|A#S#U|K#E#G|EARTH" ];
+
+const MINI_CLUES = {
+  "ALARM": "Wakes you up in the morning",
+  "ANGRY": "Very mad",
+  "ANKLE": "Joint above your foot",
+  "APPLE": "Red or green fruit",
+  "ARROW": "Shot from a bow",
+  "BAKER": "Makes bread for a living",
+  "BEACH": "Sandy shore",
+  "BLANK": "Empty, like a fresh page",
+  "BOARD": "Plank of wood",
+  "BRAIN": "Organ inside your head",
+  "BREAD": "Toast starts as this",
+  "BROWN": "Color of chocolate",
+  "CANDY": "Sweet treat",
+  "CARGO": "Goods on a ship",
+  "CHALK": "Teacher writes with it",
+  "CHEST": "Where pirates keep treasure",
+  "CHILD": "Young person",
+  "COACH": "Trains a sports team",
+  "COAST": "Land next to the sea",
+  "CORAL": "Reef builder",
+  "CRASH": "Loud car accident",
+  "CRUST": "Outer part of bread",
+  "DANCE": "Move to the beat",
+  "DIARY": "Private daily journal",
+  "DINER": "Casual restaurant",
+  "DIZZY": "Spinning feeling",
+  "DOUGH": "Pizza starts as this",
+  "DRAFT": "First version of a paper",
+  "DREAM": "Seen while sleeping",
+  "DRESS": "Worn by a bride",
+  "EAGLE": "Bird of prey",
+  "EARTH": "Our planet",
+  "ELBOW": "Joint in the middle of your arm",
+  "EMBER": "Glowing bit of a fire",
+  "FLOOR": "You walk on it",
+  "FLOUR": "Used to bake cakes",
+  "FOCUS": "Pay close attention",
+  "FRESH": "Not stale",
+  "FROST": "Thin ice on a window",
+  "GIANT": "Huge character in a fairy tale",
+  "GLASS": "Window material",
+  "GRAIN": "Wheat or rice",
+  "GRAPE": "Wine starts with it",
+  "GREEN": "Color of grass",
+  "GUARD": "Protects a place",
+  "GUEST": "Visitor",
+  "HABIT": "Something you do again and again",
+  "HEART": "Pumps blood",
+  "HORSE": "You can ride it",
+  "HOTEL": "Place to stay on a trip",
+  "HOUSE": "Where people live",
+  "HUMAN": "A person",
+  "IGLOO": "Home made of ice",
+  "KAYAK": "Small paddle boat",
+  "LADLE": "Soup scoop",
+  "LASER": "Beam of focused light",
+  "LEMON": "Sour yellow fruit",
+  "LEVEL": "Flat, or a stage in a game",
+  "LIGHT": "Opposite of dark",
+  "LLAMA": "Fluffy animal from the Andes",
+  "LUNCH": "Midday meal",
+  "MANGO": "Sweet tropical fruit",
+  "MAPLE": "Tree that gives syrup",
+  "MARCH": "Walk in step, or a month",
+  "MARGE": "Homer Simpson's wife",
+  "MELON": "Big juicy fruit",
+  "METAL": "Iron or steel",
+  "MONEY": "Dollars and cents",
+  "NOISE": "Loud sound",
+  "NORTH": "Opposite of south",
+  "NOVEL": "Long book of fiction",
+  "NURSE": "Works at a hospital",
+  "OCEAN": "Big body of salt water",
+  "OLIVE": "Small green fruit for pizza",
+  "ONION": "Makes you cry when cut",
+  "OPERA": "Play that is sung",
+  "ORBIT": "Path around a planet",
+  "OTTER": "Playful river animal",
+  "OUNCE": "One sixteenth of a pound",
+  "PAINT": "Color for walls",
+  "PASTA": "Spaghetti or penne",
+  "PEACH": "Fuzzy summer fruit",
+  "PHONE": "You call with it",
+  "PIANO": "Instrument with keys",
+  "PIZZA": "Round Italian pie",
+  "PLATE": "Dish you eat from",
+  "PLAZA": "Open town square",
+  "POINT": "Sharp tip",
+  "PUPIL": "Student",
+  "RADIO": "Plays music in a car",
+  "RANCH": "Big farm for cattle",
+  "REALM": "Kingdom",
+  "RIDER": "Person on a horse",
+  "RIDGE": "Top of a mountain",
+  "RIVER": "Flows to the sea",
+  "ROBOT": "Machine that can move",
+  "ROUTE": "Way to get somewhere",
+  "SALAD": "Bowl of greens",
+  "SALSA": "Spicy dip",
+  "SCENE": "Part of a play",
+  "SCOUT": "Kid in a uniform with badges",
+  "SHARK": "Fish with sharp teeth",
+  "SHEEP": "Animal that gives wool",
+  "SHOES": "Worn on your feet",
+  "SHORE": "Edge of the sea",
+  "SKATE": "Glide on ice",
+  "SKIRT": "Worn around your waist",
+  "SLIDE": "Playground ride",
+  "SNAIL": "Slow animal with a shell",
+  "SNAKE": "Slithering reptile",
+  "SOCKS": "Worn inside shoes",
+  "SOUTH": "Opposite of north",
+  "SPACE": "Where the stars are",
+  "SPEED": "How fast something goes",
+  "SPOON": "Used to eat soup",
+  "SPORT": "Soccer or tennis",
+  "STAGE": "Where actors perform",
+  "STAND": "Not sit",
+  "STARE": "Look at for a long time",
+  "STEAM": "Hot water vapor",
+  "STEEL": "Strong metal",
+  "STORM": "Thunder and lightning",
+  "SUPER": "Great, like a hero",
+  "SWORD": "Knight's blade",
+  "TABLE": "Dinner goes on it",
+  "TEACH": "Help others learn",
+  "TEETH": "Chew with them",
+  "TEMPO": "Speed of the music",
+  "THEME": "Main idea",
+  "THYME": "Herb that sounds like a time",
+  "TIGER": "Big striped cat",
+  "TIMER": "Counts down time",
+  "TOAST": "Browned bread",
+  "TOOTH": "Fairy collects it",
+  "TORCH": "Light carried by hand",
+  "TOWEL": "Dries you off",
+  "TOWER": "Tall, narrow building",
+  "TRACK": "Runners race on it",
+  "TRADE": "Swap one thing for another",
+  "TRAIN": "Runs on tracks",
+  "TULIP": "Spring flower from Holland",
+  "VIRUS": "Germ that makes you sick",
+  "VOICE": "Used for singing",
+  "WATCH": "Wear it on your wrist",
+  "WORLD": "Planet Earth",
+  "YACHT": "Fancy boat",
+  "YOUTH": "Time of being young",
+  "ZEBRA": "Striped animal"
+  };
+
+/* =====================================================================
+   Mini Crossword
+   ===================================================================== */
+
+const mcBoard = $('#mcBoard');
+const mcStatsModal = $('#mcStatsModal');
+const mcHelpModal = $('#mcHelpModal');
+const mcCluesModal = $('#mcCluesModal');
+
+const MC_LIST = MINI_PUZZLES.map(s => s.split('|'));
+const mcCache = {};
+
+// works out numbers, words and clues for one puzzle
+function mcLayout(id) {
+  if (mcCache[id]) return mcCache[id];
+  const rows = MC_LIST[id];
+  const white = (r, c) => r >= 0 && c >= 0 && r < 5 && c < 5 && rows[r][c] !== '#';
+  const cells = [];
+  const entries = [];
+  const at = { across: Array(25).fill(-1), down: Array(25).fill(-1) };
+  let num = 0;
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
+      const i = r * 5 + c;
+      cells.push({ black: !white(r, c), letter: rows[r][c], num: 0 });
+      if (!white(r, c)) continue;
+      const across = !white(r, c - 1) && white(r, c + 1);
+      const down = !white(r - 1, c) && white(r + 1, c);
+      if (across || down) cells[i].num = ++num;
+      [['across', across, 0, 1], ['down', down, 1, 0]].forEach(([dir, starts, dr, dc]) => {
+        if (!starts) return;
+        const list = [];
+        for (let k = 0; white(r + dr * k, c + dc * k); k++) list.push((r + dr * k) * 5 + c + dc * k);
+        const word = list.map(x => cells[x] ? cells[x].letter : rows[Math.floor(x / 5)][x % 5]).join('');
+        entries.push({ dir, num, cells: list, word, clue: MINI_CLUES[word] || '' });
+        list.forEach(x => { at[dir][x] = entries.length - 1; });
+      });
+    }
+  }
+  return (mcCache[id] = { cells, entries, at });
+}
+
+let mc = null;
+let mcSel = 0;
+let mcDir = 'across';
+let mcBusy = false;
+let mcStatsTimer = null;
+let mcArm = null;
+let mcEntered = false;
+const mcCells = [];
+let mcStats = Object.assign({ solved: 0, total: 0, best: 0, clean: 0 }, store.get('mc-stats', {}));
+
+function mcPick() {
+  let recent = store.get('mc-recent', []).filter(i => i >= 0 && i < MC_LIST.length);
+  if (recent.length >= MC_LIST.length) recent = [];
+  const pool = MC_LIST.map((_, i) => i).filter(i => !recent.includes(i));
+  const id = pool[Math.floor(Math.random() * pool.length)];
+  recent.push(id);
+  store.set('mc-recent', recent);
+  return id;
+}
+
+function mcFresh() {
+  const id = mcPick();
+  return { id, letters: Array(25).fill(''), shown: Array(25).fill(0), secs: 0, helps: 0, status: 'playing' };
+}
+
+function mcSave() {
+  store.set('mc-game', mc);
+}
+
+function mcValid(s) {
+  if (!s || !Number.isInteger(s.id) || s.id < 0 || s.id >= MC_LIST.length) return false;
+  if (!Array.isArray(s.letters) || s.letters.length !== 25 || !Array.isArray(s.shown) || s.shown.length !== 25) return false;
+  const lay = mcLayout(s.id);
+  if (!s.letters.every((ch, i) => typeof ch === 'string' && (ch === '' || (/^[A-Z]$/.test(ch) && !lay.cells[i].black)))) return false;
+  if (!Number.isInteger(s.secs) || !Number.isInteger(s.helps)) return false;
+  return ['playing', 'won'].includes(s.status);
+}
+
+const mcEntry = () => {
+  const lay = mcLayout(mc.id);
+  const idx = lay.at[mcDir][mcSel] >= 0 ? lay.at[mcDir][mcSel] : lay.at[mcDir === 'across' ? 'down' : 'across'][mcSel];
+  return lay.entries[idx];
+};
+
+/* drawing */
+
+function mcBuild() {
+  mcBoard.innerHTML = '';
+  for (let i = 0; i < 25; i++) {
+    const cell = el('div', 'mc-cell');
+    cell.dataset.i = i;
+    cell.appendChild(el('span', 'n'));
+    cell.appendChild(el('span', 'l'));
+    mcBoard.appendChild(cell);
+    mcCells.push(cell);
+  }
+  const kb = $('#mcKb');
+  ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'].forEach((letters, i) => {
+    const row = el('div', 'mg-kr');
+    for (const ch of letters) {
+      const b = el('button', 'mg-key', ch);
+      b.dataset.key = ch;
+      b.tabIndex = -1;
+      row.appendChild(b);
+    }
+    if (i === 2) {
+      const back = el('button', 'mg-key wide', '⌫');
+      back.dataset.key = 'back';
+      back.tabIndex = -1;
+      row.appendChild(back);
+    }
+    kb.appendChild(row);
+  });
+}
+
+function mcPaint() {
+  const lay = mcLayout(mc.id);
+  const entry = mcEntry();
+  mcDir = entry.dir;
+  mcCells.forEach((cell, i) => {
+    const info = lay.cells[i];
+    cell.classList.toggle('blk', info.black);
+    cell.classList.toggle('sel', i === mcSel);
+    cell.classList.toggle('word', i !== mcSel && entry.cells.includes(i));
+    cell.classList.toggle('rev', mc.shown[i] === 1);
+    cell.classList.toggle('bad', mc.shown[i] === 2);
+    cell.firstChild.textContent = info.num || '';
+    cell.lastChild.textContent = mc.letters[i];
+  });
+  $('#mcClue').innerHTML = '';
+  $('#mcClue').append(el('b', '', entry.num + (entry.dir === 'across' ? 'A' : 'D')), el('span', '', entry.clue));
+  $('#mcTimer').textContent = fmtTime(mc.secs);
+  const playing = mc.status === 'playing';
+  ['#mcCheck', '#mcReveal'].forEach(s => { $(s).disabled = !playing; });
+}
+
+function mcFirstOpen(entry) {
+  const i = entry.cells.find(c => !mc.letters[c]);
+  return i === undefined ? entry.cells[0] : i;
+}
+
+// jumps to the first empty square of another clue
+function mcStep(delta) {
+  const lay = mcLayout(mc.id);
+  const order = lay.entries.map((e, i) => i).sort((a, b) => {
+    const A = lay.entries[a], B = lay.entries[b];
+    return (A.dir === B.dir ? A.num - B.num : A.dir === 'across' ? -1 : 1);
+  });
+  const now = lay.entries.indexOf(mcEntry());
+  const next = lay.entries[order[(order.indexOf(now) + delta + order.length) % order.length]];
+  mcDir = next.dir;
+  mcSel = mcFirstOpen(next);
+  mcPaint();
+}
+
+/* playing */
+
+function mcTap(i) {
+  const lay = mcLayout(mc.id);
+  if (lay.cells[i].black || mc.status !== 'playing') return;
+  if (i === mcSel) {
+    const other = mcDir === 'across' ? 'down' : 'across';
+    if (lay.at[other][i] >= 0) mcDir = other;
+  } else {
+    mcSel = i;
+    if (lay.at[mcDir][i] < 0) mcDir = mcDir === 'across' ? 'down' : 'across';
+  }
+  mcPaint();
+}
+
+function mcType(letter) {
+  if (mc.status !== 'playing' || mcBusy) return;
+  if (mc.shown[mcSel] === 1) return;
+  mc.letters[mcSel] = letter.toUpperCase();
+  mc.shown[mcSel] = 0;
+  play('key');
+  const cell = mcCells[mcSel];
+  const entry = mcEntry();
+  const at = entry.cells.indexOf(mcSel);
+  if (at < entry.cells.length - 1) mcSel = entry.cells[at + 1];
+  mcPaint();
+  if (!reduceMotion) {
+    cell.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.12)' }, { transform: 'scale(1)' }], { duration: 140, easing: 'ease-out' });
+  }
+  mcSave();
+  mcCheckDone();
+}
+
+function mcBack() {
+  if (mc.status !== 'playing' || mcBusy) return;
+  const entry = mcEntry();
+  if (mc.letters[mcSel] && mc.shown[mcSel] !== 1) {
+    mc.letters[mcSel] = '';
+    mc.shown[mcSel] = 0;
+  } else {
+    const at = entry.cells.indexOf(mcSel);
+    if (at > 0) {
+      mcSel = entry.cells[at - 1];
+      if (mc.shown[mcSel] !== 1) { mc.letters[mcSel] = ''; mc.shown[mcSel] = 0; }
+    }
+  }
+  mcPaint();
+  mcSave();
+}
+
+function mcMove(dr, dc) {
+  const lay = mcLayout(mc.id);
+  let r = Math.floor(mcSel / 5);
+  let c = mcSel % 5;
+  for (;;) {
+    r += dr;
+    c += dc;
+    if (r < 0 || c < 0 || r > 4 || c > 4) return;
+    if (!lay.cells[r * 5 + c].black) break;
+  }
+  mcSel = r * 5 + c;
+  const want = dr ? 'down' : 'across';
+  if (lay.at[want][mcSel] >= 0) mcDir = want;
+  mcPaint();
+}
+
+function mcAllFilled() {
+  const lay = mcLayout(mc.id);
+  return lay.cells.every((info, i) => info.black || mc.letters[i]);
+}
+
+function mcAllRight() {
+  const lay = mcLayout(mc.id);
+  return lay.cells.every((info, i) => info.black || mc.letters[i] === info.letter);
+}
+
+function mcCheckDone() {
+  if (!mcAllFilled()) return;
+  if (mcAllRight()) mcWin();
+  else toast('Almost! Something is off', 1400);
+}
+
+function mcCheck() {
+  if (mc.status !== 'playing') return;
+  const lay = mcLayout(mc.id);
+  let wrong = 0;
+  lay.cells.forEach((info, i) => {
+    if (!info.black && mc.letters[i] && mc.letters[i] !== info.letter && mc.shown[i] !== 1) {
+      mc.shown[i] = 2;
+      wrong++;
+    }
+  });
+  mc.helps++;
+  mcPaint();
+  mcSave();
+  if (wrong) {
+    play('error');
+    if (!reduceMotion) {
+      mcCells.filter(c => c.classList.contains('bad')).forEach(c => c.animate(
+        [{ transform: 'translateX(0)' }, { transform: 'translateX(-3px)' }, { transform: 'translateX(3px)' }, { transform: 'translateX(0)' }],
+        { duration: 300 }
+      ));
+    }
+    toast(wrong === 1 ? '1 letter is wrong' : wrong + ' letters are wrong', 1400);
+  } else {
+    toast('Looking good so far', 1400);
+  }
+}
+
+function mcReveal() {
+  if (mc.status !== 'playing') return;
+  const lay = mcLayout(mc.id);
+  const entry = mcEntry();
+  mc.helps++;
+  entry.cells.forEach((i, k) => {
+    mc.letters[i] = lay.cells[i].letter;
+    mc.shown[i] = 1;
+    if (!reduceMotion) {
+      mcCells[i].animate([{ transform: 'rotateX(90deg)' }, { transform: 'rotateX(0)' }], { duration: 300, delay: k * 70, easing: 'ease-out' });
+    }
+  });
+  play('hint');
+  mcPaint();
+  mcSave();
+  mcCheckDone();
+}
+
+/* winning, stats, new puzzles */
+
+function mcWin() {
+  mc.status = 'won';
+  mcStats.solved++;
+  mcStats.total += mc.secs;
+  if (!mcStats.best || mc.secs < mcStats.best) mcStats.best = mc.secs;
+  if (mc.helps === 0) mcStats.clean++;
+  store.set('mc-stats', mcStats);
+  mcSave();
+  mcPaint();
+  if (!reduceMotion) {
+    mcCells.forEach((c, i) => c.animate(
+      [{ transform: 'scale(1)' }, { transform: 'scale(1.14)', offset: 0.4 }, { transform: 'scale(1)' }],
+      { duration: 420, delay: ((i % 5) + Math.floor(i / 5)) * 60, easing: 'ease-in-out' }
+    ));
+  }
+  toast(mc.helps === 0 ? 'Perfect!' : 'Solved!', 1800);
+  launchConfetti();
+  play('win');
+  mcStatsTimer = setTimeout(mcOpenStats, 2000);
+}
+
+function mcRenderStats() {
+  $('#mcSolved').textContent = mcStats.solved;
+  $('#mcBest').textContent = mcStats.best ? fmtTime(mcStats.best) : '-';
+  $('#mcAvg').textContent = mcStats.solved ? fmtTime(Math.round(mcStats.total / mcStats.solved)) : '-';
+  $('#mcClean').textContent = mcStats.clean;
+  const line = $('#mcResultLine');
+  if (mc.status === 'won') {
+    line.textContent = 'Solved in ' + fmtTime(mc.secs) + ' · ' + (mc.helps ? mc.helps + (mc.helps === 1 ? ' check or reveal' : ' checks or reveals') : 'no help');
+  } else {
+    line.textContent = '';
+  }
+  $('#mcEndFooter').classList.toggle('hidden', mc.status !== 'won');
+}
+
+function mcOpenStats() {
+  clearTimeout(mcStatsTimer);
+  if (activeApp !== 'mini') return;
+  mcRenderStats();
+  openModal(mcStatsModal);
+}
+
+async function mcShare() {
+  await copyText('Mini Crossword ∞\n⏱ ' + fmtTime(mc.secs) + (mc.helps ? '  💡 ' + mc.helps : '  ✨ no help'));
+  toast('Copied results to clipboard', 1500);
+}
+
+function mcRenderList() {
+  const lay = mcLayout(mc.id);
+  ['across', 'down'].forEach(dir => {
+    const box = $(dir === 'across' ? '#mcAcross' : '#mcDown');
+    box.innerHTML = '';
+    lay.entries.filter(e => e.dir === dir).forEach(e => {
+      const b = el('button', e.cells.every(i => mc.letters[i]) ? 'done' : '');
+      b.append(el('b', '', e.num), el('span', '', e.clue));
+      b.addEventListener('click', () => {
+        closeModal(mcCluesModal);
+        mcDir = e.dir;
+        mcSel = mcFirstOpen(e);
+        mcPaint();
+      });
+      box.appendChild(b);
+    });
+  });
+}
+
+async function mcNewPuzzle() {
+  if (mcBusy) return;
+  mcBusy = true;
+  clearTimeout(mcStatsTimer);
+  closeModal(mcStatsModal);
+  clearToasts();
+  stopConfetti();
+  if (!reduceMotion) {
+    await mcBoard.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'ease-in', fill: 'forwards' }).finished;
+  }
+  mc = mcFresh();
+  mcDir = 'across';
+  mcSel = mcLayout(mc.id).entries[0].cells[0];
+  mcPaint();
+  mcSave();
+  mcBoard.getAnimations().forEach(a => a.cancel());
+  if (!reduceMotion) {
+    mcCells.forEach((c, i) => c.animate(
+      [{ opacity: 0, transform: 'scale(0.8)' }, { opacity: 1, transform: 'scale(1)' }],
+      { duration: 380, delay: ((i % 5) + Math.floor(i / 5)) * 30, easing: 'cubic-bezier(0.2, 0.9, 0.3, 1.1)', fill: 'backwards' }
+    ));
+  }
+  mcBusy = false;
+}
+
+// "New" asks for a second tap so a half-finished puzzle isn't thrown away by accident
+function mcNewClick() {
+  if (mc.status === 'won' || !mc.letters.some(Boolean)) {
+    mcNewPuzzle();
+    return;
+  }
+  const label = $('#mcNew span');
+  if (!mcArm) {
+    label.textContent = 'Sure?';
+    mcArm = setTimeout(() => { mcArm = null; label.textContent = 'New'; }, 2500);
+    return;
+  }
+  clearTimeout(mcArm);
+  mcArm = null;
+  label.textContent = 'New';
+  mcNewPuzzle();
+}
+
+function enterMini() {
+  if (mcEntered) return;
+  mcEntered = true;
+  if (mc.status === 'won') {
+    mcStatsTimer = setTimeout(mcOpenStats, 500);
+  } else if (!store.get('mc-seen-help', false)) {
+    store.set('mc-seen-help', true);
+    setTimeout(() => { if (activeApp === 'mini') openModal(mcHelpModal); }, 450);
+  }
+}
+
+function initMini() {
+  mcBuild();
+  const saved = store.get('mc-game', null);
+  mc = mcValid(saved) ? Object.assign({ helps: 0 }, saved) : mcFresh();
+  mcSel = mcLayout(mc.id).entries[0].cells[0];
+  mcDir = 'across';
+  mcSel = mcFirstOpen(mcLayout(mc.id).entries[0]);
+  mcPaint();
+  mcSave();
+
+  mcBoard.addEventListener('click', e => {
+    const cell = e.target.closest('.mc-cell');
+    if (cell && !mcBusy) mcTap(+cell.dataset.i);
+  });
+  $('#mcKb').addEventListener('click', e => {
+    const k = e.target.closest('.mg-key');
+    if (!k) return;
+    if (k.dataset.key === 'back') mcBack();
+    else mcType(k.dataset.key);
+  });
+  $('#mcPrev').addEventListener('click', () => mcStep(-1));
+  $('#mcNext').addEventListener('click', () => mcStep(1));
+  $('#mcCheck').addEventListener('click', mcCheck);
+  $('#mcReveal').addEventListener('click', mcReveal);
+  $('#mcNew').addEventListener('click', mcNewClick);
+  $('#mcList').addEventListener('click', () => { mcRenderList(); openModal(mcCluesModal); });
+  $('#mcStatsBtn').addEventListener('click', mcOpenStats);
+  $('#mcHelpBtn').addEventListener('click', () => openModal(mcHelpModal));
+  $('#mcAgainBtn').addEventListener('click', mcNewPuzzle);
+  $('#mcShareBtn').addEventListener('click', mcShare);
+
+  document.addEventListener('keydown', e => {
+    if (activeApp !== 'mini' || modalIsOpen() || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (/^[a-zA-Z]$/.test(e.key)) mcType(e.key);
+    else if (e.key === 'Backspace') mcBack();
+    else if (e.key === 'ArrowUp') { e.preventDefault(); mcMove(-1, 0); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); mcMove(1, 0); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); mcMove(0, -1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); mcMove(0, 1); }
+    else if (e.key === 'Tab') { e.preventDefault(); mcStep(e.shiftKey ? -1 : 1); }
+    else if (e.key === ' ') { e.preventDefault(); mcTap(mcSel); }
+  });
+
+  // the clock only runs while the puzzle is on screen and nothing is covering it
+  setInterval(() => {
+    if (activeApp !== 'mini' || mc.status !== 'playing' || document.hidden || modalIsOpen()) return;
+    mc.secs++;
+    $('#mcTimer').textContent = fmtTime(mc.secs);
+    if (mc.secs % 5 === 0) mcSave();
+  }, 1000);
+}
+
+/* =====================================================================
+   Daily puzzles: dates, the daily.json file, the archive window, and
+   how Wordle and Connections play a daily puzzle
+   ===================================================================== */
+
+const DAILY_FILE = 'daily.json';
+const CN_BASE = PUZZLES.length;
+const CN_WORD_OK = /^[A-Z0-9 '&.!?-]{1,16}$/;
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const pad2 = n => String(n).padStart(2, '0');
+const dateStr = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+const todayStr = () => dateStr(new Date());
+const parseDate = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (s, n) => { const d = parseDate(s); d.setDate(d.getDate() + n); return dateStr(d); };
+const isDate = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && dateStr(parseDate(s)) === s;
+
+function niceDate(s) {
+  const d = parseDate(s);
+  const yr = d.getFullYear() === new Date().getFullYear() ? '' : ', ' + d.getFullYear();
+  return MONTHS[d.getMonth()] + ' ' + d.getDate() + yr;
+}
+
+function hashStr(str) {
+  let h = 2166136261;
+  for (const ch of str) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return h >>> 0;
+}
+
+/* checking entries */
+
+function wordleEntryOk(e) {
+  return !!e && typeof e.word === 'string' && /^[a-z]{4,7}$/.test(e.word) && wordsFor(e.word.length).valid.has(e.word);
+}
+
+function connEntryOk(e) {
+  if (!e || !Array.isArray(e.groups) || e.groups.length !== 4) return false;
+  const all = [];
+  for (const g of e.groups) {
+    if (!g || typeof g.title !== 'string' || !g.title.trim() || !Array.isArray(g.words) || g.words.length !== 4) return false;
+    for (const w of g.words) {
+      if (typeof w !== 'string' || !CN_WORD_OK.test(w)) return false;
+      all.push(w);
+    }
+  }
+  return new Set(all).size === 16;
+}
+
+// keeps only the entries that are safe to play
+function cleanDaily(raw) {
+  const out = { wordle: {}, connections: {} };
+  if (!raw || typeof raw !== 'object') return out;
+  [['wordle', wordleEntryOk], ['connections', connEntryOk]].forEach(([game, ok]) => {
+    const list = raw[game];
+    if (!list || typeof list !== 'object') return;
+    Object.keys(list).forEach(d => {
+      if (isDate(d) && ok(list[d])) out[game][d] = Object.assign({}, list[d], { hidden: !!list[d].hidden });
+    });
+  });
+  return out;
+}
+
+/* the daily.json file */
+
+let DAILY = { wordle: {}, connections: {} };
+let dailyLoad = null;
+
+function loadDaily(fresh) {
+  if (dailyLoad && !fresh) return dailyLoad;
+  dailyLoad = (async () => {
+    let raw = {};
+    try {
+      const res = await fetch(DAILY_FILE + '?_=' + Date.now(), { cache: 'no-store' });
+      if (res.ok) raw = await res.json();
+    } catch (e) {}
+    DAILY = cleanDaily(raw);
+    return DAILY;
+  })();
+  return dailyLoad;
+}
+
+// a day with nothing posted still gets a puzzle, so the daily is never empty
+function autoWordle(date) {
+  const list = wordsFor(5).answers;
+  return { word: list[hashStr('w' + date) % list.length], auto: true };
+}
+
+function autoConn(date) {
+  const p = PUZZLES[hashStr('c' + date) % CN_BASE];
+  return { groups: p.map(g => ({ title: g.title, words: g.words.slice() })), auto: true };
+}
+
+function dailyEntry(game, date) {
+  const posted = DAILY[game][date];
+  if (posted) return posted;
+  if (date !== todayStr()) return null;
+  return game === 'wordle' ? autoWordle(date) : autoConn(date);
+}
+
+const dailyKey = (game, date) => (game === 'wordle' ? 'dw-' : 'dc-') + date;
+
+/* stats: one record per game, streak only counts puzzles played on their own day */
+
+function dailyStats(kind) {
+  const s = Object.assign(
+    { played: 0, wins: 0, streak: 0, maxStreak: 0, lastWin: '', dist: kind === 'w' ? [0, 0, 0, 0, 0, 0] : [0, 0, 0, 0] },
+    store.get(kind === 'w' ? 'dw-stats' : 'dc-stats', {})
+  );
+  if (s.lastWin && s.lastWin < addDays(todayStr(), -1)) s.streak = 0;
+  return s;
+}
+
+function dailyRecord(kind, won, slot, date) {
+  const s = dailyStats(kind);
+  s.played++;
+  if (won) {
+    s.wins++;
+    s.dist[slot]++;
+  }
+  if (date === todayStr()) {
+    if (won) {
+      s.streak = s.lastWin === addDays(date, -1) ? s.streak + 1 : 1;
+      s.lastWin = date;
+      s.maxStreak = Math.max(s.maxStreak, s.streak);
+    } else {
+      s.streak = 0;
+    }
+  }
+  store.set(kind === 'w' ? 'dw-stats' : 'dc-stats', s);
+  return s;
+}
+
+function countdownText() {
+  const now = new Date();
+  const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const secs = Math.max(0, Math.floor((next - now) / 1000));
+  return 'Next puzzle in ' + pad2(Math.floor(secs / 3600)) + ':' + pad2(Math.floor(secs % 3600 / 60)) + ':' + pad2(secs % 60);
+}
+
+/* the window with today's puzzle and the archive */
+
+const dailyModal = $('#dailyModal');
+let dailyGame = 'wordle';
+
+function dailyStatus(game, date) {
+  const saved = store.get(dailyKey(game, date), null);
+  if (!saved || !Array.isArray(saved.guesses)) return { text: 'Not played yet', cls: '', done: false, started: false };
+  if (saved.status === 'won') {
+    return { text: game === 'wordle' ? 'Solved in ' + saved.guesses.length : 'Solved', cls: 'won', done: true, started: true };
+  }
+  if (saved.status === 'lost') return { text: 'Missed', cls: '', done: true, started: true };
+  return { text: 'In progress', cls: '', done: false, started: saved.guesses.length > 0 };
+}
+
+async function openDaily(game) {
+  dailyGame = game;
+  $('#dailyTitle').textContent = game === 'wordle' ? 'Daily Wordle' : 'Daily Connections';
+  $('#dailyToday').innerHTML = '<span class="st">Loading...</span>';
+  $('#dailyList').innerHTML = '';
+  openModal(dailyModal);
+  await loadDaily(true);
+  if (dailyGame === game) renderDaily();
+}
+
+function renderDaily() {
+  const game = dailyGame;
+  const today = todayStr();
+  const box = $('#dailyToday');
+  const st = dailyStatus(game, today);
+  box.innerHTML = '';
+  box.append(el('b', '', 'Today · ' + niceDate(today)));
+  box.append(el('span', 'st', st.text));
+  const btn = el('button', 'btn btn-main', st.done ? 'View' : st.started ? 'Continue' : 'Play');
+  btn.addEventListener('click', () => playDaily(game, today));
+  box.append(btn);
+  if (st.done) box.append(el('span', 'st next-daily', countdownText()));
+
+  const list = $('#dailyList');
+  list.innerHTML = '';
+  const dates = Object.keys(DAILY[game]).filter(d => d < today && !DAILY[game][d].hidden).sort().reverse();
+  dates.forEach(d => {
+    const s = dailyStatus(game, d);
+    const row = el('button', 'daily-row ' + s.cls);
+    row.append(el('span', '', niceDate(d)), el('span', 'st', s.text));
+    row.addEventListener('click', () => playDaily(game, d));
+    list.appendChild(row);
+  });
+  if (!dates.length) list.appendChild(el('div', 'daily-empty', 'Older puzzles will show up here.'));
+}
+
+function playDaily(game, date) {
+  const entry = dailyEntry(game, date);
+  if (!entry) return;
+  closeModal(dailyModal);
+  if (game === 'wordle') wordleStartDaily(date, entry);
+  else cnStartDaily(date, entry);
+}
+
+/* Wordle */
+
+async function wordleStartDaily(date, puzzle) {
+  if (busy) return;
+  if (state.daily === date && state.answer === puzzle.word) {
+    if (state.status !== 'playing') openStats();
+    return;
+  }
+  busy = true;
+  clearTimeout(statsTimer);
+  closeModal(statsModal);
+  clearToasts();
+  stopConfetti();
+  const out = boardEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: 'ease-in', fill: 'forwards' });
+  await out.finished;
+
+  const len = puzzle.word.length;
+  const saved = store.get(dailyKey('wordle', date), null);
+  const good = saved && Array.isArray(saved.guesses) && saved.guesses.length <= ROWS
+    && saved.guesses.every(g => typeof g === 'string' && g.length === len)
+    && ['playing', 'won', 'lost'].includes(saved.status);
+  state = {
+    len,
+    answer: puzzle.word,
+    guesses: good ? saved.guesses.slice() : [],
+    current: '',
+    status: good ? saved.status : 'playing',
+    hard: good ? !!saved.hard : settings.hard,
+    hints: [],
+    daily: date
+  };
+  buildBoard(len);
+  stats = dailyStats('w');
+  resetKeys();
+  state.guesses.forEach((guess, r) => {
+    const result = evaluate(guess, state.answer);
+    [...guess].forEach((ch, c) => setTile(tiles[r][c], ch, result[c]));
+    updateKeys(guess, result, false);
+  });
+  renderHints();
+  renderControls();
+
+  out.cancel();
+  await boardEl.animate(
+    [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'translateY(0)' }],
+    { duration: 300, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }
+  ).finished;
+  busy = false;
+  if (state.status !== 'playing') statsTimer = setTimeout(openStats, 500);
+}
+
+async function wordleExitDaily() {
+  if (!state.daily || busy) return;
+  busy = true;
+  clearTimeout(statsTimer);
+  closeModal(statsModal);
+  clearToasts();
+  stopConfetti();
+  const out = boardEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: 'ease-in', fill: 'forwards' });
+  await out.finished;
+  const saved = store.get('iw-game', null);
+  if (validSave(saved)) restore(saved);
+  else startRound(true);
+  out.cancel();
+  await boardEl.animate(
+    [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'translateY(0)' }],
+    { duration: 300, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }
+  ).finished;
+  busy = false;
+}
+
+/* Connections */
+
+const dailyConnIds = {};
+
+// puzzles from daily.json are added to the same list the random ones live in
+function dailyConnId(date, entry) {
+  const sig = JSON.stringify(entry.groups);
+  const known = dailyConnIds[date];
+  if (known && known.sig === sig) return known.id;
+  PUZZLES.push(entry.groups.map(g => ({ title: g.title, words: g.words.slice() })));
+  dailyConnIds[date] = { id: PUZZLES.length - 1, sig };
+  return PUZZLES.length - 1;
+}
+
+function cnLoadDaily(date, entry) {
+  const id = dailyConnId(date, entry);
+  const saved = store.get(dailyKey('connections', date), null);
+  const words = [].concat(...PUZZLES[id].map(g => g.words));
+  let base = { id, order: seededShuffle(words, mulberry32(hashStr('o' + date))), solved: [], mistakes: 0, tried: [], guesses: [], status: 'playing' };
+  if (saved && cnValid(Object.assign({ id }, saved))) base = Object.assign({ id }, saved);
+  const game = cnAttach(base, 'd');
+  game.daily = date;
+  if (game.status !== 'playing' || game.solved.length === 4) {
+    [0, 1, 2, 3].forEach(g => { if (!game.solved.includes(g)) game.solved.push(g); });
+    game.order = [];
+    if (game.status === 'playing') game.status = 'won';
+  }
+  return game;
+}
+
+async function cnSwapGame(make) {
+  clearTimeout(cnTimer);
+  closeModal(cnStatsModal);
+  clearToasts();
+  stopConfetti();
+  cnSave();
+  const out = cnBoard.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: 'ease-in', fill: 'forwards' });
+  await out.finished;
+  cn = make();
+  cnRender();
+  cnSyncMode();
+  out.cancel();
+  await cnEnter();
+}
+
+async function cnStartDaily(date, entry) {
+  if (cnBusy) return;
+  if (cn.mode === 'd' && cn.daily === date && dailyConnIds[date] && dailyConnIds[date].id === cn.id) {
+    if (cn.status !== 'playing') cnOpenStats();
+    return;
+  }
+  cnBusy = true;
+  await cnSwapGame(() => cnLoadDaily(date, entry));
+  cnBusy = false;
+  if (cn.status !== 'playing') cnTimer = setTimeout(cnOpenStats, 500);
+}
+
+async function cnLeaveDaily() {
+  if (cnBusy || cn.mode !== 'd') return;
+  cnBusy = true;
+  await cnSwapGame(() => cnLoad(cnSettings.unlock ? 'u' : 'n'));
+  cnBusy = false;
+}
+
+/* start up */
+
+function initDaily() {
+  // the "next puzzle in" lines under the end-of-game buttons
+  [['#endFooter', 'wNext'], ['#cnEndFooter', 'cnNextDaily']].forEach(([footer, id]) => {
+    const p = el('p', 'next-daily hidden');
+    p.id = id;
+    $(footer).before(p);
+  });
+  setInterval(() => {
+    document.querySelectorAll('.next-daily:not(.hidden)').forEach(p => { p.textContent = countdownText(); });
+  }, 1000);
+
+  $('#wDailyBtn').addEventListener('click', () => openDaily('wordle'));
+  $('#cnDailyBtn').addEventListener('click', () => openDaily('connections'));
+  $('#dailyRandom').addEventListener('click', () => {
+    closeModal(dailyModal);
+    if (dailyGame === 'wordle') wordleExitDaily();
+    else cnLeaveDaily();
+  });
+
+  // the editor is hidden: open it with #editor or by tapping the menu title five times
+  let taps = 0;
+  let tapTimer = null;
+  $('.hub-title').addEventListener('click', () => {
+    taps++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => { taps = 0; }, 1500);
+    if (taps >= 5) {
+      taps = 0;
+      showApp('editor');
+    }
+  });
+  const fromHash = () => { if (location.hash === '#editor') showApp('editor'); };
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+
+  loadDaily();
+}
+
+/* =====================================================================
+   Editor: build daily puzzles and save them to the GitHub repo
+   ===================================================================== */
+
+const ED_DEFAULTS = { owner: 'sugarfreechexmix', repo: 'sugarfreechexmix.2github.io', path: 'daily.json' };
+const ED_COLORS = ['Yellow', 'Green', 'Blue', 'Purple'];
+
+let edConf = Object.assign({}, ED_DEFAULTS, store.get('ed-conf', {}));
+let edToken = store.get('ed-token', '');
+let edData = { wordle: {}, connections: {} };
+let edBusy = false;
+let edArm = null;
+const edConn = { words: Array(16).fill(''), step: 1, groups: [], picked: [], color: 0 };
+
+/* talking to GitHub */
+
+const edB64 = text => btoa(unescape(encodeURIComponent(text)));
+const edUnB64 = b64 => decodeURIComponent(escape(atob(b64.replace(/\s/g, ''))));
+
+function edUrl() {
+  return 'https://api.github.com/repos/' + encodeURIComponent(edConf.owner) + '/' + encodeURIComponent(edConf.repo) + '/contents/' + edConf.path.split('/').map(encodeURIComponent).join('/');
+}
+
+function edHeaders() {
+  return { Authorization: 'Bearer ' + edToken, Accept: 'application/vnd.github+json' };
+}
+
+function edError(res) {
+  const err = new Error(
+    res.status === 401 ? 'GitHub says the token is wrong or has expired.'
+      : res.status === 403 || res.status === 404 ? 'The token can’t reach that repo. Check the names and that Contents is set to Read and write.'
+        : res.status === 409 || res.status === 422 ? 'The file changed while saving. Try again.'
+          : 'GitHub had a problem (' + res.status + ').'
+  );
+  err.status = res.status;
+  return err;
+}
+
+function edNormalize(raw) {
+  const data = raw && typeof raw === 'object' ? raw : {};
+  if (!data.wordle || typeof data.wordle !== 'object') data.wordle = {};
+  if (!data.connections || typeof data.connections !== 'object') data.connections = {};
+  return data;
+}
+
+async function ghGet() {
+  const res = await fetch(edUrl() + '?_=' + Date.now(), { headers: edHeaders(), cache: 'no-store' });
+  if (res.status === 404) return { sha: null, data: edNormalize({}) };
+  if (!res.ok) throw edError(res);
+  const file = await res.json();
+  let data = {};
+  try { data = JSON.parse(edUnB64(file.content)); } catch (e) {}
+  return { sha: file.sha, data: edNormalize(data) };
+}
+
+async function ghPut(data, sha, message) {
+  const body = { message, content: edB64(JSON.stringify(data, null, 1) + '\n') };
+  if (sha) body.sha = sha;
+  const res = await fetch(edUrl(), {
+    method: 'PUT',
+    headers: Object.assign({ 'Content-Type': 'application/json' }, edHeaders()),
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw edError(res);
+}
+
+// reads the newest file, changes it, and writes it back
+async function edCommit(change, message, attempt = 0) {
+  const cur = await ghGet();
+  change(cur.data);
+  try {
+    await ghPut(cur.data, cur.sha, message);
+  } catch (e) {
+    if ((e.status === 409 || e.status === 422) && attempt < 2) return edCommit(change, message, attempt + 1);
+    throw e;
+  }
+  edData = cur.data;
+  DAILY = cleanDaily(cur.data);
+  dailyLoad = Promise.resolve(DAILY);
+  edRenderList();
+}
+
+async function edRun(task, okText) {
+  if (edBusy) return false;
+  edBusy = true;
+  document.querySelectorAll('#edApp .btn').forEach(b => { b.disabled = true; });
+  try {
+    await task();
+    if (okText) toast(okText, 2600);
+    return true;
+  } catch (e) {
+    toast(e.message || 'Something went wrong', 3200);
+    return false;
+  } finally {
+    edBusy = false;
+    document.querySelectorAll('#edApp .btn').forEach(b => { b.disabled = false; });
+    edCheckWordle();
+    edCheckConn();
+  }
+}
+
+/* connecting */
+
+function edShowConnect(show) {
+  $('#edConnect').classList.toggle('hidden', !show);
+  $('#edWork').classList.toggle('hidden', show);
+}
+
+async function edLoadData() {
+  const cur = await ghGet();
+  edData = cur.data;
+  edRenderList();
+}
+
+function enterEditor() {
+  $('#edOwner').value = edConf.owner;
+  $('#edRepo').value = edConf.repo;
+  $('#edPath').value = edConf.path;
+  $('#edToken').value = '';
+  if (!edToken) {
+    edShowConnect(true);
+    return;
+  }
+  edShowConnect(false);
+  $('#edWho').textContent = edConf.owner + '/' + edConf.repo;
+  edRun(edLoadData);
+}
+
+async function edConnectClick() {
+  const token = $('#edToken').value.trim() || edToken;
+  const conf = { owner: $('#edOwner').value.trim(), repo: $('#edRepo').value.trim(), path: $('#edPath').value.trim().replace(/^\/+/, '') };
+  if (!token || !conf.owner || !conf.repo || !conf.path) {
+    toast('Fill in every box', 1800);
+    return;
+  }
+  const keepConf = edConf, keepToken = edToken;
+  edConf = conf;
+  edToken = token;
+  const ok = await edRun(edLoadData, 'Connected');
+  if (ok) {
+    store.set('ed-conf', conf);
+    store.set('ed-token', token);
+    $('#edWho').textContent = conf.owner + '/' + conf.repo;
+    $('#edToken').value = '';
+    edShowConnect(false);
+    edResetWordle();
+    edResetConn();
+  } else {
+    edConf = keepConf;
+    edToken = keepToken;
+  }
+}
+
+function edDisconnect() {
+  store.set('ed-token', '');
+  edToken = '';
+  edShowConnect(true);
+}
+
+/* tabs and dates */
+
+function edTab(name) {
+  document.querySelectorAll('#edTabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
+  $('#edTabWordle').classList.toggle('hidden', name !== 'wordle');
+  $('#edTabConn').classList.toggle('hidden', name !== 'conn');
+  $('#edTabList').classList.toggle('hidden', name !== 'list');
+  if (name === 'list') edRenderList();
+}
+
+function edNextFreeDate(game) {
+  let d = addDays(todayStr(), 1);
+  for (let i = 0; i < 800 && edData[game] && edData[game][d]; i++) d = addDays(d, 1);
+  return d;
+}
+
+function edNote(id, text, kind) {
+  const p = $(id);
+  p.textContent = text;
+  p.className = 'ed-msg' + (kind ? ' ' + kind : '');
+}
+
+/* wordle editor */
+
+function edResetWordle() {
+  $('#edWWord').value = '';
+  $('#edWDate').value = edNextFreeDate('wordle');
+  edCheckWordle();
+}
+
+function edWordleProblem() {
+  const word = $('#edWWord').value.trim().toLowerCase();
+  const date = $('#edWDate').value;
+  if (!isDate(date)) return 'Pick a date';
+  if (!word) return 'Type a word';
+  if (!/^[a-z]+$/.test(word)) return 'Letters only';
+  if (word.length < 4 || word.length > 7) return 'Use 4 to 7 letters';
+  if (!wordsFor(word.length).valid.has(word)) return 'That word isn’t in the word list, so players couldn’t guess it';
+  return '';
+}
+
+function edCheckWordle() {
+  const word = $('#edWWord').value.trim().toLowerCase();
+  const date = $('#edWDate').value;
+  const prev = $('#edWPrev');
+  prev.innerHTML = '';
+  [...word].forEach(ch => {
+    const cell = el('div', 'mg-cell', ch);
+    cell.dataset.state = 'correct';
+    prev.appendChild(cell);
+  });
+  const problem = edWordleProblem();
+  const exists = isDate(date) && edData.wordle[date];
+  if (!word) edNote('#edWMsg', '');
+  else if (problem) edNote('#edWMsg', problem, 'bad');
+  else edNote('#edWMsg', exists ? 'This will replace the Wordle already on ' + niceDate(date) : 'Looks good', 'good');
+  $('#edWPost').disabled = !!problem || edBusy;
+  $('#edWPost').textContent = date && isDate(date) ? 'Post for ' + niceDate(date) : 'Post';
+}
+
+function edPostWordle() {
+  if (edWordleProblem()) return;
+  const date = $('#edWDate').value;
+  const word = $('#edWWord').value.trim().toLowerCase();
+  edRun(async () => {
+    await edCommit(data => {
+      const old = data.wordle[date];
+      data.wordle[date] = { word, hidden: old ? !!old.hidden : false };
+    }, 'Wordle for ' + date);
+    $('#edWWord').value = '';
+    $('#edWDate').value = edNextFreeDate('wordle');
+  }, 'Posted Wordle for ' + niceDate(date) + '. It can take a minute to go live.');
+}
+
+/* connections editor */
+
+function edResetConn() {
+  Object.assign(edConn, { words: Array(16).fill(''), step: 1, groups: [], picked: [], color: 0 });
+  $('#edCDate').value = edNextFreeDate('connections');
+  edRenderConn();
+}
+
+function edRenderInputs() {
+  const box = $('#edCInputs');
+  if (box.children.length !== 16) {
+    box.innerHTML = '';
+    for (let i = 0; i < 16; i++) {
+      const input = el('input');
+      input.maxLength = 16;
+      input.autocomplete = 'off';
+      input.dataset.i = i;
+      input.setAttribute('aria-label', 'Word ' + (i + 1));
+      box.appendChild(input);
+    }
+  }
+  [...box.children].forEach((input, i) => { if (input.value !== edConn.words[i]) input.value = edConn.words[i]; });
+}
+
+function edWordsProblem() {
+  const words = edConn.words.map(w => w.trim().replace(/\s+/g, ' '));
+  if (words.some(w => !w)) return 'Fill in all 16 boxes';
+  const bad = words.find(w => !CN_WORD_OK.test(w));
+  if (bad) return '“' + bad + '” has a character that isn’t allowed';
+  const seen = new Set();
+  for (const w of words) {
+    if (seen.has(w)) return '“' + w + '” is in there twice';
+    seen.add(w);
+  }
+  return '';
+}
+
+const edLeft = () => edConn.words.map(w => w.trim().replace(/\s+/g, ' ')).filter(w => !edConn.groups.some(g => g.words.includes(w)));
+
+function edRenderBoard() {
+  const board = $('#edCBoard');
+  board.innerHTML = '';
+  edConn.groups.slice().sort((a, b) => a.color - b.color).forEach(g => {
+    const row = el('div', 'cn-group c' + g.color);
+    row.append(el('b', '', g.title), el('span', '', g.words.join(', ')));
+    const x = el('button', 'x', '×');
+    x.setAttribute('aria-label', 'Remove group');
+    x.addEventListener('click', () => {
+      edConn.groups = edConn.groups.filter(o => o !== g);
+      edConn.picked = [];
+      edRenderConn();
+    });
+    row.appendChild(x);
+    board.appendChild(row);
+  });
+  edLeft().forEach(w => {
+    const tile = el('button', 'cn-tile' + (edConn.picked.includes(w) ? ' sel' : ''), w);
+    tile.style.setProperty('--n', Math.max(5, w.length));
+    tile.addEventListener('click', () => {
+      const at = edConn.picked.indexOf(w);
+      if (at >= 0) edConn.picked.splice(at, 1);
+      else if (edConn.picked.length < 4) edConn.picked.push(w);
+      edRenderConn();
+    });
+    board.appendChild(tile);
+  });
+}
+
+function edRenderConn() {
+  const one = edConn.step === 1;
+  $('#edCStep1').classList.toggle('hidden', !one);
+  $('#edCStep2').classList.toggle('hidden', one);
+  if (one) {
+    edRenderInputs();
+    edCheckConn();
+    return;
+  }
+  edRenderBoard();
+  const maker = $('#edCMaker');
+  const full = edConn.picked.length === 4;
+  maker.classList.toggle('hidden', !full);
+  if (full) {
+    const used = edConn.groups.map(g => g.color);
+    if (used.includes(edConn.color)) edConn.color = [0, 1, 2, 3].find(c => !used.includes(c));
+    document.querySelectorAll('#edCColors button').forEach(b => {
+      const c = +b.dataset.c;
+      b.disabled = used.includes(c);
+      b.classList.toggle('on', c === edConn.color);
+      b.setAttribute('aria-label', ED_COLORS[c]);
+    });
+  }
+  $('#edCHint').textContent = edConn.groups.length === 4
+    ? 'All four groups are set.'
+    : full ? 'Pick a color and name this group.' : 'Tap 4 words that go together. Groups made: ' + edConn.groups.length + ' of 4.';
+  edCheckConn();
+}
+
+function edConnProblem() {
+  if (!isDate($('#edCDate').value)) return 'Pick a date';
+  if (edConn.step === 1) return edWordsProblem();
+  if (edConn.groups.length !== 4) return 'Make all four groups';
+  return '';
+}
+
+function edCheckConn() {
+  const date = $('#edCDate').value;
+  const problem = edConnProblem();
+  if (edConn.step === 1) {
+    $('#edCNext').disabled = !!edWordsProblem() || edBusy;
+    edNote('#edCMsg1', edConn.words.some(Boolean) ? edWordsProblem() : '', 'bad');
+  } else {
+    $('#edCPost').disabled = !!problem || edBusy;
+    const exists = isDate(date) && edData.connections[date];
+    edNote('#edCMsg2', !problem && exists ? 'This will replace the Connections already on ' + niceDate(date) : '', '');
+  }
+  $('#edCPost').textContent = isDate(date) ? 'Post for ' + niceDate(date) : 'Post';
+}
+
+function edAddGroup() {
+  const title = $('#edCTitle').value.trim();
+  if (edConn.picked.length !== 4) return;
+  if (!title) {
+    toast('Name the group first', 1500);
+    return;
+  }
+  edConn.groups.push({ color: edConn.color, title, words: edConn.picked.slice() });
+  edConn.picked = [];
+  $('#edCTitle').value = '';
+  edRenderConn();
+}
+
+function edPostConn() {
+  if (edConnProblem()) return;
+  const date = $('#edCDate').value;
+  const groups = edConn.groups.slice().sort((a, b) => a.color - b.color).map(g => ({ title: g.title, words: g.words.slice() }));
+  const entry = { groups };
+  if (!connEntryOk(entry)) {
+    toast('Something is off with those groups', 2200);
+    return;
+  }
+  edRun(async () => {
+    await edCommit(data => {
+      const old = data.connections[date];
+      data.connections[date] = { groups, hidden: old ? !!old.hidden : false };
+    }, 'Connections for ' + date);
+    edResetConn();
+  }, 'Posted Connections for ' + niceDate(date) + '. It can take a minute to go live.');
+}
+
+/* schedule */
+
+function edSummary(game, entry) {
+  if (game === 'wordle') return typeof entry.word === 'string' ? entry.word.toUpperCase() : '(broken entry)';
+  const g = Array.isArray(entry.groups) ? entry.groups : [];
+  return g.map(x => x && x.title).filter(Boolean).join(' · ') || '(broken entry)';
+}
+
+function edRenderList() {
+  const box = $('#edList');
+  if (!box) return;
+  box.innerHTML = '';
+  const today = todayStr();
+  const rows = [];
+  ['wordle', 'connections'].forEach(game => {
+    Object.keys(edData[game] || {}).forEach(date => rows.push({ game, date, entry: edData[game][date] }));
+  });
+  rows.sort((a, b) => (a.date === b.date ? (a.game < b.game ? -1 : 1) : a.date < b.date ? 1 : -1));
+  if (!rows.length) {
+    box.appendChild(el('div', 'daily-empty', 'Nothing posted yet. Make a puzzle in the other tabs.'));
+    return;
+  }
+  rows.forEach(({ game, date, entry }) => {
+    const item = el('div', 'ed-item');
+    const top = el('div', 'top');
+    top.append(el('b', '', niceDate(date) + ' · ' + (game === 'wordle' ? 'Wordle' : 'Connections')));
+    const hidden = !!entry.hidden && date < today;
+    const tag = el('span', 'tag ' + (date > today ? 'soon' : hidden ? '' : 'live'), date > today ? 'Scheduled' : date === today ? 'Today' : hidden ? 'Hidden' : 'In archive');
+    top.appendChild(tag);
+    item.append(top, el('div', 'what', edSummary(game, entry)));
+    const acts = el('div', 'acts');
+    const edit = el('button', '', 'Edit');
+    edit.addEventListener('click', () => edEdit(game, date));
+    acts.appendChild(edit);
+    if (date < today) {
+      const hide = el('button', '', entry.hidden ? 'Show in archive' : 'Hide from archive');
+      hide.addEventListener('click', () => edRun(() => edCommit(data => {
+        if (data[game][date]) data[game][date].hidden = !entry.hidden;
+      }, (entry.hidden ? 'Show ' : 'Hide ') + game + ' ' + date), entry.hidden ? 'Back in the archive' : 'Hidden from the archive'));
+      acts.appendChild(hide);
+    }
+    const del = el('button', '', 'Delete');
+    del.addEventListener('click', () => {
+      if (!del.classList.contains('armed')) {
+        clearTimeout(edArm);
+        del.classList.add('armed');
+        del.textContent = 'Sure?';
+        edArm = setTimeout(() => { del.classList.remove('armed'); del.textContent = 'Delete'; }, 2500);
+        return;
+      }
+      clearTimeout(edArm);
+      edRun(() => edCommit(data => { delete data[game][date]; }, 'Delete ' + game + ' ' + date),
+        date === today ? 'Deleted. Today will use an automatic puzzle.' : 'Deleted');
+    });
+    acts.appendChild(del);
+    item.appendChild(acts);
+    box.appendChild(item);
+  });
+}
+
+function edEdit(game, date) {
+  const entry = edData[game][date];
+  if (!entry) return;
+  if (game === 'wordle') {
+    edTab('wordle');
+    $('#edWDate').value = date;
+    $('#edWWord').value = entry.word || '';
+    edCheckWordle();
+    return;
+  }
+  const groups = Array.isArray(entry.groups) ? entry.groups : [];
+  edTab('conn');
+  $('#edCDate').value = date;
+  edConn.words = [].concat(...groups.map(g => g.words || [])).concat(Array(16).fill('')).slice(0, 16);
+  edConn.groups = groups.map((g, i) => ({ color: i, title: g.title, words: (g.words || []).slice() }));
+  edConn.picked = [];
+  edConn.step = edConn.groups.length === 4 ? 2 : 1;
+  edRenderConn();
+}
+
+/* start up */
+
+function initEditor() {
+  $('#edSaveConn').addEventListener('click', edConnectClick);
+  $('#edDisconnect').addEventListener('click', edDisconnect);
+  $('#edRefresh').addEventListener('click', () => edRun(edLoadData, 'Refreshed'));
+  $('#edTabs').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (b) edTab(b.dataset.tab);
+  });
+
+  $('#edWWord').addEventListener('input', edCheckWordle);
+  $('#edWDate').addEventListener('input', edCheckWordle);
+  $('#edWClear').addEventListener('click', edResetWordle);
+  $('#edWPost').addEventListener('click', edPostWordle);
+
+  $('#edCDate').addEventListener('input', edCheckConn);
+  $('#edCInputs').addEventListener('input', e => {
+    const input = e.target;
+    input.value = input.value.toUpperCase();
+    edConn.words[+input.dataset.i] = input.value;
+    edCheckConn();
+  });
+  $('#edCInputs').addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const next = $('#edCInputs').children[+e.target.dataset.i + 1];
+    if (next) next.focus();
+    else if (!edWordsProblem()) $('#edCNext').click();
+  });
+  $('#edCClear').addEventListener('click', edResetConn);
+  $('#edCNext').addEventListener('click', () => {
+    if (edWordsProblem()) return;
+    edConn.words = edConn.words.map(w => w.trim().replace(/\s+/g, ' '));
+    edConn.step = 2;
+    edConn.groups = [];
+    edConn.picked = [];
+    edRenderConn();
+  });
+  $('#edCBack').addEventListener('click', () => {
+    edConn.step = 1;
+    edConn.groups = [];
+    edConn.picked = [];
+    edRenderConn();
+  });
+  $('#edCColors').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (b && !b.disabled) {
+      edConn.color = +b.dataset.c;
+      edRenderConn();
+    }
+  });
+  $('#edCAdd').addEventListener('click', edAddGroup);
+  $('#edCTitle').addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      edAddGroup();
+    }
+  });
+  $('#edCPost').addEventListener('click', edPostConn);
+  edResetWordle();
+  edResetConn();
+}
+
 init();
 initConnections();
+initSudoku();
+initMini();
 initHub();
+initEditor();
+initDaily();
 </script>
 </body>
 </html>
