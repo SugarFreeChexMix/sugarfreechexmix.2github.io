@@ -5955,7 +5955,12 @@ function edNormalize(raw) {
 
 async function ghGet() {
   const res = await fetch(edUrl() + '?_=' + Date.now(), { headers: edHeaders(), cache: 'no-store' });
-  if (res.status === 404) return { sha: null, data: edNormalize({}) };
+  if (res.status === 404) {
+    // 404 means either "no file yet" or "can't see the repo", so check the repo itself
+    const repo = await fetch('https://api.github.com/repos/' + encodeURIComponent(edConf.owner) + '/' + encodeURIComponent(edConf.repo), { headers: edHeaders(), cache: 'no-store' });
+    if (!repo.ok) throw edError(repo);
+    return { sha: null, data: edNormalize({}) };
+  }
   if (!res.ok) throw edError(res);
   const file = await res.json();
   let data = {};
