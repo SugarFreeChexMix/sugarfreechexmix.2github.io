@@ -1502,39 +1502,120 @@ h1.ed-title { font-size: 1.7rem; }
 .ed-lock .ed-input { margin-top: 0; }
 .ed-lock .ed-msg { min-height: 0; margin: 0; text-align: left; }
 .ed-lock .ed-msg:empty { display: none; }
-/* ---------- leaderboard ---------- */
-.lbcard h2 { margin-bottom: 4px; }
-.board-sub { margin-bottom: 14px; text-align: center; font-size: 0.85rem; color: var(--sub); }
-.board-form { display: flex; gap: 8px; margin-bottom: 8px; }
-.board-form .ed-input { flex: 1; margin: 0; }
-.board-msg { margin-bottom: 6px; text-align: center; font-size: 0.8rem; color: var(--sub); }
-.board-msg:empty { display: none; }
-.board-msg.bad { color: var(--present); }
-.board-list { list-style: none; max-height: 52vh; overflow-y: auto; padding: 0; margin: 0; }
-.board-list li {
+/* ---------- levels, names and leaderboards ---------- */
+:root { --lose: #b83a35; }
+.namecard { max-width: 380px; }
+.namecard h2.big { text-align: center; }
+.name-sub { margin-bottom: 14px; text-align: center; font-size: 0.85rem; line-height: 1.4; color: var(--sub); }
+.namecard .ed-input { margin: 0; text-align: center; font-size: 1.1rem; }
+.name-msg { min-height: 20px; margin: 8px 0; text-align: center; font-size: 0.8rem; color: var(--present); }
+.name-go { width: 100%; flex: none; }
+.namecard .ed-link { display: block; margin: 12px auto 0; }
+
+.lbcard { max-width: 380px; }
+.lb-title { margin-bottom: 2px; text-align: center; font-family: Georgia, 'Times New Roman', serif; font-size: 1.5rem; font-weight: 700; }
+.lb-sub { margin-bottom: 12px; text-align: center; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.lb-list { list-style: none; padding: 0; margin: 0; max-height: 52vh; overflow-y: auto; }
+.lb-list li {
   display: grid;
-  grid-template-columns: 28px 1fr auto;
+  grid-template-columns: 26px 1fr auto;
   gap: 8px;
   align-items: center;
-  padding: 9px 10px;
+  padding: 8px 10px;
   border-radius: 6px;
+  font-size: 0.9rem;
   font-variant-numeric: tabular-nums;
+  animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
 }
-.board-list li:nth-child(odd) { background: var(--border); }
-.board-list li.me { background: var(--correct); color: #fff; }
-.board-list .rk { font-weight: 700; color: var(--muted); }
-.board-list li.me .rk { color: #fff; }
-.board-list .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
-.board-list .tm { font-weight: 700; }
-.board-list li.in { animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
-.board-empty { padding: 18px 0; text-align: center; color: var(--muted); font-size: 0.85rem; }
-.lb-open { margin: 10px auto 0; display: block; }
+.lb-list li:nth-child(odd) { background: var(--border); }
+.lb-list li { cursor: pointer; }
+.lb-list li.me, .lb-list li.me:nth-child(odd) { background: var(--correct); color: #fff; }
+.lb-list li.lose, .lb-list li.lose:nth-child(odd) { background: var(--lose); color: #fff; }
+.lb-list li.lose .rk, .lb-list li.lose .sc { color: rgba(255, 255, 255, 0.8); }
+.lb-list li.me.lose { box-shadow: inset 0 0 0 2px #fff; }
+.lb-list li:hover { filter: brightness(1.15); }
+.lb-list .rk { font-weight: 700; color: var(--muted); }
+.lb-list li.me .rk { color: #fff; }
+.lb-list .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+.lb-list .sc { font-weight: 700; color: var(--sub); }
+.lb-list li.me .sc { color: #fff; }
+.lb-empty { padding: 16px 4px; text-align: center; font-size: 0.85rem; color: var(--muted); }
+
+.lb-side { display: none; }
+.lv-dock { position: fixed; left: 118px; bottom: calc(7px + env(safe-area-inset-bottom)); z-index: 40; display: flex; gap: 8px; }
+.lv-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  min-width: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.1s;
+}
+.lv-chip:hover { border-color: var(--filled); }
+.lv-chip:active { transform: scale(0.95); }
+.lv-chip.static { cursor: default; }
+.lv-trophy { padding: 0; }
+.lv-trophy svg { width: 18px; height: 18px; fill: currentColor; }
+.lv-dock.off { display: none; }
+
+.lvcard { max-width: 420px; }
+.lv-sub { margin: -6px 0 12px; text-align: center; font-size: 0.8rem; color: var(--muted); }
+.lv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 6px; max-height: 50vh; overflow-y: auto; padding: 2px; }
+.lv-grid button {
+  height: 42px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--border);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s, background-color 0.2s;
+}
+.lv-grid button:active { transform: scale(0.92); }
+.lv-grid button.done { background: var(--correct); color: #fff; }
+.lv-grid button.here { box-shadow: 0 0 0 2px var(--text); }
+.lv-grid button.next { box-shadow: inset 0 0 0 2px var(--present); }
+.lv-grid button.locked { opacity: 0.3; cursor: not-allowed; }
+.lv-grid button.locked:active { transform: none; }
+
+.dtcard { max-width: 380px; }
+#dtTitle { margin-bottom: 8px; }
+.dt-rows { display: flex; flex-direction: column; gap: 6px; align-items: center; max-height: 52vh; overflow-y: auto; padding: 2px; }
+.dt-word, .dt-group { display: flex; gap: 4px; }
+.dt-tile { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 3px; background: var(--absent); color: #fff; font-size: 1.1rem; font-weight: 700; text-transform: uppercase; }
+.dt-tile.correct { background: var(--correct); }
+.dt-tile.present { background: var(--present); }
+.dt-chip { min-width: 74px; padding: 7px 6px; border-radius: 4px; background: var(--border); color: #000; text-align: center; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+.dt-chip.c-1 { background: var(--border); color: var(--text); }
+.dt-chip.c0 { background: var(--cn-y); }
+.dt-chip.c1 { background: var(--cn-g); }
+.dt-chip.c2 { background: var(--cn-b); }
+.dt-chip.c3 { background: var(--cn-p); }
+.dt-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.lb-tab { display: none; }
+
 .clock-pill {
   position: fixed;
   right: 14px;
-  bottom: 14px;
+  bottom: calc(7px + env(safe-area-inset-bottom));
   z-index: 20;
-  padding: 7px 13px;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 13px;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--bg);
@@ -1542,6 +1623,57 @@ h1.ed-title { font-size: 1.7rem; }
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--sub);
+}
+.lb-open { margin: 10px auto 0; display: block; }
+
+@media (min-width: 1100px) {
+  .app { left: 250px; }
+  .appsbtn { left: 262px; }
+  .lv-dock { left: 368px; }
+  .lv-trophy { display: none; }
+  .lb-side {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 30;
+    display: block;
+    width: 250px;
+    padding: 22px 14px;
+    border-right: 1px solid var(--border);
+    background: var(--bg);
+    overflow-y: auto;
+    transition: background-color 0.3s;
+  }
+  .lb-side .lb-list { max-height: none; }
+  .lb-side { transition: transform 0.3s ease, background-color 0.3s; }
+  .app, .app.on { transition: opacity 0.28s ease, transform 0.28s ease, left 0.3s ease, background-color 0.3s; }
+  .app:not(.on) { transition: opacity 0.28s ease, transform 0.28s ease, left 0.3s ease, visibility 0s linear 0.28s, background-color 0.3s; }
+  .appsbtn, .lv-dock { transition: left 0.3s ease; }
+  .lb-tab {
+    position: fixed;
+    top: 90px;
+    left: 250px;
+    z-index: 31;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 54px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-left: 0;
+    border-radius: 0 8px 8px 0;
+    background: var(--bg);
+    color: var(--sub);
+    cursor: pointer;
+    transition: left 0.3s ease, color 0.2s, background-color 0.3s;
+  }
+  .lb-tab:hover { color: var(--text); }
+  .lb-tab svg { width: 20px; height: 20px; fill: currentColor; transition: transform 0.3s ease; }
+  body.lb-shut .lb-side { transform: translateX(-100%); }
+  body.lb-shut .app { left: 0; }
+  body.lb-shut .appsbtn { left: 12px; }
+  body.lb-shut .lv-dock { left: 118px; }
+  body.lb-shut .lb-tab { left: 0; }
+  body.lb-shut .lb-tab svg { transform: rotate(180deg); }
 }
 </style>
 </head>
@@ -1595,7 +1727,7 @@ h1.ed-title { font-size: 1.7rem; }
   </button>
   <div class="hub-inner">
     <h1 class="hub-title">Infinite Games<span class="inf">&#8734;</span></h1>
-    <p class="hub-sub">Pick a game. Play as many rounds as you like.</p>
+    <p class="hub-sub">Pick a game and beat level after level.</p>
     <div class="hub-streak hidden" id="hubStreak"></div>
     <button class="btn btn-main hub-continue hidden" id="hubContinue"></button>
     <div class="hub-cards">
@@ -1604,7 +1736,7 @@ h1.ed-title { font-size: 1.7rem; }
           <div class="mini c">W</div><div class="mini p">O</div><div class="mini">R</div><div class="mini c">D</div><div class="mini">L</div><div class="mini c">E</div>
         </div>
         <div class="hub-name">Wordle</div>
-        <div class="hub-desc">Guess the hidden word in 6 tries. A new word every round.</div>
+        <div class="hub-desc">Guess the hidden word in 6 tries. A new word every level.</div>
         <div class="hub-chip" id="chipWordle">New</div>
       </button>
       <button class="hub-card" data-app="conn">
@@ -1991,7 +2123,7 @@ h1.ed-title { font-size: 1.7rem; }
       <button class="btn btn-ghost" id="anShareBtn">Share
         <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
       </button>
-      <button class="btn btn-main" id="anAgainBtn">Play Again</button>
+      <button class="btn btn-main" id="anAgainBtn">Next Level</button>
     </div>
   </div>
 </div>
@@ -2025,21 +2157,63 @@ h1.ed-title { font-size: 1.7rem; }
     <button class="daily-random" id="dailyRandom">Play random puzzles</button>
   </div>
 </div>
-<!-- daily leaderboard -->
-<div class="modal" id="boardModal" aria-hidden="true">
+<!-- name -->
+<div class="modal" id="nameModal" aria-hidden="true">
+  <div class="card namecard">
+    <h2 class="big">Pick a name</h2>
+    <p class="name-sub">Your name shows on the leaderboard when you beat a level. You can't change it later.</p>
+    <form id="nameForm" autocomplete="off">
+      <input class="ed-input" id="nameInput" maxlength="12" placeholder="Your name" aria-label="Your name" spellcheck="false" autocapitalize="off">
+      <p class="name-msg" id="nameMsg"></p>
+      <button class="btn btn-main name-go" id="nameGo" type="submit">Let's play</button>
+      <button class="ed-link hidden" id="nameSkip" type="button">Play without a name this time</button>
+    </form>
+  </div>
+</div>
+
+<!-- leaderboard window -->
+<div class="modal" id="lbModal" aria-hidden="true">
   <div class="card lbcard">
     <button class="close" data-close aria-label="Close">
       <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
     </button>
-    <h2 id="boardTitle">Leaderboard</h2>
-    <p class="board-sub" id="boardSub"></p>
-    <form class="board-form hidden" id="boardForm" autocomplete="off">
-      <input class="ed-input" id="boardName" maxlength="12" placeholder="Your name" aria-label="Your name" spellcheck="false">
-      <button class="btn btn-main" id="boardPost" type="submit">Post time</button>
-    </form>
-    <p class="board-msg" id="boardMsg"></p>
-    <ol class="board-list" id="boardList"></ol>
+    <div id="lbModalBody"></div>
   </div>
+</div>
+
+<!-- level picker -->
+<div class="modal" id="lvModal" aria-hidden="true">
+  <div class="card lvcard">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <h2 id="lvTitle">Levels</h2>
+    <p class="lv-sub" id="lvSub"></p>
+    <div class="lv-grid" id="lvGrid"></div>
+  </div>
+</div>
+
+<!-- how someone played -->
+<div class="modal" id="dtModal" aria-hidden="true">
+  <div class="card dtcard">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <h2 id="dtTitle"></h2>
+    <p class="lv-sub" id="dtSub"></p>
+    <div id="dtBody"></div>
+  </div>
+</div>
+
+<aside class="lb-side" id="lbSide" aria-label="Leaderboard"></aside>
+<button class="lb-tab" id="lbTab" aria-label="Show or hide the leaderboard" aria-expanded="true">
+  <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+</button>
+<div class="lv-dock" id="lvDock">
+  <button class="lv-chip hidden" id="lvBtn" aria-label="Choose a level"></button>
+  <button class="lv-chip lv-trophy" id="lbBtn" aria-label="Leaderboard">
+    <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+  </button>
 </div>
 <div class="clock-pill hidden" id="clockPill" aria-label="Time"></div>
 <!-- editor for posting daily puzzles -->
@@ -2079,6 +2253,7 @@ h1.ed-title { font-size: 1.7rem; }
         <button data-tab="wordle" class="on">Wordle</button>
         <button data-tab="conn">Connections</button>
         <button data-tab="list">Schedule</button>
+        <button data-tab="players">Players</button>
       </div>
 
       <div id="edTabWordle">
@@ -2129,6 +2304,13 @@ h1.ed-title { font-size: 1.7rem; }
             <button class="btn btn-main" id="edCPost">Post</button>
           </div>
         </div>
+      </div>
+
+      <div id="edTabPlayers" class="hidden">
+        <label class="ed-label">Admin password<input class="ed-input" id="edAdminPw" type="password" autocomplete="off" placeholder="The one from the Supabase setup"></label>
+        <button class="btn btn-main ed-wide" id="edPlLoad">Load players</button>
+        <p class="ed-msg" id="edPlMsg"></p>
+        <div class="ed-list" id="edPlList"></div>
       </div>
 
       <div id="edTabList" class="hidden">
@@ -2370,20 +2552,9 @@ function loadStats(len) {
   );
 }
 
+// words come in a fixed order: level 1 is the first word
 function pickWord(len) {
-  const key = 'iw-recent' + suffix(len);
-  const recent = store.get(key, []);
-  const seen = new Set(recent);
-  const all = wordsFor(len).answers;
-  let pool = all.filter(w => !seen.has(w));
-  if (!pool.length) {
-    pool = all;
-    recent.length = 0;
-  }
-  const word = pool[Math.floor(Math.random() * pool.length)];
-  recent.push(word);
-  store.set(key, recent);
-  return word;
+  return wordOrder(len)[lvCur(wordleKey(len)) - 1];
 }
 
 /* ---------- sound ---------- */
@@ -2601,14 +2772,14 @@ function renderControls() {
   const left = MAX_HINTS - state.hints.length;
   $('#hintLeft').textContent = left;
   $('#hintBtn').disabled = over || left <= 0 || !!state.daily;
-  $('#roundLabel').textContent = state.daily ? 'Daily · ' + niceDate(state.daily) : 'Round ' + round + ' · ' + state.len + ' letters';
-  $('#againBtn').textContent = state.daily ? 'Archive' : 'Play Again';
+  $('#roundLabel').textContent = state.daily ? 'Daily · ' + niceDate(state.daily) : 'Level ' + (wordOrder(state.len).indexOf(state.answer) + 1) + ' · ' + state.len + ' letters';
+  $('#againBtn').textContent = state.daily ? 'Archive' : lvRetry() ? 'Try Again' : 'Next Level';
 
   const skip = $('#skipBtn');
   clearTimeout(skipTimer);
   skip.classList.remove('armed');
   skip.classList.toggle('next', over);
-  skip.textContent = state.daily ? 'Archive' : over ? 'Next word' : 'Skip';
+  skip.textContent = state.daily ? 'Archive' : over ? (lvRetry() ? 'Retry' : 'Next level') : 'Skip';
 }
 
 /* ---------- animations ---------- */
@@ -2944,9 +3115,12 @@ function skipRound() {
 function recordResult(won) {
   if (state.daily) {
     if (state.t0) state.t1 = Date.now();
+    if (won) lvDailyWon('wordle', state.daily, state.t0, state.t1, state.guesses.slice());
     stats = dailyRecord('w', won, state.guesses.length - 1, state.daily);
     return;
   }
+  if (won) lvWon(wordleKey(state.len), wordOrder(state.len).indexOf(state.answer) + 1, state.guesses.length, state.guesses.slice());
+  else if (state.guesses.length) lvLost(wordleKey(state.len), wordOrder(state.len).indexOf(state.answer) + 1, wordleProgress(state.guesses, state.answer), state.guesses.slice());
   stats.played++;
   if (won) {
     stats.wins++;
@@ -3320,15 +3494,8 @@ function cnGroupOf(word) {
   return PUZZLES[cn.id].findIndex(g => g.words.includes(word));
 }
 
-function cnPick() {
-  let recent = store.get('cn-recent', []).filter(i => i >= 0 && i < PUZZLES.length);
-  if (recent.length >= PUZZLES.length) recent = [];
-  const pool = PUZZLES.map((_, i) => i).filter(i => !recent.includes(i));
-  const id = pool[Math.floor(Math.random() * pool.length)];
-  recent.push(id);
-  store.set('cn-recent', recent);
-  return id;
-}
+// puzzles come in a fixed order: level 1 is puzzle 0
+const cnPick = mode => lvCur(mode === 'u' ? 'connections-u' : 'connections') - 1;
 
 // adds the pieces that aren't saved: the current picks and, in Unlocked mode, which words are locked
 function cnAttach(game, mode) {
@@ -3339,9 +3506,9 @@ function cnAttach(game, mode) {
 }
 
 function cnFresh(mode) {
-  const id = cnPick();
+  const id = cnPick(mode);
   const words = [].concat(...PUZZLES[id].map(g => g.words));
-  return cnAttach({ id, order: shuffled(words), solved: [], mistakes: 0, tried: [], guesses: [], status: 'playing' }, mode);
+  return cnAttach({ id, order: seededShuffle(words, mulberry32(hashStr('cn' + id))), solved: [], mistakes: 0, tried: [], guesses: [], status: 'playing' }, mode);
 }
 
 function cnSave() {
@@ -3635,6 +3802,8 @@ async function cnUnlock(word, revealed) {
 function cnWin() {
   cn.status = 'won';
   if (cn.mode === 'd' && cn.t0) cn.t1 = Date.now();
+  if (cn.mode === 'd') lvDailyWon('connections', cn.daily, cn.t0, cn.t1, cn.tried.map(k => k.split('|')));
+  else lvWon(cn.mode === 'u' ? 'connections-u' : 'connections', cn.id + 1, cn.mistakes, cn.tried.map(k => k.split('|')));
   cnRecord(true);
   cnSave();
   cnSync();
@@ -3646,6 +3815,7 @@ function cnWin() {
 
 async function cnLose() {
   cn.status = 'lost';
+  if (cn.mode !== 'd') lvLost(cn.mode === 'u' ? 'connections-u' : 'connections', cn.id + 1, cn.solved.length, cn.tried.map(k => k.split('|')));
   if (cn.mode === 'd' && cn.t0) cn.t1 = Date.now();
   cnRecord(false);
   cnSave();
@@ -3965,7 +4135,7 @@ function showApp(name) {
     document.getElementById(APP_IDS[key]).classList.toggle('on', key === name);
   });
   $('#appsBtn').classList.toggle('on', name !== 'hub');
-  if (HUB_NAMES[name]) { store.set('hub-last', name); hubMarkDay(); }
+  if (HUB_NAMES[name]) { store.set('hub-last', name); hubMarkDay(); lvGate(); }
   if (name === 'hub') renderHub();
   if (name === 'wordle') enterWordle();
   if (name === 'conn') enterConn();
@@ -4881,7 +5051,13 @@ function sdSearch(start, limit, randomize) {
 }
 
 // takes numbers out of a finished grid one at a time, keeping only removals that leave a single solution
-function sdMake(diff) {
+function sdMake(diff, level = lvCur('sudoku-' + diff)) {
+  const game = lvSeeded(hashStr('sd' + diff + ':' + level), () => sdGenerate(diff));
+  game.level = level;
+  return game;
+}
+
+function sdGenerate(diff) {
   const solution = sdSearch(Array(81).fill(0), 1, true).first;
   const puzzle = solution.slice();
   let clues = 81;
@@ -4925,7 +5101,10 @@ function sdValid(s, diff) {
 
 function sdLoad(diff) {
   const saved = store.get(sdKey(diff), null);
-  if (sdValid(saved, diff)) return saved;
+  if (sdValid(saved, diff)) {
+    if (!saved.level) saved.level = 1;
+    return saved;
+  }
   const fresh = sdMake(diff);
   store.set(sdKey(diff), fresh);
   return fresh;
@@ -5112,6 +5291,7 @@ function sdMove(dr, dc) {
 
 function sdWin() {
   sd.status = 'won';
+  lvWon('sudoku-' + sd.diff, sd.level || 1, sd.secs);
   sdSave();
   const d = sd.diff;
   sdStats.solved[d]++;
@@ -5465,15 +5645,7 @@ let mcEntered = false;
 const mcCells = [];
 let mcStats = Object.assign({ solved: 0, total: 0, best: 0, clean: 0 }, store.get('mc-stats', {}));
 
-function mcPick() {
-  let recent = store.get('mc-recent', []).filter(i => i >= 0 && i < MC_LIST.length);
-  if (recent.length >= MC_LIST.length) recent = [];
-  const pool = MC_LIST.map((_, i) => i).filter(i => !recent.includes(i));
-  const id = pool[Math.floor(Math.random() * pool.length)];
-  recent.push(id);
-  store.set('mc-recent', recent);
-  return id;
-}
+const mcPick = () => lvCur('mini') - 1;
 
 function mcFresh() {
   const id = mcPick();
@@ -5701,6 +5873,7 @@ function mcReveal() {
 
 function mcWin() {
   mc.status = 'won';
+  lvWon('mini', mc.id + 1, mc.secs);
   mcStats.solved++;
   mcStats.total += mc.secs;
   if (!mcStats.best || mc.secs < mcStats.best) mcStats.best = mc.secs;
@@ -5919,19 +6092,12 @@ function anWordsFor(id) {
   return (anCache[id] = { root, need, bonus });
 }
 
-function anPick() {
-  let recent = store.get('an-recent', []).filter(i => i >= 0 && i < ANAG_ROOTS.length);
-  if (recent.length >= ANAG_ROOTS.length) recent = [];
-  const pool = ANAG_ROOTS.map((_, i) => i).filter(i => !recent.includes(i));
-  const id = pool[Math.floor(Math.random() * pool.length)];
-  recent.push(id);
-  store.set('an-recent', recent);
-  return id;
-}
+const anPick = () => lvCur('anagrams') - 1;
 
 function anScramble(root) {
+  const rand = mulberry32(hashStr('an' + root));
   let out = root;
-  for (let i = 0; i < 20 && out === root; i++) out = shuffled(root.split('')).join('');
+  for (let i = 0; i < 20 && out === root; i++) out = seededShuffle(root.split(''), rand).join('');
   return out;
 }
 
@@ -6113,6 +6279,7 @@ function anGiveHint() {
 
 function anWin() {
   an.status = 'won';
+  lvWon('anagrams', an.id + 1, an.hints, an.found.slice());
   const all = anWordsFor(an.id);
   const count = an.found.length;
   anStats.solved++;
@@ -6448,7 +6615,7 @@ function renderDaily() {
   btn.addEventListener('click', () => playDaily(game, today));
   box.append(btn);
   const lb = el('button', 'btn btn-ghost', 'Leaderboard');
-  lb.addEventListener('click', () => { closeModal(dailyModal); openBoard(game, today); });
+  lb.addEventListener('click', () => { closeModal(dailyModal); lbOpen(dailyCtx(game, today)); });
   box.append(lb);
   if (st.done) box.append(el('span', 'st next-daily', countdownText()));
 
@@ -6656,183 +6823,579 @@ function initDaily() {
 }
 
 /* =====================================================================
-   Daily leaderboard (Supabase) and the puzzle clock
+   Levels, player names, leaderboards and the daily clock
    ===================================================================== */
 
 const SB_URL = 'https://dohofplqvzxpibcapzul.supabase.co';
 const SB_KEY = 'sb_publishable_uZT6R1WL87Ex1qVOMrztEA_bjh5dGXI';
-const SB_MAX = 3600;
+const DAILY_MAX_SECS = 3600;
 
-const boardModal = $('#boardModal');
-const boardForm = $('#boardForm');
+const nameModal = $('#nameModal');
+const lbModal = $('#lbModal');
+const lvModal = $('#lvModal');
+const lbSide = $('#lbSide');
 const clockPill = $('#clockPill');
-let boardWho = null;
-let boardWatch = 0;
 
-const clockText = secs => Math.floor(secs / 60) + ':' + pad2(secs % 60);
+/* ---------- talking to Supabase ---------- */
 
-// the clock for whichever daily puzzle is on screen
-function clockFor() {
-  if (activeApp === 'wordle' && state.daily) return { game: 'wordle', date: state.daily, t0: state.t0, t1: state.t1, over: state.status !== 'playing' };
-  if (activeApp === 'conn' && cn.mode === 'd') return { game: 'connections', date: cn.daily, t0: cn.t0, t1: cn.t1, over: cn.status !== 'playing' };
-  return null;
-}
-
-function clockSeconds(c) {
-  if (!c || !c.t0) return 0;
-  return Math.max(0, Math.round(((c.t1 || Date.now()) - c.t0) / 1000));
-}
-
-function tickClock() {
-  const c = clockFor();
-  const show = !!c && !!c.t0 && !modalIsOpen();
-  clockPill.classList.toggle('hidden', !show);
-  if (show) clockPill.textContent = clockText(clockSeconds(c));
-  syncBoardButtons();
-}
-
-/* talking to Supabase */
-
-async function sb(path, opts) {
+// every call goes through one of the database functions, never straight at a table
+async function rpc(name, args) {
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), 8000);
   try {
-    const extra = (opts && opts.headers) || {};
-    return await fetch(SB_URL + '/rest/v1/' + path, Object.assign({}, opts, {
+    const res = await fetch(SB_URL + '/rest/v1/rpc/' + name, {
+      method: 'POST',
       signal: ctl.signal,
-      headers: Object.assign({ apikey: SB_KEY, 'Content-Type': 'application/json' }, extra)
-    }));
+      headers: { apikey: SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify(args || {})
+    });
+    let body = null;
+    try { body = await res.json(); } catch (e) {}
+    if (res.ok) return { ok: true, data: body };
+    return { ok: false, error: body && typeof body.message === 'string' ? body.message : 'http_' + res.status };
+  } catch (e) {
+    return { ok: false, error: 'offline' };
   } finally {
     clearTimeout(timer);
   }
 }
 
-async function boardFetch(game, date) {
-  const res = await sb('scores?select=name,seconds&game=eq.' + game + '&day=eq.' + date + '&order=seconds.asc,created_at.asc&limit=25');
-  if (!res.ok) throw new Error('read ' + res.status);
-  const rows = await res.json();
-  return Array.isArray(rows) ? rows.filter(r => r && typeof r.name === 'string' && Number.isFinite(r.seconds)) : [];
+/* ---------- level progress ---------- */
+
+const wordleKey = len => (len === 5 ? 'wordle' : 'wordle' + len);
+const wordOrders = {};
+
+// every player gets the same words in the same order
+function wordOrder(len) {
+  if (!wordOrders[len]) wordOrders[len] = seededShuffle(wordsFor(len).answers, mulberry32(len * 977 + 13));
+  return wordOrders[len];
 }
 
-const sentKey = (game, date) => 'lb-sent-' + game + '-' + date;
-const cleanName = s => s.replace(/\s+/g, ' ').trim();
-const nameOk = s => /^[A-Za-z0-9 ._'-]{1,12}$/.test(s);
-
-// the player's own result for a daily puzzle: seconds, or 0 when it can't be posted
-function myResult(game, date) {
-  const saved = store.get(dailyKey(game, date), null);
-  if (!saved || saved.status !== 'won' || !saved.t0 || !saved.t1) return 0;
-  return Math.max(3, Math.round((saved.t1 - saved.t0) / 1000));
+function lvMax(game) {
+  if (game.startsWith('wordle')) return wordsFor(Number(game.slice(6)) || 5).answers.length;
+  if (game.startsWith('connections')) return CN_BASE;
+  if (game.startsWith('sudoku')) return 99;
+  if (game === 'mini') return MC_LIST.length;
+  if (game === 'anagrams') return ANAG_ROOTS.length;
+  return 1;
 }
 
-function boardMsg(text, bad) {
-  const p = $('#boardMsg');
-  p.textContent = text || '';
-  p.classList.toggle('bad', !!bad);
+// the first level not beaten yet: nobody can play past it
+function lvFrontier(game, done) {
+  const max = lvMax(game);
+  for (let l = 1; l <= max; l++) if (done[l] === undefined) return l;
+  return max;
 }
 
-function boardPaint(rows, mine) {
-  const list = $('#boardList');
-  list.innerHTML = '';
-  if (!rows.length) {
-    list.appendChild(el('div', 'board-empty', 'No times yet. Be the first!'));
+function lvInfo(game) {
+  const all = store.get('lv-progress', {});
+  const info = Object.assign({ cur: 1, done: {} }, all[game]);
+  if (!Number.isInteger(info.cur) || info.cur < 1) info.cur = 1;
+  info.cur = Math.min(info.cur, lvFrontier(game, info.done));
+  return info;
+}
+
+function lvSave(game, info) {
+  const all = store.get('lv-progress', {});
+  all[game] = info;
+  store.set('lv-progress', all);
+}
+
+const lvCur = game => lvInfo(game).cur;
+
+function lvNext(game, level) {
+  const done = lvInfo(game).done;
+  const open = lvFrontier(game, done);
+  return done[open] === undefined ? open : (level % lvMax(game)) + 1;
+}
+
+function lvSetCur(game, level) {
+  const info = lvInfo(game);
+  info.cur = Math.min(Math.max(1, level), lvFrontier(game, info.done));
+  lvSave(game, info);
+}
+
+function lvWon(game, level, score, detail) {
+  const info = lvInfo(game);
+  const before = info.done[level];
+  info.done[level] = before === undefined ? score : Math.min(before, score);
+  lvSave(game, info);
+  if (info.cur === level) {
+    info.cur = lvNext(game, level);
+    lvSave(game, info);
+  }
+  lvPost(game, level, score, true, detail);
+}
+
+// a lost round still goes on the board, in red
+const lvLost = (game, level, score, detail) => lvPost(game, level, score, false, detail);
+
+// how close a lost Wordle was: best row by green letters, then yellow
+function wordleProgress(guesses, answer) {
+  return guesses.reduce((best, g) => {
+    const r = evaluate(g, answer);
+    return Math.max(best, r.filter(x => x === 'correct').length * 10 + r.filter(x => x === 'present').length);
+  }, 0);
+}
+
+// after a loss the same level comes back, unless it was skipped
+const lvRetry = () => state.status === 'lost' && lvCur(wordleKey(state.len)) === wordOrder(state.len).indexOf(state.answer) + 1;
+
+/* ---------- the player ---------- */
+
+let me = { name: store.get('lb-name', ''), token: store.get('lb-token', '') };
+let nameSkipped = false;
+let verified = false;
+
+function newToken() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.floor(Math.random() * 16);
+    return (c === 'x' ? r : (r & 3) | 8).toString(16);
+  });
+}
+
+// leet-speak and spacing tricks are flattened before checking
+const BAD_PARTS = ['fuck', 'shit', 'bitch', 'cunt', 'nigg', 'nazi', 'whore', 'slut', 'porn', 'pussy', 'hitler', 'penis', 'vagina', 'rapist', 'molest'];
+const BAD_WORDS = ['ass', 'sex', 'dick', 'cock', 'cum', 'tit', 'tits', 'fag', 'rape', 'anus', 'boob', 'boobs', 'damn'];
+
+function nameProblem(raw) {
+  const name = raw.replace(/\s+/g, ' ').trim();
+  if (!/^[A-Za-z0-9 ._'-]{1,12}$/.test(name)) return 'Use 1 to 12 letters, numbers or spaces.';
+  const flat = name.toLowerCase().replace(/[0@]/g, 'o').replace(/[1!|]/g, 'i').replace(/3/g, 'e').replace(/[4]/g, 'a').replace(/[5$]/g, 's').replace(/7/g, 't');
+  const squashed = flat.replace(/[^a-z]/g, '');
+  if (BAD_PARTS.some(w => squashed.includes(w))) return 'Please pick a different name.';
+  const words = flat.split(/[^a-z]+/).filter(Boolean);
+  if (words.some(w => BAD_WORDS.includes(w)) || BAD_WORDS.includes(squashed)) return 'Please pick a different name.';
+  return '';
+}
+
+function nameMsg(text) {
+  $('#nameMsg').textContent = text || '';
+}
+
+function askName() {
+  nameMsg('');
+  $('#nameSkip').classList.add('hidden');
+  $('#nameInput').value = '';
+  openModal(nameModal);
+  setTimeout(() => $('#nameInput').focus(), 300);
+}
+
+async function claimName(e) {
+  e.preventDefault();
+  const name = $('#nameInput').value.replace(/\s+/g, ' ').trim();
+  const why = nameProblem(name);
+  if (why) { nameMsg(why); return; }
+  const btn = $('#nameGo');
+  btn.disabled = true;
+  nameMsg('Checking...');
+  const token = newToken();
+  const res = await rpc('claim_player', { p_name: name, p_token: token });
+  btn.disabled = false;
+  if (res.ok) {
+    me = { name: typeof res.data === 'string' ? res.data : name, token };
+    store.set('lb-name', me.name);
+    store.set('lb-token', token);
+    nameMsg('');
+    closeModal(nameModal);
+    toast('Welcome, ' + me.name + '!', 1600);
+    lvFlush();
+    lbRefresh(true);
+  } else if (res.error === 'taken') {
+    nameMsg('That name is taken. Try another.');
+  } else if (res.error === 'bad_name') {
+    nameMsg('Please pick a different name.');
+  } else {
+    nameMsg("Can't reach the server right now.");
+    $('#nameSkip').classList.remove('hidden');
+  }
+}
+
+// asks for a name the first time someone opens a game
+function lvGate() {
+  lvVerify();
+  if (me.token || nameSkipped || nameModal.classList.contains('open')) return;
+  setTimeout(() => { if (!me.token && !nameSkipped && activeApp !== 'hub') askName(); }, 350);
+}
+
+// the name might have been changed or removed from the editor
+async function lvVerify() {
+  if (verified || !me.token) return;
+  verified = true;
+  const res = await rpc('whoami', { p_token: me.token });
+  if (!res.ok) { verified = false; return; }
+  if (typeof res.data === 'string' && res.data) {
+    if (res.data !== me.name) {
+      me.name = res.data;
+      store.set('lb-name', me.name);
+      lbRefresh(true);
+    }
+  } else {
+    me = { name: '', token: '' };
+    store.set('lb-name', '');
+    store.set('lb-token', '');
+    lvGate();
+  }
+}
+
+/* ---------- posting results ---------- */
+
+let flushing = false;
+
+function lvPost(game, level, score, won = true, detail = null) {
+  const old = store.get('lv-pending', []);
+  if (!won && old.some(p => p.game === game && p.level === level && p.won !== false)) return;
+  const pending = old.filter(p => !(p.game === game && p.level === level));
+  pending.push({ game, level, score, won, detail });
+  store.set('lv-pending', pending.slice(-60));
+  lvFlush();
+}
+
+async function lvFlush() {
+  if (flushing || !me.token) return;
+  flushing = true;
+  let sent = false;
+  for (;;) {
+    const pending = store.get('lv-pending', []);
+    if (!pending.length) break;
+    const p = pending[0];
+    const res = await rpc('submit_result', { p_token: me.token, p_game: p.game, p_level: p.level, p_score: p.score, p_won: p.won !== false, p_detail: p.detail || null });
+    if (res.ok || res.error === 'bad_result') {
+      store.set('lv-pending', store.get('lv-pending', []).filter(x => !(x.game === p.game && x.level === p.level)));
+      sent = true;
+    } else {
+      if (res.error === 'no_player') { verified = false; lvVerify(); }
+      break;
+    }
+  }
+  flushing = false;
+  if (sent) {
+    boardCache.clear();
+    lbRefresh(true);
+  }
+}
+
+/* ---------- the clock for daily puzzles ---------- */
+
+const clockText = secs => Math.floor(secs / 60) + ':' + pad2(secs % 60);
+const dayNumber = date => Math.floor(Date.UTC(...date.split('-').map((n, i) => (i === 1 ? n - 1 : +n))) / 864e5);
+
+function clockFor() {
+  if (activeApp === 'wordle' && state.daily) return { game: 'wordle', date: state.daily, t0: state.t0, t1: state.t1 };
+  if (activeApp === 'conn' && cn.mode === 'd') return { game: 'connections', date: cn.daily, t0: cn.t0, t1: cn.t1 };
+  return null;
+}
+
+const clockSeconds = c => (c && c.t0 ? Math.max(0, Math.round(((c.t1 || Date.now()) - c.t0) / 1000)) : 0);
+
+// a finished daily puzzle posts its time, if it was played on its own day
+function lvDailyWon(game, date, t0, t1, detail) {
+  if (date !== todayStr() || !t0 || !t1) return;
+  const secs = Math.max(3, Math.round((t1 - t0) / 1000));
+  if (secs > DAILY_MAX_SECS) return;
+  lvPost('daily-' + game, dayNumber(date), secs, true, detail);
+}
+
+/* ---------- what's on screen: game, level, how scores are shown ---------- */
+
+const fmtGuesses = n => n + '/6';
+const fmtMisses = n => (n === 0 ? 'Perfect' : n + (n === 1 ? ' miss' : ' misses'));
+const fmtHints = n => (n === 0 ? 'No hints' : n + (n === 1 ? ' hint' : ' hints'));
+const FORMATS = { guesses: fmtGuesses, misses: fmtMisses, hints: fmtHints, time: clockText };
+
+const dailyCtx = (game, date) => ({ game: 'daily-' + game, level: dayNumber(date), title: game === 'wordle' ? 'Daily Wordle' : 'Daily Connections', sub: niceDate(date), fmt: 'time', daily: true });
+
+// runs a puzzle maker with Math.random swapped for a seeded one, so a level always builds the same puzzle
+function lvSeeded(seed, make) {
+  const real = Math.random;
+  Math.random = mulberry32(seed);
+  try {
+    return make();
+  } finally {
+    Math.random = real;
+  }
+}
+
+function lvContext() {
+  if (activeApp === 'wordle') {
+    if (state.daily) return dailyCtx('wordle', state.daily);
+    const level = wordOrder(state.len).indexOf(state.answer) + 1;
+    return { game: wordleKey(state.len), level, title: 'Wordle', sub: state.len + ' letters', fmt: 'guesses' };
+  }
+  if (activeApp === 'conn') {
+    if (cn.mode === 'd') return dailyCtx('connections', cn.daily);
+    return { game: cn.mode === 'u' ? 'connections-u' : 'connections', level: cn.id + 1, title: 'Connections', sub: cn.mode === 'u' ? 'Unlocked (beta)' : '', fmt: 'misses' };
+  }
+  if (activeApp === 'sudoku') return { game: 'sudoku-' + sd.diff, level: sd.level || 1, title: 'Sudoku', sub: sd.diff, fmt: 'time' };
+  if (activeApp === 'mini') return { game: 'mini', level: mc.id + 1, title: 'Mini Crossword', sub: '', fmt: 'time' };
+  if (activeApp === 'anagrams') return { game: 'anagrams', level: an.id + 1, title: 'Anagrams', sub: '', fmt: 'hints' };
+  return null;
+}
+
+/* ---------- drawing the leaderboard ---------- */
+
+const boardCache = new Map();
+
+async function boardData(ctx) {
+  const key = ctx ? ctx.game + ':' + ctx.level : 'top';
+  const hit = boardCache.get(key);
+  if (hit && Date.now() - hit.at < 20000) return hit.rows;
+  const res = ctx ? await rpc('level_board', { p_game: ctx.game, p_level: ctx.level }) : await rpc('top_players', {});
+  if (!res.ok || !Array.isArray(res.data)) return null;
+  boardCache.set(key, { at: Date.now(), rows: res.data });
+  return res.data;
+}
+
+const lossText = (ctx, s) => (ctx.fmt === 'guesses' ? 'Lost · ' + Math.floor(s / 10) + ' green' : ctx.fmt === 'misses' ? 'Lost · ' + s + '/4' : 'Lost');
+
+function boardHtml(ctx, rows) {
+  const frag = document.createDocumentFragment();
+  frag.appendChild(el('div', 'lb-title', ctx ? ctx.title + (ctx.daily ? '' : ' · Level ' + ctx.level) : 'Top players'));
+  frag.appendChild(el('div', 'lb-sub', ctx ? [ctx.sub, ctx.daily ? 'Fastest times' : 'Beat this level'].filter(Boolean).join(' · ') : 'Most levels beaten'));
+  if (rows === undefined) {
+    frag.appendChild(el('div', 'lb-empty', 'Loading...'));
+  } else if (rows === null) {
+    frag.appendChild(el('div', 'lb-empty', "Can't reach the leaderboard right now."));
+  } else if (!rows.length) {
+    frag.appendChild(el('div', 'lb-empty', ctx ? 'Nobody has beaten this one yet. Be the first!' : 'No one yet. Beat a level to get on the board!'));
+  } else {
+    const list = el('ol', 'lb-list');
+    rows.forEach((r, i) => {
+      const mine = me.name && r.name.toLowerCase() === me.name.toLowerCase();
+      const lost = !!ctx && r.won === false;
+      const li = el('li', (mine ? 'me ' : '') + (lost ? 'lose' : ''));
+      li.style.animationDelay = Math.min(i, 10) * 0.03 + 's';
+      if (ctx) {
+        li.dataset.name = r.name;
+        li.dataset.game = ctx.game;
+        li.dataset.level = ctx.level;
+        li.dataset.won = lost ? '0' : '1';
+        li.tabIndex = 0;
+      }
+      const score = !ctx ? r.beaten + (r.beaten === 1 ? ' level' : ' levels') : lost ? lossText(ctx, r.score) : FORMATS[ctx.fmt](r.score);
+      li.append(el('span', 'rk', String(i + 1)), el('span', 'nm', r.name), el('span', 'sc', score));
+      list.appendChild(li);
+    });
+    frag.appendChild(list);
+  }
+  return frag;
+}
+
+let lbShown = '';
+let lbModalCtx = null;
+
+function paint(box, ctx, rows) {
+  box.innerHTML = '';
+  box.appendChild(boardHtml(ctx, rows));
+}
+
+async function lbRefresh(force) {
+  const ctx = lbModalCtx !== null && lbModal.classList.contains('open') ? lbModalCtx.ctx : lvContext();
+  const key = ctx ? ctx.game + ':' + ctx.level : 'top';
+  const wide = !!window.matchMedia && window.matchMedia('(min-width: 1100px)').matches;
+  const modalOpen = lbModal.classList.contains('open');
+  if (!force && key === lbShown && !modalOpen) return;
+  lbShown = key;
+  if (force) boardCache.delete(key);
+  if (wide) paint(lbSide, ctx, undefined);
+  if (modalOpen) paint($('#lbModalBody'), ctx, undefined);
+  const rows = await boardData(ctx);
+  if (key !== lbShown) return;
+  if (wide) paint(lbSide, ctx, rows);
+  if (modalOpen) paint($('#lbModalBody'), ctx, rows);
+}
+
+function lbOpen(ctx) {
+  lbModalCtx = { ctx: ctx || lvContext() };
+  openModal(lbModal);
+  lbShown = '';
+  lbRefresh(true);
+}
+
+/* ---------- level picker ---------- */
+
+function lvOpenPicker() {
+  const ctx = lvContext();
+  if (!ctx || ctx.daily) return;
+  const info = lvInfo(ctx.game);
+  $('#lvTitle').textContent = ctx.title + ' Levels';
+  const beaten = Object.keys(info.done).length;
+  const frontier = lvFrontier(ctx.game, info.done);
+  $('#lvSub').textContent = beaten + ' of ' + lvMax(ctx.game) + ' beaten. Beat a level to open the next one.';
+  const grid = $('#lvGrid');
+  grid.innerHTML = '';
+  for (let l = 1; l <= lvMax(ctx.game); l++) {
+    const locked = l > frontier;
+    const b = el('button', (info.done[l] !== undefined ? 'done ' : '') + (l === ctx.level ? 'here ' : '') + (l === frontier && l !== ctx.level ? 'next ' : '') + (locked ? 'locked' : ''), String(l));
+    b.dataset.l = l;
+    b.disabled = locked;
+    grid.appendChild(b);
+  }
+  openModal(lvModal);
+  const here = grid.querySelector('.here');
+  if (here && here.scrollIntoView) here.scrollIntoView({ block: 'center' });
+}
+
+function lvJump(level) {
+  const ctx = lvContext();
+  if (!ctx || ctx.daily) return;
+  if (level > lvFrontier(ctx.game, lvInfo(ctx.game).done)) return;
+  closeModal(lvModal);
+  lvSetCur(ctx.game, level);
+  if (activeApp === 'wordle') {
+    const len = state.len;
+    if (settings.len !== len) { settings.len = len; saveSettings(); }
+    newGame();
+  } else if (activeApp === 'conn') cnNewPuzzle();
+  else if (activeApp === 'sudoku') sdSwitch(() => sdMake(sd.diff));
+  else if (activeApp === 'mini') mcNewPuzzle();
+  else if (activeApp === 'anagrams') anNewRound();
+}
+
+/* ---------- the dock and the clock ---------- */
+
+let tickKey = '';
+
+function tickLevels() {
+  const c = clockFor();
+  const show = !!c && !!c.t0 && !modalIsOpen();
+  clockPill.classList.toggle('hidden', !show);
+  if (show) clockPill.textContent = clockText(clockSeconds(c));
+
+  const ctx = lvContext();
+  const chip = $('#lvBtn');
+  chip.classList.toggle('hidden', !ctx);
+  if (ctx) {
+    chip.textContent = ctx.daily ? 'Daily' : 'Level ' + ctx.level;
+    chip.classList.toggle('static', !!ctx.daily);
+  }
+  $('#lvDock').classList.toggle('off', activeApp === 'editor');
+
+  const w = !!(state.daily && state.daily === todayStr() && state.status !== 'playing');
+  const d = !!(cn.mode === 'd' && cn.daily === todayStr() && cn.status !== 'playing');
+  $('#wBoard').classList.toggle('hidden', !w);
+  $('#cnBoard').classList.toggle('hidden', !d);
+
+  const key = ctx ? ctx.game + ':' + ctx.level : 'top';
+  if (key !== tickKey) {
+    tickKey = key;
+    lbRefresh(false);
+  }
+}
+
+/* ---------- how someone played a level ---------- */
+
+const dateOfDay = n => new Date(n * 864e5).toISOString().slice(0, 10);
+
+// guesses can give a level away, so they're only shown to people who already finished it
+function lvCanSee(game, level) {
+  if (game.startsWith('daily-')) {
+    const date = dateOfDay(level);
+    if (date < todayStr()) return true;
+    const saved = store.get(dailyKey(game.slice(6), date), null);
+    return !!saved && saved.status !== 'playing';
+  }
+  return lvInfo(game).done[level] !== undefined;
+}
+
+function dtRows(game, level, detail) {
+  const box = el('div', 'dt-rows');
+  if (!Array.isArray(detail) || !detail.length) {
+    box.appendChild(el('div', 'lb-empty', 'No guess history for this one.'));
+    return box;
+  }
+  if (game.startsWith('wordle') || game.startsWith('daily-wordle')) {
+    const len = detail[0].length;
+    const answer = game.startsWith('daily-') ? ((DAILY.wordle[dateOfDay(level)] || {}).word || null) : wordOrder(Number(game.slice(6)) || 5)[level - 1];
+    detail.forEach(g => {
+      const row = el('div', 'dt-word');
+      const res = answer ? evaluate(g, answer) : null;
+      [...g].forEach((ch, i) => row.appendChild(el('span', 'dt-tile ' + (res ? res[i] : 'absent'), ch)));
+      box.appendChild(row);
+    });
+    return box;
+  }
+  if (game.startsWith('connections') || game.startsWith('daily-connections')) {
+    const groups = game.startsWith('daily-') ? (dailyConnIds[dateOfDay(level)] ? PUZZLES[dailyConnIds[dateOfDay(level)].id] : null) : PUZZLES[level - 1];
+    detail.forEach(words => {
+      const row = el('div', 'dt-group');
+      words.forEach(w => {
+        const gi = groups ? groups.findIndex(g => g.words.includes(w)) : -1;
+        row.appendChild(el('span', 'dt-chip c' + gi, w));
+      });
+      box.appendChild(row);
+    });
+    return box;
+  }
+  const row = el('div', 'dt-chips');
+  detail.forEach(w => row.appendChild(el('span', 'an-chip', String(w))));
+  box.appendChild(row);
+  return box;
+}
+
+async function lvShowDetail(game, level, name, won) {
+  if (!lvCanSee(game, level)) {
+    toast('Beat this level to see how others played it', 2200);
     return;
   }
-  rows.forEach((r, i) => {
-    const li = el('li', 'in' + (mine && r.name === mine ? ' me' : ''));
-    li.style.animationDelay = Math.min(i, 12) * 0.03 + 's';
-    li.append(el('span', 'rk', String(i + 1)), el('span', 'nm', r.name), el('span', 'tm', clockText(r.seconds)));
-    list.appendChild(li);
+  $('#dtTitle').textContent = name;
+  $('#dtSub').textContent = (won ? 'Beat' : 'Lost') + ' level ' + (game.startsWith('daily-') ? niceDate(dateOfDay(level)) : level);
+  const body = $('#dtBody');
+  body.innerHTML = '';
+  body.appendChild(el('div', 'lb-empty', 'Loading...'));
+  openModal($('#dtModal'));
+  const res = await rpc('result_detail', { p_game: game, p_level: level, p_name: name });
+  body.innerHTML = '';
+  if (!res.ok) body.appendChild(el('div', 'lb-empty', "Can't load this right now."));
+  else body.appendChild(dtRows(game, level, res.data));
+}
+
+function rowClick(e) {
+  const li = e.target.closest('li[data-name]');
+  if (li) lvShowDetail(li.dataset.game, Number(li.dataset.level), li.dataset.name, li.dataset.won === '1');
+}
+
+// the side panel can fold away into a small arrow
+function setSide(open) {
+  document.body.classList.toggle('lb-shut', !open);
+  $('#lbTab').setAttribute('aria-expanded', String(open));
+  store.set('lb-open', open);
+}
+
+function initLevels() {
+  setSide(store.get('lb-open', true));
+  $('#lbTab').addEventListener('click', () => setSide(document.body.classList.contains('lb-shut')));
+  lbSide.addEventListener('click', rowClick);
+  $('#lbModalBody').addEventListener('click', rowClick);
+  [lbSide, $('#lbModalBody')].forEach(box => box.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target.matches('li[data-name]')) rowClick(e);
+  }));
+  $('#nameForm').addEventListener('submit', claimName);
+  $('#nameSkip').addEventListener('click', () => {
+    nameSkipped = true;
+    closeModal(nameModal);
   });
-}
+  $('#lbBtn').addEventListener('click', () => lbOpen());
+  $('#lvBtn').addEventListener('click', lvOpenPicker);
+  $('#lvGrid').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (b) lvJump(Number(b.dataset.l));
+  });
 
-async function boardRefresh(mine) {
-  const who = boardWho;
-  const mark = ++boardWatch;
-  try {
-    const rows = await boardFetch(who.game, who.date);
-    if (mark !== boardWatch) return;
-    boardPaint(rows, mine);
-  } catch (e) {
-    if (mark !== boardWatch) return;
-    $('#boardList').innerHTML = '';
-    boardMsg("Couldn't reach the leaderboard. Try again in a bit.", true);
-  }
-}
-
-function openBoard(game, date) {
-  boardWho = { game, date };
-  const secs = myResult(game, date);
-  const sent = store.get(sentKey(game, date), '');
-  $('#boardTitle').textContent = (game === 'wordle' ? 'Wordle' : 'Connections') + ' Leaderboard';
-  $('#boardSub').textContent = niceDate(date) + (secs ? ' · your time ' + clockText(secs) : '');
-  const canPost = date === todayStr() && secs > 0 && !sent;
-  boardForm.classList.toggle('hidden', !canPost);
-  $('#boardName').value = store.get('lb-name', '');
-  boardMsg(canPost && secs > SB_MAX ? 'That run is over an hour, so it can\'t be posted.' : '', canPost && secs > SB_MAX);
-  if (canPost && secs > SB_MAX) boardForm.classList.add('hidden');
-  $('#boardList').innerHTML = '';
-  boardPaint([], '');
-  $('#boardList').innerHTML = '<div class="board-empty">Loading...</div>';
-  openModal(boardModal);
-  boardRefresh(sent);
-}
-
-async function boardPost(e) {
-  e.preventDefault();
-  const { game, date } = boardWho;
-  const name = cleanName($('#boardName').value);
-  const secs = myResult(game, date);
-  if (!nameOk(name)) { boardMsg('Use 1 to 12 letters, numbers or spaces.', true); return; }
-  if (!secs || secs > SB_MAX) { boardMsg("This time can't be posted.", true); return; }
-  const btn = $('#boardPost');
-  btn.disabled = true;
-  boardMsg('Posting...');
-  try {
-    const res = await sb('scores', {
-      method: 'POST',
-      headers: { Prefer: 'return=minimal' },
-      body: JSON.stringify({ day: date, game, name, seconds: secs })
-    });
-    if (res.status === 409) {
-      boardMsg('Someone already used that name today. Try another.', true);
-    } else if (!res.ok) {
-      boardMsg("Couldn't post your time. Try again.", true);
-    } else {
-      store.set('lb-name', name);
-      store.set(sentKey(game, date), name);
-      boardForm.classList.add('hidden');
-      boardMsg('Posted!');
-      play('win');
-      await boardRefresh(name);
-    }
-  } catch (err) {
-    boardMsg("Couldn't reach the leaderboard. Try again.", true);
-  }
-  btn.disabled = false;
-}
-
-function initBoard() {
-  boardForm.addEventListener('submit', boardPost);
-  setInterval(tickClock, 250);
-
-  // a trophy button under each daily end screen, and one on today's card in the daily window
-  [['#endFooter', 'wBoard', 'wordle'], ['#cnEndFooter', 'cnBoard', 'connections']].forEach(([footer, id, game]) => {
+  [['#endFooter', 'wBoard'], ['#cnEndFooter', 'cnBoard']].forEach(([footer, id]) => {
     const b = el('button', 'btn btn-ghost lb-open hidden', 'Leaderboard');
     b.id = id;
-    b.addEventListener('click', () => {
-      const date = game === 'wordle' ? state.daily : cn.daily;
-      if (date) openBoard(game, date);
-    });
+    b.addEventListener('click', () => lbOpen());
     $(footer).before(b);
   });
-}
 
-function syncBoardButtons() {
-  const w = !!(state.daily && state.daily === todayStr() && state.status !== 'playing');
-  const c = !!(cn.mode === 'd' && cn.daily === todayStr() && cn.status !== 'playing');
-  $('#wBoard').classList.toggle('hidden', !w);
-  $('#cnBoard').classList.toggle('hidden', !c);
+  setInterval(tickLevels, 250);
+  setInterval(() => lbRefresh(true), 45000);
+  window.addEventListener('resize', () => lbRefresh(true));
+  lvVerify();
+  lvFlush();
+  lbRefresh(true);
 }
 
 /* =====================================================================
@@ -7006,6 +7569,7 @@ function edTab(name) {
   $('#edTabWordle').classList.toggle('hidden', name !== 'wordle');
   $('#edTabConn').classList.toggle('hidden', name !== 'conn');
   $('#edTabList').classList.toggle('hidden', name !== 'list');
+  $('#edTabPlayers').classList.toggle('hidden', name !== 'players');
   if (name === 'list') edRenderList();
 }
 
@@ -7393,6 +7957,8 @@ function initEditor() {
   $('#edSaveConn').addEventListener('click', edConnectClick);
   $('#edDisconnect').addEventListener('click', edDisconnect);
   $('#edRefresh').addEventListener('click', () => edRun(edLoadData, 'Refreshed'));
+  $('#edAdminPw').value = store.get('ed-admin', '');
+  $('#edPlLoad').addEventListener('click', edLoadPlayers);
   $('#edTabs').addEventListener('click', e => {
     const b = e.target.closest('button');
     if (b) edTab(b.dataset.tab);
@@ -7471,6 +8037,86 @@ function initEditor() {
   edResetConn();
 }
 
+
+/* ---------- players: rename or remove names ---------- */
+
+const edPlMsg = (text, bad) => {
+  const p = $('#edPlMsg');
+  p.textContent = text || '';
+  p.classList.toggle('bad', !!bad);
+};
+
+const PL_ERRORS = {
+  denied: 'Wrong admin password.',
+  taken: 'Someone already has that name.',
+  bad_name: 'Use 1 to 12 letters, numbers or spaces.',
+  no_player: 'That player is gone. Reload the list.',
+  offline: "Can't reach Supabase right now."
+};
+
+async function edAdmin(fn, args) {
+  const pw = $('#edAdminPw').value;
+  const res = await rpc(fn, Object.assign({ p_pw: pw }, args));
+  if (res.ok) store.set('ed-admin', pw);
+  else edPlMsg(PL_ERRORS[res.error] || 'Something went wrong (' + res.error + ').', true);
+  return res;
+}
+
+async function edLoadPlayers() {
+  edPlMsg('Loading...');
+  const res = await edAdmin('admin_list', {});
+  if (!res.ok) return;
+  edPlMsg(res.data.length + (res.data.length === 1 ? ' player' : ' players'));
+  edRenderPlayers(res.data);
+}
+
+function edRenderPlayers(rows) {
+  const box = $('#edPlList');
+  box.innerHTML = '';
+  if (!rows.length) {
+    box.appendChild(el('div', 'daily-empty', 'No players yet.'));
+    return;
+  }
+  rows.forEach(r => {
+    const item = el('div', 'ed-item');
+    const top = el('div', 'top');
+    top.append(el('b', '', r.name), el('span', 'tag live', r.beaten + (r.beaten === 1 ? ' result' : ' results')));
+    const acts = el('div', 'acts');
+    const rename = el('button', '', 'Rename');
+    const del = el('button', '', 'Delete');
+    let armed = null;
+    rename.addEventListener('click', () => {
+      const row = el('div', 'ed-row');
+      const input = el('input', 'ed-input');
+      input.value = r.name;
+      input.maxLength = 12;
+      const save = el('button', 'btn btn-main', 'Save');
+      const cancel = el('button', 'btn btn-ghost', 'Cancel');
+      cancel.addEventListener('click', () => row.remove());
+      save.addEventListener('click', async () => {
+        const res = await edAdmin('admin_rename', { p_old: r.name, p_new: input.value });
+        if (res.ok) { edPlMsg('Renamed to ' + res.data); edLoadPlayers(); }
+      });
+      row.append(input, save, cancel);
+      item.appendChild(row);
+      input.focus();
+    });
+    del.addEventListener('click', async () => {
+      if (!armed) {
+        del.textContent = 'Sure?';
+        armed = setTimeout(() => { armed = null; del.textContent = 'Delete'; }, 3000);
+        return;
+      }
+      clearTimeout(armed);
+      const res = await edAdmin('admin_delete', { p_name: r.name });
+      if (res.ok) { edPlMsg('Deleted ' + r.name); edLoadPlayers(); }
+    });
+    acts.append(rename, del);
+    item.append(top, acts);
+    box.appendChild(item);
+  });
+}
+
 init();
 initConnections();
 initSudoku();
@@ -7478,7 +8124,7 @@ initMini();
 initAnagrams();
 initHub();
 initEditor();
-initDaily(); initBoard();
+initDaily(); initLevels();
 </script>
 </body>
 </html>
