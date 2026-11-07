@@ -1700,7 +1700,8 @@ h1.ed-title { font-size: 1.7rem; }
 .name-tabs { display: flex; gap: 4px; margin-bottom: 16px; padding: 4px; border-radius: 10px; background: var(--border); }
 .name-tabs button { flex: 1; height: 34px; border: 0; border-radius: 7px; background: none; color: var(--sub); font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
 .name-tabs button.on { background: var(--card); color: var(--text); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }
-.namecard .ed-input + .ed-input { margin-top: 8px; }
+.namecard .ed-input + .ed-input, .namecard .pw-wrap { margin-top: 8px; }
+.namecard .pw-wrap .ed-input { margin-top: 0; }
 
 .lv-icon { padding: 0; }
 .lv-icon svg { width: 18px; height: 18px; fill: currentColor; }
@@ -1760,6 +1761,14 @@ form.pf-panel .btn { flex: none; width: 90px; height: 40px; font-size: 0.9rem; }
   .pf-id h2 { font-size: 1.5rem; }
   .pf-box b { font-size: 1.6rem; }
 }
+
+.pw-wrap { position: relative; flex: 1; }
+.pw-wrap .ed-input { width: 100%; padding-right: 46px; }
+.pw-eye { position: absolute; top: 50%; right: 6px; width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--muted); cursor: pointer; transform: translateY(-50%); transition: color 0.2s; }
+.pw-eye:hover, .pw-eye[aria-pressed='true'] { color: var(--text); }
+.pw-eye svg { width: 20px; height: 20px; fill: currentColor; }
+.pw-eye .shut, .pw-eye[aria-pressed='true'] .open { display: none; }
+.pw-eye[aria-pressed='true'] .shut { display: block; }
 /* ---------- finishing touches ---------- */
 .modal { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .card { border-radius: 14px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5); transform: translateY(28px) scale(0.96); transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.25, 1.15); }
@@ -2293,7 +2302,7 @@ h1.hub-title { letter-spacing: 0.01em; }
     <p class="name-sub" id="nameSub">Your name shows on the leaderboard. Your password lets you log in on any device and keep your progress.</p>
     <form id="nameForm" autocomplete="off">
       <input class="ed-input" id="nameInput" maxlength="12" placeholder="Your name" aria-label="Your name" spellcheck="false" autocapitalize="off">
-      <input class="ed-input" id="pwInput" type="password" maxlength="40" placeholder="Password" aria-label="Password" autocomplete="off">
+      <div class="pw-wrap"><input class="ed-input" id="pwInput" type="password" maxlength="40" placeholder="Password" aria-label="Password" autocomplete="off"><button type="button" class="pw-eye" aria-label="Show password" aria-pressed="false"><svg viewBox="0 0 24 24"><path class="open" d="M12 5C7 5 2.7 8.1 1 12.5 2.7 16.9 7 20 12 20s9.3-3.1 11-7.5C21.3 8.1 17 5 12 5zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/><path class="shut" d="M2.8 2 1.4 3.4l3.2 3.2A12.3 12.3 0 0 0 1 12.5C2.7 16.9 7 20 12 20c1.9 0 3.7-.5 5.3-1.3l3.3 3.3 1.4-1.4L2.8 2zM12 17.5a5 5 0 0 1-4.6-7L9 12.1a3 3 0 0 0 2.9 2.9l1.6 1.6c-.5.6-1 .9-1.5.9zM12 5c-1.1 0-2.2.2-3.2.5l2.4 2.4a5 5 0 0 1 5.9 5.9l2.9 2.9A12.4 12.4 0 0 0 23 12.5C21.3 8.1 17 5 12 5z"/></svg></button></div>
       <p class="name-msg" id="nameMsg"></p>
       <button class="btn btn-main name-go" id="nameGo" type="submit">Let's play</button>
       <button class="ed-link hidden" id="nameSkip" type="button">Play without a name this time</button>
@@ -2321,7 +2330,7 @@ h1.hub-title { letter-spacing: 0.01em; }
     </div>
     <div class="pf-panel hidden" id="pfPick"></div>
     <form class="pf-panel hidden" id="pfPwForm" autocomplete="off">
-      <input class="ed-input" id="pfPwInput" type="password" maxlength="40" placeholder="New password" aria-label="New password">
+      <div class="pw-wrap"><input class="ed-input" id="pfPwInput" type="password" maxlength="40" placeholder="New password" aria-label="New password"><button type="button" class="pw-eye" aria-label="Show password" aria-pressed="false"><svg viewBox="0 0 24 24"><path class="open" d="M12 5C7 5 2.7 8.1 1 12.5 2.7 16.9 7 20 12 20s9.3-3.1 11-7.5C21.3 8.1 17 5 12 5zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/><path class="shut" d="M2.8 2 1.4 3.4l3.2 3.2A12.3 12.3 0 0 0 1 12.5C2.7 16.9 7 20 12 20c1.9 0 3.7-.5 5.3-1.3l3.3 3.3 1.4-1.4L2.8 2zM12 17.5a5 5 0 0 1-4.6-7L9 12.1a3 3 0 0 0 2.9 2.9l1.6 1.6c-.5.6-1 .9-1.5.9zM12 5c-1.1 0-2.2.2-3.2.5l2.4 2.4a5 5 0 0 1 5.9 5.9l2.9 2.9A12.4 12.4 0 0 0 23 12.5C21.3 8.1 17 5 12 5z"/></svg></button></div>
       <button class="btn btn-main" type="submit">Save</button>
     </form>
     <p class="pf-note hidden" id="pfNote"></p>
@@ -7158,6 +7167,10 @@ function askName(mode) {
   $('#nameSkip').classList.add('hidden');
   $('#nameInput').value = '';
   $('#pwInput').value = '';
+  $('#pwInput').type = 'password';
+  const eye = $('#pwInput').parentNode.querySelector('.pw-eye');
+  eye.setAttribute('aria-pressed', 'false');
+  eye.setAttribute('aria-label', 'Show password');
   openModal(nameModal);
   setTimeout(() => $('#nameInput').focus(), 300);
 }
@@ -7876,6 +7889,14 @@ function pfLogOut() {
 }
 
 function initProfile() {
+  document.querySelectorAll('.pw-eye').forEach(b => b.addEventListener('click', () => {
+    const input = b.parentNode.querySelector('input');
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    b.setAttribute('aria-pressed', String(show));
+    b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    input.focus();
+  }));
   $('#pfBtn').addEventListener('click', pfOpenMine);
   $('#dtProfile').addEventListener('click', () => openProfile($('#dtProfile').dataset.name));
   document.querySelectorAll('#nameTabs button').forEach(b => b.addEventListener('click', () => setNameMode(b.dataset.mode)));
