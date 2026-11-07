@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#000000" id="themeColor">
 <title>htla w</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <style>
 :root {
   --bg: #000;
@@ -1769,6 +1772,149 @@ form.pf-panel .btn { flex: none; width: 90px; height: 40px; font-size: 0.9rem; }
 .pw-eye svg { width: 20px; height: 20px; fill: currentColor; }
 .pw-eye .shut, .pw-eye[aria-pressed='true'] .open { display: none; }
 .pw-eye[aria-pressed='true'] .shut { display: block; }
+/* ---------- manager ---------- */
+#edApp .ed-main { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+.ed-tabs { position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; display: flex; gap: 0; margin: 0; padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: rgba(10, 10, 11, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.ed-tabs button { flex: 1; height: auto; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0 4px; border: 0; border-radius: 10px; background: none; color: var(--muted); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; transition: color 0.2s, background-color 0.2s; }
+.ed-tabs button svg { width: 22px; height: 22px; fill: currentColor; transition: transform 0.2s; }
+.ed-tabs button.on { background: var(--border); border: 0; color: var(--text); }
+.ed-tabs button.on svg { transform: translateY(-1px) scale(1.08); }
+
+.ed-admin { display: flex; gap: 8px; margin-bottom: 14px; }
+.ed-admin .ed-input { margin: 0; flex: 1; }
+.ed-admin .btn { flex: none; width: 96px; height: 42px; font-size: 0.9rem; }
+.ed-admin-ok { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding: 8px 12px; border-radius: 10px; background: rgba(83, 141, 78, 0.16); color: var(--correct); font-size: 0.8rem; font-weight: 700; }
+.ed-admin-ok .ed-link { color: var(--sub); }
+
+.mg-card { margin-bottom: 12px; padding: 14px; border: 1px solid var(--card-border); border-radius: 14px; background: var(--card); animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+.mg-card h3, .mg-h { margin: 0 0 10px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.mg-h { margin-top: 16px; }
+.mg-card .ed-note { margin-bottom: 10px; }
+.mg-card .ed-wide { margin-top: 8px; }
+.mg-sep { height: 1px; margin: 16px 0; background: var(--border); }
+.mg-area { resize: none; min-height: 78px; }
+.mg-count { margin: 4px 0 8px; text-align: right; font-size: 0.7rem; color: var(--muted); }
+.mg-test .ed-input:last-child { width: 90px; flex: none; }
+.mg-test .ed-input { margin-top: 0; }
+.mg-steps { margin: 0; padding-left: 20px; font-size: 0.85rem; line-height: 1.7; color: var(--sub); }
+
+.mg-alert { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; padding: 10px 12px; border-radius: 12px; font-size: 0.82rem; line-height: 1.35; animation: rise 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+.mg-alert.warn { background: rgba(181, 159, 59, 0.16); color: #e3cf6e; }
+.mg-alert.info { background: rgba(58, 123, 213, 0.16); color: #8db6ee; }
+.mg-alert.ok { background: rgba(83, 141, 78, 0.16); color: #86c481; }
+.mg-alert button { flex: none; padding: 6px 12px; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.14); color: inherit; font-size: 0.75rem; font-weight: 700; cursor: pointer; }
+#edAlerts { margin-bottom: 4px; }
+
+.mg-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.mg-tile { display: flex; flex-direction: column; gap: 2px; padding: 14px; border: 1px solid var(--card-border); border-radius: 14px; background: var(--card); animation: rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+.mg-tile:nth-child(2) { animation-delay: 0.05s; }
+.mg-tile:nth-child(3) { animation-delay: 0.1s; }
+.mg-tile:nth-child(4) { animation-delay: 0.15s; }
+.mg-tile b { font-family: Georgia, 'Times New Roman', serif; font-size: 2rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.mg-tile span { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sub); }
+.mg-tile em { font-style: normal; font-size: 0.72rem; color: var(--muted); }
+.mg-locked { grid-column: 1 / -1; padding: 18px; border: 1px dashed var(--filled); border-radius: 14px; text-align: center; font-size: 0.85rem; color: var(--muted); }
+.mg-champ { font-family: Georgia, 'Times New Roman', serif; font-size: 1.3rem; color: #f3c93e; }
+.mg-bar { display: grid; grid-template-columns: 120px 1fr 34px; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.8rem; }
+.mg-bar .track { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; }
+.mg-bar .track i { display: block; height: 100%; border-radius: 4px; background: var(--correct); transition: width 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.mg-bar em { font-style: normal; text-align: right; color: var(--sub); font-variant-numeric: tabular-nums; }
+.mg-bar span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#edDailyTop { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.mg-daily h4, .mg-puz h4 { margin: 0 0 6px; font-size: 0.85rem; }
+.mg-daily p { font-size: 0.8rem; color: var(--muted); }
+.mg-rank { display: grid; grid-template-columns: 18px 1fr auto; gap: 6px; padding: 4px 0; font-size: 0.82rem; }
+.mg-rank em { font-style: normal; color: var(--sub); font-variant-numeric: tabular-nums; }
+.mg-rank.m1 span { color: #f3c93e; }
+.mg-rank.m2 span { color: #c4ccd4; }
+.mg-rank.m3 span { color: #cd7f32; }
+.mg-quick { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mg-quick button { height: 40px; border: 1px solid var(--filled); border-radius: 10px; background: none; color: var(--text); font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s; }
+.mg-quick button:hover { background: var(--border); }
+
+.mg-search { display: flex; gap: 8px; margin-bottom: 8px; }
+.mg-search .ed-input { margin: 0; }
+.mg-search select { width: 130px; flex: none; }
+.pl-card { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--card); color: var(--text); text-align: left; cursor: pointer; transition: background-color 0.2s, transform 0.12s; animation: rise 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+.pl-card:active { transform: scale(0.985); }
+.pl-card:hover { background: var(--border); }
+.pl-card .mid { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pl-card b { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 0.95rem; }
+.pl-card .mid > span { font-size: 0.75rem; color: var(--muted); }
+.pl-card .tag { padding: 1px 7px; border-radius: 999px; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #fff; }
+.pl-card .tag.hid { background: var(--lose); }
+.pl-card .tag.nopw { background: var(--filled); }
+.plcard { max-width: 460px; max-height: 88vh; overflow-y: auto; }
+.pl-acts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.pl-acts button { flex: 1 1 40%; height: 34px; border: 1px solid var(--filled); border-radius: 999px; background: none; color: var(--text); font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s; }
+.pl-acts button:hover { background: var(--border); }
+.pl-acts button.danger, .pl-acts button.armed { border-color: var(--lose); color: #e5817b; }
+.pl-acts button.armed { background: var(--lose); color: #fff; }
+#edPlForm .ed-row { margin: 0 0 10px; }
+#edPlForm .ed-input { margin: 0; flex: 1; }
+#edPlForm .btn { flex: none; width: auto; padding: 0 14px; height: 40px; font-size: 0.85rem; }
+.pl-results { display: flex; flex-direction: column; gap: 4px; max-height: 32vh; overflow-y: auto; }
+.pl-res { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; background: var(--border); font-size: 0.8rem; }
+.pl-res.lost b { color: #e5817b; }
+.pl-res button { padding: 4px 10px; border: 1px solid var(--filled); border-radius: 999px; background: none; color: var(--sub); font-size: 0.68rem; font-weight: 700; cursor: pointer; }
+.pl-res button.armed { border-color: var(--lose); background: var(--lose); color: #fff; }
+
+.mg-cal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.mg-cal-head b { font-family: Georgia, 'Times New Roman', serif; font-size: 1.2rem; }
+.mg-arrow { width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 50%; background: var(--border); color: var(--text); cursor: pointer; }
+.mg-arrow svg { width: 22px; height: 22px; fill: currentColor; }
+.mg-cal-dow, .mg-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.mg-cal-dow span { text-align: center; font-size: 0.65rem; font-weight: 700; color: var(--muted); }
+.mg-cal-grid { margin-top: 6px; }
+.mg-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border: 1px solid transparent; border-radius: 10px; background: var(--border); color: var(--text); font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: transform 0.12s, border-color 0.2s; }
+.mg-day:active { transform: scale(0.94); }
+.mg-day.past { opacity: 0.55; }
+.mg-day.empty { background: none; border-color: var(--border); font-weight: 400; }
+.mg-day.today { border-color: var(--text); opacity: 1; }
+.mg-day .dots { display: flex; gap: 3px; height: 6px; }
+.mg-day .dots i, .mg-legend i { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.mg-day .dots i.w, .mg-legend i.w { background: var(--correct); }
+.mg-day .dots i.c, .mg-legend i.c { background: #5b8def; }
+.mg-legend { display: flex; justify-content: center; gap: 16px; margin-top: 10px; font-size: 0.72rem; color: var(--muted); }
+.mg-legend span { display: flex; align-items: center; gap: 5px; }
+.mg-puz { margin-bottom: 12px; padding: 12px; border-radius: 12px; background: var(--border); }
+.mg-puz p { margin-bottom: 10px; font-size: 0.82rem; color: var(--sub); overflow-wrap: anywhere; }
+.mg-puz .pl-acts { margin: 0; }
+.mg-puz .pl-acts button { flex: 1 1 28%; }
+.mg-copy { display: flex; gap: 8px; margin-top: 10px; }
+.mg-copy .ed-input { margin: 0; flex: 1; }
+.mg-copy .btn { flex: none; width: 110px; height: 42px; font-size: 0.85rem; }
+.mg-copy .btn.armed { background: var(--lose); }
+
+/* pin lock */
+.pin-lock { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; background: var(--bg); }
+.pin-box { width: min(300px, 86vw); text-align: center; }
+.pin-box h2 { margin-bottom: 18px; font-family: Georgia, 'Times New Roman', serif; font-size: 1.6rem; }
+.pin-dots { display: flex; justify-content: center; gap: 14px; margin-bottom: 8px; }
+.pin-dots i { width: 14px; height: 14px; border: 2px solid var(--filled); border-radius: 50%; transition: background-color 0.15s, border-color 0.15s; }
+.pin-dots i.on { background: var(--text); border-color: var(--text); }
+.pin-msg { min-height: 1.4em; margin-bottom: 8px; font-size: 0.85rem; color: #e5817b; }
+.pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.pin-pad button { height: 62px; border: 0; border-radius: 50%; background: var(--border); color: var(--text); font-size: 1.5rem; font-weight: 600; cursor: pointer; transition: background-color 0.15s, transform 0.1s; }
+.pin-pad button:active { transform: scale(0.92); background: var(--filled); }
+.pin-pad button.ghost { background: none; font-size: 0.85rem; color: var(--muted); }
+
+/* public site extras */
+.ann-bar { position: fixed; top: 8px; left: 50%; z-index: 60; display: flex; align-items: center; gap: 10px; width: min(520px, calc(100vw - 24px)); padding: 10px 8px 10px 16px; border: 1px solid #5a4a12; border-radius: 14px; background: rgba(40, 32, 8, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #f3dd8a; font-size: 0.88rem; line-height: 1.35; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); transform: translateX(-50%); animation: annIn 0.5s cubic-bezier(0.2, 0.9, 0.25, 1.1); }
+.ann-bar .ann-t { flex: 1; overflow-wrap: anywhere; }
+.ann-bar .ann-x { width: 30px; height: 30px; flex: none; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.1); color: inherit; font-size: 1.2rem; line-height: 1; cursor: pointer; }
+@keyframes annIn { from { transform: translate(-50%, -140%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+body.in-editor .ann-bar { display: none; }
+.hub-champ { display: inline-flex; align-items: center; gap: 8px; margin: 0 auto 12px; padding: 7px 14px; border: 1px solid #7a5f10; border-radius: 999px; background: linear-gradient(110deg, rgba(138, 106, 0, 0.35), rgba(230, 180, 34, 0.22)); color: #f6d56a; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: transform 0.15s, box-shadow 0.2s; }
+.hub-champ:hover { transform: translateY(-1px); box-shadow: 0 0 14px rgba(230, 180, 34, 0.35); }
+.hub-champ svg { width: 18px; height: 18px; fill: currentColor; }
+.test-pill { position: fixed; top: 8px; left: 50%; z-index: 70; display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 14px; border-radius: 999px; background: #8e54c9; color: #fff; font-size: 0.78rem; font-weight: 700; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5); transform: translateX(-50%); white-space: nowrap; }
+.test-pill button { padding: 6px 14px; border: 0; border-radius: 999px; background: #fff; color: #4a2470; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+@media (max-width: 380px) { .mg-bar { grid-template-columns: 90px 1fr 30px; } .ed-tabs button span { font-size: 0.56rem; } }
+
+body.in-editor .appsbtn { display: none; }
+.ed-bar #edWho { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ed-links { display: flex; flex: none; gap: 2px; }
 /* ---------- finishing touches ---------- */
 .modal { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .card { border-radius: 14px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5); transform: translateY(28px) scale(0.96); transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.25, 1.15); }
@@ -1863,6 +2009,7 @@ h1.hub-title { letter-spacing: 0.01em; }
     <h1 class="hub-title">Infinite Games<span class="inf">&#8734;</span></h1>
     <p class="hub-sub">Pick a game and beat level after level.</p>
     <div class="hub-streak hidden" id="hubStreak"></div>
+    <button class="hub-champ hidden" id="hubChamp" type="button"></button>
     <button class="btn btn-main hub-continue hidden" id="hubContinue"></button>
     <div class="hub-cards">
       <button class="hub-card" data-app="wordle">
@@ -2386,6 +2533,7 @@ h1.hub-title { letter-spacing: 0.01em; }
     <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
   </button>
 </div>
+<div class="test-pill hidden" id="testPill"><span>Test mode · nothing is saved</span><button id="testExit" type="button">Exit</button></div>
 <div class="clock-pill hidden" id="clockPill" aria-label="Time"></div>
 <!-- editor for posting daily puzzles -->
 <div class="app" id="edApp">
@@ -2418,13 +2566,28 @@ h1.hub-title { letter-spacing: 0.01em; }
     <section id="edWork" class="hidden">
       <div class="ed-bar">
         <span id="edWho"></span>
-        <span><button class="ed-link" id="edRefresh">Refresh</button> <button class="ed-link" id="edDisconnect">Disconnect</button></span>
+        <span class="ed-links"><button class="ed-link" id="edGames">Games</button><button class="ed-link" id="edRefresh">Refresh</button><button class="ed-link" id="edDisconnect">Disconnect</button></span>
       </div>
-      <div class="ed-tabs" id="edTabs">
-        <button data-tab="wordle" class="on">Wordle</button>
-        <button data-tab="conn">Connections</button>
-        <button data-tab="list">Schedule</button>
-        <button data-tab="players">Players</button>
+      <div class="ed-admin" id="edAdminBar">
+        <input class="ed-input" id="edAdminPw" type="password" autocomplete="off" placeholder="Admin password">
+        <button class="btn btn-main" id="edUnlock" type="button">Unlock</button>
+      </div>
+      <div class="ed-admin-ok hidden" id="edAdminOk"><span>Admin unlocked</span><button class="ed-link" id="edAdminLock" type="button">Lock</button></div>
+
+      <div id="edTabHome">
+        <div id="edAlerts"></div>
+        <div class="mg-tiles" id="edTiles"></div>
+        <div class="mg-card hidden" id="edChampCard"></div>
+        <div class="mg-card"><h3>Today's daily puzzles</h3><div id="edDailyTop"></div></div>
+        <div class="mg-card"><h3>Most played</h3><div id="edPopular"></div></div>
+        <div class="mg-card"><h3>Quick actions</h3>
+          <div class="mg-quick">
+            <button data-go="wordle">New Wordle</button>
+            <button data-go="conn">New Connections</button>
+            <button data-go="site">Announcement</button>
+            <button data-go="players">Players</button>
+          </div>
+        </div>
       </div>
 
       <div id="edTabWordle">
@@ -2478,17 +2641,149 @@ h1.hub-title { letter-spacing: 0.01em; }
       </div>
 
       <div id="edTabPlayers" class="hidden">
-        <label class="ed-label">Admin password<input class="ed-input" id="edAdminPw" type="password" autocomplete="off" placeholder="The one from the Supabase setup"></label>
-        <button class="btn btn-main ed-wide" id="edPlLoad">Load players</button>
+        <div class="mg-search">
+          <input class="ed-input" id="edPlSearch" placeholder="Search players" autocomplete="off" spellcheck="false">
+          <select class="ed-input" id="edPlSort" aria-label="Sort players">
+            <option value="new">Newest</option>
+            <option value="active">Most active</option>
+            <option value="seen">Last seen</option>
+            <option value="az">A to Z</option>
+          </select>
+        </div>
+        <button class="btn btn-ghost ed-wide" id="edPlLoad">Reload players</button>
         <p class="ed-msg" id="edPlMsg"></p>
         <div class="ed-list" id="edPlList"></div>
       </div>
 
       <div id="edTabList" class="hidden">
+        <div class="mg-card mg-cal">
+          <div class="mg-cal-head">
+            <button class="mg-arrow" id="edCalPrev" aria-label="Previous month"><svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+            <b id="edCalTitle"></b>
+            <button class="mg-arrow" id="edCalNext" aria-label="Next month"><svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></button>
+          </div>
+          <div class="mg-cal-dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+          <div class="mg-cal-grid" id="edCal"></div>
+          <div class="mg-legend"><span><i class="w"></i>Wordle</span><span><i class="c"></i>Connections</span></div>
+        </div>
+        <h3 class="mg-h">All puzzles</h3>
         <div class="ed-list" id="edList"></div>
+      </div>
+
+      <div id="edTabSite" class="hidden">
+        <div class="mg-card">
+          <h3>Announcement</h3>
+          <p class="ed-note">Shows at the top of the site for everyone until they close it.</p>
+          <textarea class="ed-input mg-area" id="edAnnText" maxlength="200" rows="3" placeholder="New game coming Friday!"></textarea>
+          <div class="mg-count" id="edAnnCount">0 / 200</div>
+          <div class="ed-row">
+            <button class="btn btn-ghost" id="edAnnClear" type="button">Remove</button>
+            <button class="btn btn-main" id="edAnnPost" type="button">Post</button>
+          </div>
+          <p class="ed-msg" id="edAnnMsg"></p>
+        </div>
+        <div class="mg-card">
+          <h3>Test play</h3>
+          <p class="ed-note">Play any level to try it. Nothing counts and nothing is saved.</p>
+          <div class="ed-row mg-test">
+            <select class="ed-input" id="edTestGame" aria-label="Game">
+              <option value="wordle">Wordle</option>
+              <option value="conn">Connections</option>
+              <option value="sudoku">Sudoku</option>
+              <option value="mini">Mini Crossword</option>
+              <option value="anagrams">Anagrams</option>
+            </select>
+            <input class="ed-input" id="edTestLevel" type="number" min="1" value="1" aria-label="Level">
+          </div>
+          <button class="btn btn-main ed-wide" id="edTestGo" type="button">Start test</button>
+        </div>
+        <div class="mg-card">
+          <h3>Backup</h3>
+          <p class="ed-note">Saves every player, result and puzzle to a file. Passwords are never included.</p>
+          <button class="btn btn-ghost ed-wide" id="edBackup" type="button">Download backup</button>
+          <p class="ed-msg" id="edBackupMsg"></p>
+        </div>
+        <div class="mg-card">
+          <h3>Security</h3>
+          <label class="ed-label">New admin password
+            <input class="ed-input" id="edNewAdminPw" type="password" autocomplete="off" placeholder="At least 6 characters">
+          </label>
+          <button class="btn btn-ghost ed-wide" id="edChangeAdmin" type="button">Change admin password</button>
+          <p class="ed-msg" id="edSecMsg"></p>
+          <div class="mg-sep"></div>
+          <label class="ed-label">Lock this manager with a PIN
+            <input class="ed-input" id="edPinInput" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4 digits">
+          </label>
+          <div class="ed-row">
+            <button class="btn btn-ghost" id="edPinOff" type="button">Remove PIN</button>
+            <button class="btn btn-main" id="edPinSet" type="button">Set PIN</button>
+          </div>
+          <p class="ed-note">The PIN only stops someone from opening the manager on this phone.</p>
+        </div>
+        <div class="mg-card">
+          <h3>Put it on your home screen</h3>
+          <ol class="mg-steps">
+            <li>Open this page in Safari on your iPhone.</li>
+            <li>Tap the Share button.</li>
+            <li>Tap Add to Home Screen.</li>
+            <li>Tap Add. It opens full screen like an app.</li>
+          </ol>
+        </div>
       </div>
     </section>
   </main>
+  <nav class="ed-tabs hidden" id="edTabs" aria-label="Manager">
+    <button data-tab="home" class="on"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></button>
+    <button data-tab="wordle"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg><span>Wordle</span></button>
+    <button data-tab="conn"><svg viewBox="0 0 24 24"><path d="M4 4h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 10h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 16h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4z"/></svg><span>Connections</span></button>
+    <button data-tab="list"><svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V10h14v10z"/></svg><span>Planner</span></button>
+    <button data-tab="players"><svg viewBox="0 0 24 24"><path d="M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2c-2.3 0-7 1.2-7 3.5V19h14v-2.5C15 14.2 10.3 13 8 13zm8 0c-.3 0-.6 0-1 .1 1.2.8 2 1.9 2 3.4V19h6v-2.5c0-2.3-4.7-3.5-7-3.5z"/></svg><span>Players</span></button>
+    <button data-tab="site"><svg viewBox="0 0 24 24"><path d="M19.4 13a7.7 7.7 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.6 7.6 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.6 7.6 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.7 7.7 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1c.5.4 1.1.7 1.7 1L11 21h4l.4-2.9c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg><span>Site</span></button>
+  </nav>
+</div>
+
+<!-- player sheet -->
+<div class="modal" id="edPlSheet" aria-hidden="true">
+  <div class="card plcard">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <div class="pf-head">
+      <div class="pf-av sm" id="edPlAv"></div>
+      <div class="pf-id"><h2 id="edPlName"></h2><p id="edPlSub"></p></div>
+    </div>
+    <div class="pl-acts" id="edPlActs"></div>
+    <div id="edPlForm"></div>
+    <p class="ed-msg" id="edPlSheetMsg"></p>
+    <h3 class="mg-h">Results</h3>
+    <div class="pl-results" id="edPlResults"></div>
+  </div>
+</div>
+
+<!-- day sheet -->
+<div class="modal" id="edDayModal" aria-hidden="true">
+  <div class="card plcard">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <h2 id="edDayTitle"></h2>
+    <div id="edDayBody"></div>
+  </div>
+</div>
+
+<!-- PIN lock -->
+<div class="pin-lock hidden" id="pinLock">
+  <div class="pin-box">
+    <h2>Enter PIN</h2>
+    <div class="pin-dots" id="pinDots"><i></i><i></i><i></i><i></i></div>
+    <p class="pin-msg" id="pinMsg"></p>
+    <div class="pin-pad" id="pinPad">
+      <button>1</button><button>2</button><button>3</button>
+      <button>4</button><button>5</button><button>6</button>
+      <button>7</button><button>8</button><button>9</button>
+      <button class="ghost" data-k="back">Back</button><button>0</button><button class="ghost" data-k="del">&#9003;</button>
+    </div>
+  </div>
 </div>
 
 <!-- stats -->
@@ -7054,6 +7349,7 @@ function lvMax(game) {
 // the first level not beaten yet: nobody can play past it
 function lvFrontier(game, done) {
   const max = lvMax(game);
+  if (testMode) return max;
   for (let l = 1; l <= max; l++) if (done[l] === undefined) return l;
   return max;
 }
@@ -7230,6 +7526,7 @@ async function claimName(e) {
 
 // asks for a name the first time someone opens a game
 function lvGate() {
+  if (testMode) return;
   lvVerify();
   if (me.token || nameSkipped || nameModal.classList.contains('open')) return;
   setTimeout(() => { if (!me.token && !nameSkipped && activeApp !== 'hub') askName(); }, 350);
@@ -7261,6 +7558,7 @@ async function lvVerify() {
 let flushing = false;
 
 function lvPost(game, level, score, won = true, detail = null) {
+  if (testMode) return;
   const old = store.get('lv-pending', []);
   if (!won && old.some(p => p.game === game && p.level === level && p.won !== false)) return;
   const pending = old.filter(p => !(p.game === game && p.level === level));
@@ -7491,7 +7789,47 @@ function lvJump(level) {
 
 let tickKey = '';
 
+/* ---------- test play: try anything, keep nothing ---------- */
+
+let testMode = false;
+
+function lvTestBegin() {
+  if (testMode) return;
+  const snap = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (!/^ed-/.test(k)) snap[k] = localStorage.getItem(k);
+  }
+  // kept in storage so a closed tab can still be put back
+  store.set('ed-test-snap', snap);
+  testMode = true;
+}
+
+function lvTestRestore() {
+  const snap = store.get('ed-test-snap', null);
+  testMode = false;
+  if (!snap) return;
+  Object.keys(localStorage).forEach(k => { if (!/^ed-/.test(k) && !(k in snap)) localStorage.removeItem(k); });
+  Object.keys(snap).forEach(k => localStorage.setItem(k, snap[k]));
+  try { localStorage.removeItem('ed-test-snap'); } catch (e) {}
+}
+
+function lvTestStart(app, level, then) {
+  lvTestBegin();
+  showApp(app);
+  if (then) then();
+  else lvJump(level);
+}
+
+function lvTestExit() {
+  lvTestRestore();
+  location.hash = '#editor';
+  location.reload();
+}
+
 function tickLevels() {
+  document.body.classList.toggle('in-editor', activeApp === 'editor');
+  $('#testPill').classList.toggle('hidden', !testMode);
   const c = clockFor();
   const show = !!c && !!c.t0 && !modalIsOpen();
   clockPill.classList.toggle('hidden', !show);
@@ -7602,6 +7940,8 @@ function setSide(open) {
 }
 
 function initLevels() {
+  if (store.get('ed-test-snap', null)) lvTestRestore();
+  $('#testExit').addEventListener('click', lvTestExit);
   setSide(store.get('lb-open', true));
   $('#lbTab').addEventListener('click', () => setSide(document.body.classList.contains('lb-shut')));
   lbSide.addEventListener('click', rowClick);
@@ -8028,15 +8368,18 @@ async function edRun(task, okText) {
 function edShowConnect(show) {
   $('#edConnect').classList.toggle('hidden', !show);
   $('#edWork').classList.toggle('hidden', show);
+  $('#edTabs').classList.toggle('hidden', show);
 }
 
 async function edLoadData() {
   const cur = await ghGet();
   edData = cur.data;
   edRenderList();
+  edHomeAlerts();
 }
 
 function enterEditor() {
+  if (pinGate()) return;
   $('#edOwner').value = edConf.owner;
   $('#edRepo').value = edConf.repo;
   $('#edPath').value = edConf.path;
@@ -8048,6 +8391,8 @@ function enterEditor() {
   edShowConnect(false);
   $('#edWho').textContent = edConf.owner + '/' + edConf.repo;
   edRun(edLoadData);
+  edAutoUnlock();
+  edTab('home');
 }
 
 async function edConnectClick() {
@@ -8085,11 +8430,16 @@ function edDisconnect() {
 
 function edTab(name) {
   document.querySelectorAll('#edTabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
+  $('#edTabHome').classList.toggle('hidden', name !== 'home');
   $('#edTabWordle').classList.toggle('hidden', name !== 'wordle');
   $('#edTabConn').classList.toggle('hidden', name !== 'conn');
   $('#edTabList').classList.toggle('hidden', name !== 'list');
   $('#edTabPlayers').classList.toggle('hidden', name !== 'players');
+  $('#edTabSite').classList.toggle('hidden', name !== 'site');
+  $('.ed-main').scrollTop = 0;
   if (name === 'list') edRenderList();
+  if (name === 'home') edHomeLoad();
+  if (name === 'players' && edAuth && !edPlayers.length) edLoadPlayers();
 }
 
 function edNextFreeDate(game) {
@@ -8393,6 +8743,7 @@ function edSummary(game, entry) {
 function edRenderList() {
   const box = $('#edList');
   if (!box) return;
+  edRenderCal();
   box.innerHTML = '';
   const today = todayStr();
   const rows = [];
@@ -8477,7 +8828,6 @@ function initEditor() {
   $('#edDisconnect').addEventListener('click', edDisconnect);
   $('#edRefresh').addEventListener('click', () => edRun(edLoadData, 'Refreshed'));
   $('#edAdminPw').value = store.get('ed-admin', '');
-  $('#edPlLoad').addEventListener('click', edLoadPlayers);
   $('#edTabs').addEventListener('click', e => {
     const b = e.target.closest('button');
     if (b) edTab(b.dataset.tab);
@@ -8574,84 +8924,639 @@ const PL_ERRORS = {
   offline: "Can't reach Supabase right now."
 };
 
-async function edAdmin(fn, args) {
+async function edAdmin(fn, args, say = edPlMsg) {
   const pw = $('#edAdminPw').value;
   const res = await rpc(fn, Object.assign({ p_pw: pw }, args));
-  if (res.ok) store.set('ed-admin', pw);
-  else edPlMsg(PL_ERRORS[res.error] || 'Something went wrong (' + res.error + ').', true);
+  if (res.ok) { store.set('ed-admin', pw); edSetAuth(true); }
+  else say(PL_ERRORS[res.error] || 'Something went wrong (' + res.error + ').', true);
   return res;
 }
+
+/* =====================================================================
+   Manager: dashboard, players, planner, site tools, and the home-screen app bits
+   ===================================================================== */
+
+let edAuth = false;
+let edPlayers = [];
+let edPlOpen = '';
+let edAdminArm = null;
+
+const GAME_TITLES = {};
+GAME_LIST.forEach(g => { GAME_TITLES[g[0]] = g[1]; });
+
+function ago(iso) {
+  if (!iso) return 'never';
+  const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+  if (s < 90) return 'just now';
+  if (s < 3600) return Math.round(s / 60) + 'm ago';
+  if (s < 86400) return Math.round(s / 3600) + 'h ago';
+  return Math.round(s / 86400) + 'd ago';
+}
+
+function mgSay(id, text, kind) {
+  const p = $(id);
+  p.textContent = text || '';
+  p.className = 'ed-msg' + (kind ? ' ' + kind : '');
+}
+
+function armButton(btn, text, run) {
+  btn.addEventListener('click', () => {
+    if (!btn.classList.contains('armed')) {
+      clearTimeout(edAdminArm);
+      btn.classList.add('armed');
+      btn.dataset.was = btn.textContent;
+      btn.textContent = text;
+      edAdminArm = setTimeout(() => { btn.classList.remove('armed'); btn.textContent = btn.dataset.was; }, 2800);
+      return;
+    }
+    clearTimeout(edAdminArm);
+    run();
+  });
+}
+
+/* ---------- admin password ---------- */
+
+function edSetAuth(on) {
+  edAuth = on;
+  $('#edAdminBar').classList.toggle('hidden', on);
+  $('#edAdminOk').classList.toggle('hidden', !on);
+}
+
+async function edUnlock(quiet) {
+  const pw = $('#edAdminPw').value;
+  if (!pw) { if (!quiet) toast('Type the admin password', 1800); return false; }
+  const res = await rpc('admin_stats', { p_pw: pw, p_day: dayNumber(todayStr()) });
+  if (!res.ok) {
+    if (!quiet) toast(PL_ERRORS[res.error] || "Can't reach Supabase right now.", 2200);
+    return false;
+  }
+  store.set('ed-admin', pw);
+  edSetAuth(true);
+  edRenderHome(res.data);
+  return true;
+}
+
+function edAutoUnlock() {
+  if ($('#edAdminPw').value) edUnlock(true);
+}
+
+function edLock() {
+  store.set('ed-admin', '');
+  $('#edAdminPw').value = '';
+  edPlayers = [];
+  $('#edPlList').innerHTML = '';
+  edSetAuth(false);
+  edRenderHome(null);
+}
+
+/* ---------- home ---------- */
+
+function edAlert(kind, text, go) {
+  const box = el('div', 'mg-alert ' + kind);
+  box.appendChild(el('span', '', text));
+  if (go) {
+    const b = el('button', '', go.label);
+    b.addEventListener('click', go.run);
+    box.appendChild(b);
+  }
+  return box;
+}
+
+function edHomeAlerts() {
+  const box = $('#edAlerts');
+  if (!box) return;
+  box.innerHTML = '';
+  const today = todayStr();
+  [['wordle', 'Wordle', 'wordle', '#edWDate', edCheckWordle], ['connections', 'Connections', 'conn', '#edCDate', edCheckConn]].forEach(([game, label, tab, dateBox, check]) => {
+    const set = !!(edData[game] && edData[game][today]);
+    const later = Object.keys(edData[game] || {}).filter(d => d > today).length;
+    if (!set) {
+      box.appendChild(edAlert('warn', 'No ' + label + ' set for today. An automatic one is being used.', {
+        label: 'Set one', run: () => { edTab(tab); $(dateBox).value = today; check(); }
+      }));
+    } else if (!later) {
+      box.appendChild(edAlert('info', label + ' is set for today, but nothing is scheduled after it.', {
+        label: 'Plan ahead', run: () => edTab('list')
+      }));
+    } else {
+      box.appendChild(edAlert('ok', label + ' is ready · ' + later + (later === 1 ? ' day' : ' days') + ' scheduled ahead.'));
+    }
+  });
+}
+
+function mgTile(num, label, sub) {
+  const t = el('div', 'mg-tile');
+  t.append(el('b', '', String(num)), el('span', '', label));
+  if (sub) t.appendChild(el('em', '', sub));
+  return t;
+}
+
+function edRenderHome(d) {
+  const tiles = $('#edTiles');
+  tiles.innerHTML = '';
+  $('#edPopular').innerHTML = '';
+  $('#edDailyTop').innerHTML = '';
+  if (!d) {
+    tiles.appendChild(el('div', 'mg-locked', 'Unlock with your admin password to see player stats.'));
+    $('#edPopular').appendChild(el('div', 'daily-empty', 'Locked'));
+    $('#edDailyTop').appendChild(el('div', 'daily-empty', 'Locked'));
+    return;
+  }
+  tiles.append(
+    mgTile(d.players, 'Players', d.hidden ? d.hidden + ' hidden' : ''),
+    mgTile(d.active_24h, 'Active today', 'last 24 hours'),
+    mgTile(d.results_24h, 'Games today', d.results + ' in total'),
+    mgTile(d.new_7d, 'New this week', d.new_24h + ' today')
+  );
+
+  const pop = $('#edPopular');
+  const max = Math.max(1, ...(d.popular || []).map(x => x.n));
+  (d.popular || []).forEach(x => {
+    const row = el('div', 'mg-bar');
+    const fill = el('i');
+    fill.style.width = '0%';
+    const track = el('div', 'track');
+    track.appendChild(fill);
+    row.append(el('span', '', GAME_TITLES[x.game] || x.game), track, el('em', '', String(x.n)));
+    pop.appendChild(row);
+    setTimeout(() => { fill.style.width = Math.round((x.n / max) * 100) + '%'; }, 60);
+  });
+  if (!(d.popular || []).length) pop.appendChild(el('div', 'daily-empty', 'No games played yet.'));
+
+  const top = $('#edDailyTop');
+  [['wordle', 'Wordle'], ['connections', 'Connections']].forEach(([key, label]) => {
+    const rows = (d.daily && d.daily[key]) || [];
+    const col = el('div', 'mg-daily');
+    col.appendChild(el('h4', '', label));
+    if (!rows.length) col.appendChild(el('p', '', 'Nobody yet'));
+    rows.forEach((r, i) => {
+      const line = el('div', 'mg-rank m' + (i + 1));
+      line.append(el('span', '', String(i + 1)), el('b', '', r.name), el('em', '', clockText(r.score)));
+      col.appendChild(line);
+    });
+    top.appendChild(col);
+  });
+}
+
+async function edHomeLoad() {
+  edHomeAlerts();
+  mgChampion();
+  const card = $('#edChampCard');
+  if (window.mgChamp) {
+    card.classList.remove('hidden');
+    card.innerHTML = '';
+    card.append(el('h3', '', 'Weekly champion'), el('div', 'mg-champ', window.mgChamp.name + ' · ' + window.mgChamp.firsts + ' first ' + (window.mgChamp.firsts === 1 ? 'place' : 'places')));
+  } else {
+    card.classList.add('hidden');
+  }
+  if (!edAuth) {
+    if ($('#edAdminPw').value) edUnlock(true);
+    else edRenderHome(null);
+    return;
+  }
+  const res = await edAdmin('admin_stats', { p_day: dayNumber(todayStr()) }, () => {});
+  if (res.ok) edRenderHome(res.data);
+}
+
+/* ---------- players ---------- */
 
 async function edLoadPlayers() {
   edPlMsg('Loading...');
   const res = await edAdmin('admin_list', {});
   if (!res.ok) return;
+  edPlayers = res.data;
   edPlMsg(res.data.length + (res.data.length === 1 ? ' player' : ' players'));
-  edRenderPlayers(res.data);
+  edRenderPlayers();
 }
 
-function edRenderPlayers(rows) {
+function edRenderPlayers() {
   const box = $('#edPlList');
   box.innerHTML = '';
+  const q = $('#edPlSearch').value.trim().toLowerCase();
+  const sort = $('#edPlSort').value;
+  const stamp = x => (x ? new Date(x).getTime() : 0);
+  const rows = edPlayers.filter(p => !q || p.name.toLowerCase().includes(q)).sort((a, b) => {
+    if (sort === 'az') return a.name.localeCompare(b.name);
+    if (sort === 'active') return b.played - a.played || a.name.localeCompare(b.name);
+    if (sort === 'seen') return stamp(b.last_seen) - stamp(a.last_seen);
+    return stamp(b.joined) - stamp(a.joined);
+  });
   if (!rows.length) {
-    box.appendChild(el('div', 'daily-empty', 'No players yet.'));
+    box.appendChild(el('div', 'daily-empty', edPlayers.length ? 'No one matches that.' : 'No players yet.'));
     return;
   }
-  rows.forEach(r => {
-    const item = el('div', 'ed-item');
-    const top = el('div', 'top');
-    top.append(el('b', '', r.name), el('span', 'tag live', r.beaten + (r.beaten === 1 ? ' result' : ' results')));
-    const acts = el('div', 'acts');
-    const rename = el('button', '', 'Rename');
-    const pwBtn = el('button', '', 'Password');
-    const del = el('button', '', 'Delete');
-    let armed = null;
-    rename.addEventListener('click', () => {
-      const row = el('div', 'ed-row');
-      const input = el('input', 'ed-input');
-      input.value = r.name;
-      input.maxLength = 12;
-      const save = el('button', 'btn btn-main', 'Save');
-      const cancel = el('button', 'btn btn-ghost', 'Cancel');
-      cancel.addEventListener('click', () => row.remove());
-      save.addEventListener('click', async () => {
-        const res = await edAdmin('admin_rename', { p_old: r.name, p_new: input.value });
-        if (res.ok) { edPlMsg('Renamed to ' + res.data); edLoadPlayers(); }
-      });
-      row.append(input, save, cancel);
-      item.appendChild(row);
-      input.focus();
-    });
-    del.addEventListener('click', async () => {
-      if (!armed) {
-        del.textContent = 'Sure?';
-        armed = setTimeout(() => { armed = null; del.textContent = 'Delete'; }, 3000);
-        return;
-      }
-      clearTimeout(armed);
-      const res = await edAdmin('admin_delete', { p_name: r.name });
-      if (res.ok) { edPlMsg('Deleted ' + r.name); edLoadPlayers(); }
-    });
-    pwBtn.addEventListener('click', () => {
-      const row = el('div', 'ed-row');
-      const input = el('input', 'ed-input');
-      input.placeholder = 'New password';
-      input.maxLength = 40;
-      const save = el('button', 'btn btn-main', 'Save');
-      const cancel = el('button', 'btn btn-ghost', 'Cancel');
-      cancel.addEventListener('click', () => row.remove());
-      save.addEventListener('click', async () => {
-        const res = await edAdmin('admin_reset_password', { p_name: r.name, p_new: input.value });
-        if (res.ok) { edPlMsg('New password set for ' + r.name); row.remove(); }
-      });
-      row.append(input, save, cancel);
-      item.appendChild(row);
-      input.focus();
-    });
-    acts.append(rename, pwBtn, del);
-    item.append(top, acts);
-    box.appendChild(item);
+  rows.forEach(p => {
+    const card = el('button', 'pl-card');
+    card.type = 'button';
+    card.dataset.name = p.name;
+    const av = el('div', 'pf-av sm');
+    pfPaint(av, p.name, p.pfp);
+    const mid = el('div', 'mid');
+    const name = el('b', '', p.name);
+    if (p.hidden) name.appendChild(el('span', 'tag hid', 'Hidden'));
+    if (!p.has_pw) name.appendChild(el('span', 'tag nopw', 'No password'));
+    mid.append(name, el('span', '', p.beaten + ' beaten · ' + p.played + ' played · seen ' + ago(p.last_seen)));
+    card.append(av, mid);
+    card.addEventListener('click', () => edOpenPlayer(p.name));
+    box.appendChild(card);
   });
+}
+
+function edResultLabel(r) {
+  const fmt = (GAME_LIST.find(g => g[0] === r.game) || [])[2];
+  const title = GAME_TITLES[r.game] || r.game;
+  const where = r.game.startsWith('daily-') ? niceDate(dateOfDay(r.level)) : 'Level ' + r.level;
+  const score = !r.won ? 'Lost' : fmt && FORMATS[fmt] ? FORMATS[fmt](r.score) : String(r.score);
+  return [title + ' · ' + where, score];
+}
+
+async function edOpenPlayer(name) {
+  const p = edPlayers.find(x => x.name === name);
+  if (!p) return;
+  edPlOpen = name;
+  pfPaint($('#edPlAv'), p.name, p.pfp);
+  $('#edPlName').textContent = p.name;
+  $('#edPlSub').textContent = 'Joined ' + new Date(p.joined).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) + ' · seen ' + ago(p.last_seen);
+  $('#edPlForm').innerHTML = '';
+  mgSay('#edPlSheetMsg', '');
+
+  const acts = $('#edPlActs');
+  acts.innerHTML = '';
+  const rename = el('button', '', 'Rename');
+  const pw = el('button', '', 'Password');
+  const hide = el('button', '', p.hidden ? 'Show on boards' : 'Hide from boards');
+  const del = el('button', 'danger', 'Delete');
+  rename.addEventListener('click', () => edPlForm('Rename', 'New name', 12, async value => {
+    const res = await edAdmin('admin_rename', { p_old: p.name, p_new: value }, (t, b) => mgSay('#edPlSheetMsg', t, b ? 'bad' : ''));
+    if (!res.ok) return false;
+    await edLoadPlayers();
+    edOpenPlayer(value.trim());
+    return true;
+  }));
+  pw.addEventListener('click', () => edPlForm('Set password', 'New password', 40, async value => {
+    const res = await edAdmin('admin_reset_password', { p_name: p.name, p_new: value }, (t, b) => mgSay('#edPlSheetMsg', t, b ? 'bad' : ''));
+    if (res.ok) { mgSay('#edPlSheetMsg', 'New password set for ' + p.name, 'good'); await edLoadPlayers(); }
+    return res.ok;
+  }, 'password'));
+  hide.addEventListener('click', async () => {
+    const res = await edAdmin('admin_set_hidden', { p_name: p.name, p_hidden: !p.hidden }, (t, b) => mgSay('#edPlSheetMsg', t, b ? 'bad' : ''));
+    if (!res.ok) return;
+    await edLoadPlayers();
+    edOpenPlayer(p.name);
+  });
+  armButton(del, 'Sure?', async () => {
+    const res = await edAdmin('admin_delete', { p_name: p.name }, (t, b) => mgSay('#edPlSheetMsg', t, b ? 'bad' : ''));
+    if (!res.ok) return;
+    closeModal($('#edPlSheet'));
+    await edLoadPlayers();
+    edPlMsg('Deleted ' + p.name);
+  });
+  acts.append(rename, pw, hide, del);
+  openModal($('#edPlSheet'));
+  edLoadResults(name);
+}
+
+function edPlForm(label, hint, max, run, type) {
+  const box = $('#edPlForm');
+  box.innerHTML = '';
+  const row = el('div', 'ed-row');
+  const input = el('input', 'ed-input');
+  input.placeholder = hint;
+  input.maxLength = max;
+  if (type) input.type = type;
+  const save = el('button', 'btn btn-main', 'Save');
+  const cancel = el('button', 'btn btn-ghost', 'Cancel');
+  cancel.addEventListener('click', () => { box.innerHTML = ''; });
+  save.addEventListener('click', async () => {
+    if (!input.value.trim()) return;
+    save.disabled = true;
+    const ok = await run(input.value);
+    save.disabled = false;
+    if (ok) box.innerHTML = '';
+  });
+  row.append(input, save, cancel);
+  box.appendChild(row);
+  input.focus();
+}
+
+async function edLoadResults(name) {
+  const box = $('#edPlResults');
+  box.innerHTML = '';
+  box.appendChild(el('div', 'daily-empty', 'Loading...'));
+  const res = await edAdmin('admin_results', { p_name: name }, (t, b) => mgSay('#edPlSheetMsg', t, b ? 'bad' : ''));
+  if (edPlOpen !== name) return;
+  box.innerHTML = '';
+  if (!res.ok) return;
+  if (!res.data.length) { box.appendChild(el('div', 'daily-empty', 'No results yet.')); return; }
+  res.data.forEach(r => {
+    const [what, score] = edResultLabel(r);
+    const row = el('div', 'pl-res' + (r.won ? '' : ' lost'));
+    const x = el('button', '', 'Remove');
+    armButton(x, 'Sure?', async () => {
+      const del = await edAdmin('admin_delete_result', { p_name: name, p_game: r.game, p_level: r.level }, (t, b) => mgSay('#edPlSheetMsg', t, b ? 'bad' : ''));
+      if (!del.ok) return;
+      edLoadResults(name);
+      edLoadPlayers();
+    });
+    row.append(el('span', '', what), el('b', '', score), x);
+    box.appendChild(row);
+  });
+}
+
+/* ---------- planner ---------- */
+
+const calNow = new Date();
+let calY = calNow.getFullYear();
+let calM = calNow.getMonth();
+
+function edRenderCal() {
+  const grid = $('#edCal');
+  if (!grid) return;
+  grid.innerHTML = '';
+  $('#edCalTitle').textContent = new Date(calY, calM, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+  const blanks = new Date(calY, calM, 1).getDay();
+  const days = new Date(calY, calM + 1, 0).getDate();
+  const today = todayStr();
+  for (let i = 0; i < blanks; i++) grid.appendChild(el('i'));
+  for (let d = 1; d <= days; d++) {
+    const date = calY + '-' + pad2(calM + 1) + '-' + pad2(d);
+    const w = !!(edData.wordle && edData.wordle[date]);
+    const c = !!(edData.connections && edData.connections[date]);
+    const cell = el('button', 'mg-day' + (date === today ? ' today' : '') + (date < today ? ' past' : '') + (w || c ? '' : ' empty'));
+    cell.type = 'button';
+    cell.dataset.date = date;
+    cell.appendChild(el('span', '', String(d)));
+    const dots = el('div', 'dots');
+    if (w) dots.appendChild(el('i', 'w'));
+    if (c) dots.appendChild(el('i', 'c'));
+    cell.appendChild(dots);
+    cell.addEventListener('click', () => edOpenDay(date));
+    grid.appendChild(cell);
+  }
+}
+
+function edOpenDay(date) {
+  $('#edDayTitle').textContent = niceDate(date) + (date === todayStr() ? ' · Today' : '');
+  const body = $('#edDayBody');
+  body.innerHTML = '';
+  [['wordle', 'Wordle', 'wordle'], ['connections', 'Connections', 'conn']].forEach(([game, label, tab]) => {
+    const entry = edData[game] && edData[game][date];
+    const card = el('div', 'mg-puz');
+    card.appendChild(el('h4', '', label));
+    card.appendChild(el('p', '', entry ? edSummary(game, entry) : 'Nothing set. An automatic puzzle is used.'));
+    const acts = el('div', 'pl-acts');
+    const edit = el('button', '', entry ? 'Edit' : 'Create');
+    edit.addEventListener('click', () => {
+      closeModal($('#edDayModal'));
+      if (entry) edEdit(game, date);
+      else {
+        edTab(tab);
+        if (game === 'wordle') { $('#edWDate').value = date; edCheckWordle(); } else { $('#edCDate').value = date; edCheckConn(); }
+      }
+    });
+    acts.appendChild(edit);
+    if (entry) {
+      const form = el('div', 'mg-copy hidden');
+      const input = el('input', 'ed-input');
+      input.type = 'date';
+      const go = el('button', 'btn btn-main', 'Copy');
+      let mode = 'copy';
+      go.addEventListener('click', () => edCopyPuzzle(game, date, input.value, mode === 'move', go));
+      form.append(input, go);
+      const open = m => {
+        mode = m;
+        go.textContent = m === 'move' ? 'Move' : 'Copy';
+        go.classList.remove('armed');
+        input.value = edNextFreeDate(game);
+        form.classList.remove('hidden');
+      };
+      const copy = el('button', '', 'Copy to...');
+      copy.addEventListener('click', () => open('copy'));
+      const move = el('button', '', 'Move to...');
+      move.addEventListener('click', () => open('move'));
+      const prev = el('button', '', 'Preview');
+      prev.addEventListener('click', () => edPreview(game, date));
+      acts.append(copy, move, prev);
+      card.append(acts, form);
+    } else {
+      card.appendChild(acts);
+    }
+    body.appendChild(card);
+  });
+  openModal($('#edDayModal'));
+}
+
+function edCopyPuzzle(game, from, to, move, btn) {
+  if (!isDate(to) || to === from) { toast('Pick a different date', 1800); return; }
+  if (edData[game][to] && !btn.classList.contains('armed')) {
+    btn.classList.add('armed');
+    btn.textContent = 'Replace it?';
+    return;
+  }
+  closeModal($('#edDayModal'));
+  edRun(() => edCommit(data => {
+    data[game][to] = JSON.parse(JSON.stringify(data[game][from]));
+    if (move) delete data[game][from];
+  }, (move ? 'Move ' : 'Copy ') + game + ' ' + from + ' to ' + to), (move ? 'Moved to ' : 'Copied to ') + niceDate(to));
+}
+
+function edPreview(game, date) {
+  const entry = dailyEntry(game, date);
+  if (!entry || entry.auto) { toast('Save and refresh first', 2000); return; }
+  closeModal($('#edDayModal'));
+  if (game === 'wordle') lvTestStart('wordle', 1, () => wordleStartDaily(date, entry));
+  else lvTestStart('conn', 1, () => cnStartDaily(date, entry));
+}
+
+/* ---------- site tab ---------- */
+
+function mgDownload(name, text) {
+  const a = el('a');
+  a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+async function mgBackup() {
+  mgSay('#edBackupMsg', 'Collecting...');
+  const res = await edAdmin('admin_backup', {}, (t, b) => mgSay('#edBackupMsg', t, b ? 'bad' : ''));
+  if (!res.ok) return;
+  mgDownload('games-backup-' + todayStr() + '.json', JSON.stringify({ database: res.data, puzzles: edData }, null, 1));
+  mgSay('#edBackupMsg', 'Saved ' + res.data.players.length + ' players and ' + res.data.results.length + ' results.', 'good');
+}
+
+async function mgAnnPost(clear) {
+  const text = clear ? '' : $('#edAnnText').value.trim();
+  if (!clear && !text) { mgSay('#edAnnMsg', 'Type a message first.', 'bad'); return; }
+  const res = await edAdmin('admin_set_announcement', { p_text: text }, (t, b) => mgSay('#edAnnMsg', t, b ? 'bad' : ''));
+  if (!res.ok) return;
+  if (clear) $('#edAnnText').value = '';
+  mgSay('#edAnnMsg', clear ? 'Announcement removed.' : 'Posted. Everyone sees it next time they open the site.', 'good');
+  $('#edAnnCount').textContent = $('#edAnnText').value.length + ' / 200';
+  mgAnnouncement();
+}
+
+async function mgAnnLoad() {
+  const res = await rpc('get_announcement', {});
+  if (res.ok && res.data) {
+    $('#edAnnText').value = res.data.text || '';
+    $('#edAnnCount').textContent = $('#edAnnText').value.length + ' / 200';
+  }
+}
+
+async function mgChangeAdmin() {
+  const next = $('#edNewAdminPw').value;
+  if (next.length < 6) { mgSay('#edSecMsg', 'Use at least 6 characters.', 'bad'); return; }
+  const res = await edAdmin('admin_change_password', { p_new: next }, (t, b) => mgSay('#edSecMsg', t === PL_ERRORS.bad_pw ? 'Use 6 to 60 characters.' : t, b ? 'bad' : ''));
+  if (!res.ok) return;
+  $('#edAdminPw').value = next;
+  store.set('ed-admin', next);
+  $('#edNewAdminPw').value = '';
+  mgSay('#edSecMsg', 'Admin password changed.', 'good');
+}
+
+/* ---------- PIN lock ---------- */
+
+let pinOk = false;
+let pinTyped = '';
+const pinHash = pin => String(hashStr('manager-pin:' + pin));
+
+function pinPaint(wrong) {
+  document.querySelectorAll('#pinDots i').forEach((d, i) => d.classList.toggle('on', i < pinTyped.length));
+  $('#pinMsg').textContent = wrong ? 'Wrong PIN' : '';
+  if (wrong) $('#pinDots').animate([{ transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)' }], { duration: 240 });
+}
+
+function pinGate() {
+  if (!store.get('ed-pin', '') || pinOk) return false;
+  pinTyped = '';
+  pinPaint(false);
+  $('#pinLock').classList.remove('hidden');
+  return true;
+}
+
+function pinPress(e) {
+  const b = e.target.closest('button');
+  if (!b) return;
+  if (b.dataset.k === 'back') { $('#pinLock').classList.add('hidden'); showApp('hub'); return; }
+  if (b.dataset.k === 'del') { pinTyped = pinTyped.slice(0, -1); pinPaint(false); return; }
+  if (pinTyped.length >= 4) return;
+  pinTyped += b.textContent.trim();
+  pinPaint(false);
+  if (pinTyped.length < 4) return;
+  if (pinHash(pinTyped) === store.get('ed-pin', '')) {
+    pinOk = true;
+    $('#pinLock').classList.add('hidden');
+    enterEditor();
+  } else {
+    setTimeout(() => { pinTyped = ''; pinPaint(true); }, 120);
+  }
+}
+
+/* ---------- the public site: announcement, champion, home-screen app ---------- */
+
+async function mgAnnouncement() {
+  const res = await rpc('get_announcement', {});
+  let bar = $('#annBar');
+  if (!bar) {
+    bar = el('div', 'ann-bar hidden');
+    bar.id = 'annBar';
+    bar.append(el('span', 'ann-t'), el('button', 'ann-x', '×'));
+    bar.lastChild.setAttribute('aria-label', 'Close');
+    bar.lastChild.addEventListener('click', () => {
+      store.set('ann-seen', bar.dataset.at || '');
+      bar.classList.add('hidden');
+    });
+    document.body.appendChild(bar);
+  }
+  const d = res.ok ? res.data : null;
+  const show = !!(d && d.text && store.get('ann-seen', '') !== d.at);
+  bar.dataset.at = d ? d.at : '';
+  bar.firstChild.textContent = d ? d.text : '';
+  bar.classList.toggle('hidden', !show);
+}
+
+async function mgChampion() {
+  const res = await rpc('weekly_champion', {});
+  window.mgChamp = res.ok && res.data ? res.data : null;
+  const b = $('#hubChamp');
+  const c = window.mgChamp;
+  b.classList.toggle('hidden', !c);
+  if (!c) return;
+  b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18h14l1-9-4.5 3.5L12 6l-3.5 6.5L4 9z"/><path d="M5 20h14v1.5H5z"/></svg>';
+  b.appendChild(el('span', '', 'Weekly champion · ' + c.name));
+  b.dataset.name = c.name;
+}
+
+const MG_ICONS = {"site":"iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAACQElEQVR42u3dwUmDQRSF0cmUFe1AcGMF1mAd1mAFbgQ70NRlATEhhrzf+5hz9uINfAwRF28MAAAAAAAAAAAAAAAAAEiw2+B3PL0+pn3s95ePv/7I59td2qd4eP5uHEdgFlckEpjFNonMZcu4cGF4GaUL57JlXLIzv4zSnXPlMs6v7VJG3dq5eBmnNvcqo2jzHLBNHB2fjePlHZ+NiuVeDsSBOBAH4kAciANxIA7EgThAHIgDcSAOxIE4EAfiQByIA8SBOBAH4kAciANxIA7EgThAHIgDcSAOxIE4EAfiQByIA3GAOBAH4kAciANxsGgcV9xrHXlnRKvvtY4mZ0S9HGwYR8fH43hzx8fj5ptnyDHwwLvUvfqoWDtzjsUHXizv0kfRzvnvl+LDb9nn91G3cDcyTsYHZjHizxD3/asKgAVt8Z1jv79P+9iHw9ea35yC4gjM4opEArPYJpG5bBkXLgwvo3ThXLaMS3bml1G6c65cxvm1XcqoWzsXL+PU5l5lFG32L3u2iqPjs3G8vOOzUbHcy4E4EAfiQByIA3EgDsSBOBAHiANxIA7EgTgQB+JAHIgDcYA4EAfiQByIA3EgDsSBOBAHiANxIA7EgTgQB+JAHIgDcSAOEAfiQByIA3EgDhaN44p7rSPvjGj1vdbR5Iyol4MN4+j4eBxv7vh43HzzDDkGHniXulcfFWtnzrH4wIvlXfoo2jn//VJ8+C37/D7qFu5Gxsn4wCxG/Bnivn9VAQAAAAAAAAAAAAAAAPziB0WMnPe4WrYIAAAAAElFTkSuQmCC","manager":"iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAD30lEQVR42u3dPW5USxCA0esrr8DjRXgFJEhIEJITsgBCRAghhIiQBRCSE4JkiYQVeBF4D2QIeX58PXRXVc89Xwb4zZThvGqPmff67OJiM0m7mv0WCA7BITgEh+AQHIJDcAgOwSHBITgEh+AQHIJDcAgOwSE4JDgEh+AQHIrsPPj5nr59nPWp/vjws9VDXb26zvosbj4/CXuus5j/HDLRREMliSZSlMxrk3H0PKVkxMzTd3NUY3HcCqnGImyFzKuVsXDC4jK6TjivVsaSOevL6Dqnl7KKxTHK2jg87Shro9+088pl7Jt5LBmdZnasCA6l4xjxTNmefMQzpcfkNofgEByCQ3AIDsEhOASH4BAcEhyCQ3AIDsEhOASH4BAcgkOCQ3AIDsEhOASH4BAcgkNwSHAIDsEhOASH4BAcgkNwCI4p7R61Ke9insh71KbCF/PYHIJDFXCMeLJszzziydJ85rn4Da6J1wCO5aPHtI4VheMYZXkcnnOU5dFpznmI68ETJ6zvo9+EEdeVF7yh5wi4BW/o6Q13rnx3fKl5qq2QgHkiNkeRLdLQaOIWiTQajUNerQgOnXTnwc/35eNV1qf68s1Nq4d69+xb1mfx/vvzU/uaI9FEQyWJJlKUzGuTcfQ8pWTEzNN3c1RjcdwKqcYibIXMq5WxcMLiMrpOOK9WxpI568voOqeXsorFMcraODztKGuj37TzymXsm3ksGZ1mdqwIDqXjGPFM2Z58xDOlx+Q2h+AQHIJDcAgOwSE4NHkPqVr0+uujfb/06cUvOJi452OylMBRkcXOfySeCBylWeQS8QXpGDKaPw4cpyYj2Accg8mI9AHHeDLCfMAxpIyYx4djGvff7N7PAofgOMW10fu5fBOsRJvN5b8/vL39bXNYG9Nmc3lHxr6fjF8ecBRaGA/6VZtjvTIq+IAj50xZ/qe+8CN7nCxwCI7RDpQKhwscgkNwCA7BcaI99LvjWd9Nh0NwRLXw3eHLl8HCj+zxrnQ4Sh8uuX89C0ddH+l/cQ9H2snyV8A2gp0/GXymTN7sM+jrF5tjLcuj7HPBoSgcDe9Rm/Iu5mlyvU3M8rjzLG0v5rE5Bj5cej8+HKP6CNhMc+UbOhMve2u4n3v8Ke58zOaXvc3Fb3BNvAawrI8YGY6V8c6XyBfJHa8OHeJ6jXuXXPPrNY5+m/gBFp1uD3Wv7JRyfdqDiBzeFv3ulY24rrwgkSO+Kup0Q8///H9Ie99Y7i57d9ln46igpOFrqEQlASbScGjyNkHBITgEhwSH4BAcgkNwCA7BITgEh+CQ4BAcgkNwCA7BITgEh+AQHFp3fwDOtEgAYTaTjQAAAABJRU5ErkJggg=="};
+
+function mgHomeScreen() {
+  const manager = location.hash === '#editor';
+  const head = document.head;
+  const put = (sel, make) => { let n = head.querySelector(sel); if (!n) { n = make(); head.appendChild(n); } return n; };
+  put('link[rel="apple-touch-icon"]', () => el('link')).setAttribute('rel', 'apple-touch-icon');
+  head.querySelector('link[rel="apple-touch-icon"]').href = 'data:image/png;base64,' + (manager ? MG_ICONS.manager : MG_ICONS.site);
+  const title = put('meta[name="apple-mobile-web-app-title"]', () => { const m = el('meta'); m.name = 'apple-mobile-web-app-title'; return m; });
+  title.content = manager ? 'Manager' : 'Games';
+  if (manager) {
+    try {
+      const json = JSON.stringify({ name: 'Games Manager', short_name: 'Manager', start_url: location.pathname + '#editor', display: 'standalone', background_color: '#000000', theme_color: '#000000', icons: [{ src: 'data:image/png;base64,' + MG_ICONS.manager, sizes: '180x180', type: 'image/png' }] });
+      put('link[rel="manifest"]', () => { const l = el('link'); l.rel = 'manifest'; return l; }).href = URL.createObjectURL(new Blob([json], { type: 'application/manifest+json' }));
+    } catch (e) {}
+  }
+}
+
+function initManager() {
+  $('#edGames').addEventListener('click', () => showApp('hub'));
+  $('#edUnlock').addEventListener('click', () => edUnlock(false));
+  $('#edAdminPw').addEventListener('keydown', e => { if (e.key === 'Enter') edUnlock(false); });
+  $('#edAdminLock').addEventListener('click', edLock);
+  $('#edPlLoad').addEventListener('click', edLoadPlayers);
+  $('#edPlSearch').addEventListener('input', edRenderPlayers);
+  $('#edPlSort').addEventListener('change', edRenderPlayers);
+  $('#edTabHome').addEventListener('click', e => {
+    const b = e.target.closest('[data-go]');
+    if (b) edTab(b.dataset.go);
+  });
+  $('#edCalPrev').addEventListener('click', () => { calM--; if (calM < 0) { calM = 11; calY--; } edRenderCal(); });
+  $('#edCalNext').addEventListener('click', () => { calM++; if (calM > 11) { calM = 0; calY++; } edRenderCal(); });
+  $('#edTabs').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (b && b.dataset.tab === 'site') mgAnnLoad();
+  });
+  $('#edAnnText').addEventListener('input', () => { $('#edAnnCount').textContent = $('#edAnnText').value.length + ' / 200'; });
+  $('#edAnnPost').addEventListener('click', () => mgAnnPost(false));
+  $('#edAnnClear').addEventListener('click', () => mgAnnPost(true));
+  $('#edBackup').addEventListener('click', mgBackup);
+  $('#edChangeAdmin').addEventListener('click', mgChangeAdmin);
+  $('#edTestGo').addEventListener('click', () => {
+    const game = $('#edTestGame').value;
+    const level = Math.max(1, parseInt($('#edTestLevel').value, 10) || 1);
+    lvTestStart(game, level);
+  });
+  $('#edPinSet').addEventListener('click', () => {
+    const pin = $('#edPinInput').value;
+    if (!/^\d{4}$/.test(pin)) { mgSay('#edSecMsg', 'The PIN is 4 digits.', 'bad'); return; }
+    store.set('ed-pin', pinHash(pin));
+    pinOk = true;
+    $('#edPinInput').value = '';
+    mgSay('#edSecMsg', 'PIN set. It asks for it next time you open the manager.', 'good');
+  });
+  $('#edPinOff').addEventListener('click', () => {
+    store.set('ed-pin', '');
+    mgSay('#edSecMsg', 'PIN removed.', 'good');
+  });
+  $('#pinPad').addEventListener('click', pinPress);
+  $('#hubChamp').addEventListener('click', () => openProfile($('#hubChamp').dataset.name));
+
+  mgHomeScreen();
+  window.addEventListener('hashchange', mgHomeScreen);
+  mgAnnouncement();
+  mgChampion();
+  setInterval(() => { mgAnnouncement(); mgChampion(); }, 300000);
 }
 
 init();
@@ -8661,7 +9566,7 @@ initMini();
 initAnagrams();
 initHub();
 initEditor();
-initDaily(); initLevels(); initProfile();
+initDaily(); initLevels(); initProfile(); initManager();
 </script>
 </body>
 </html>
