@@ -1527,18 +1527,39 @@ h1.ed-title { font-size: 1.7rem; }
   font-variant-numeric: tabular-nums;
   animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
 }
-.lb-list li:nth-child(odd) { background: var(--border); }
-.lb-list li { cursor: pointer; }
-.lb-list li.me, .lb-list li.me:nth-child(odd) { background: var(--correct); color: #fff; }
+.lb-list li { cursor: pointer; position: relative; overflow: hidden; margin-bottom: 4px; transition: transform 0.15s ease, filter 0.15s ease; }
+.lb-list li.win, .lb-list li.win:nth-child(odd) { background: #3f7a3b; color: #fff; }
 .lb-list li.lose, .lb-list li.lose:nth-child(odd) { background: var(--lose); color: #fff; }
-.lb-list li.lose .rk, .lb-list li.lose .sc { color: rgba(255, 255, 255, 0.8); }
-.lb-list li.me.lose { box-shadow: inset 0 0 0 2px #fff; }
-.lb-list li:hover { filter: brightness(1.15); }
+.lb-list li.win .rk, .lb-list li.win .sc, .lb-list li.lose .rk, .lb-list li.lose .sc { color: rgba(255, 255, 255, 0.85); }
+.lb-list li.me { box-shadow: inset 0 0 0 2px #fff; }
+.lb-list li:hover { filter: brightness(1.12); transform: translateX(2px); }
+.lb-list li.m1, .lb-list li.m1:nth-child(odd) { background: linear-gradient(110deg, #8a6a00, #e6b422 35%, #fff0a0 50%, #e6b422 65%, #8a6a00); background-size: 220% 100%; animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards, goldflow 3.2s linear infinite; color: #2b1f00; box-shadow: 0 0 14px rgba(230, 180, 34, 0.45); }
+.lb-list li.m2, .lb-list li.m2:nth-child(odd) { background: linear-gradient(110deg, #6c757e, #c4ccd4 35%, #f4f7fa 50%, #c4ccd4 65%, #6c757e); background-size: 220% 100%; animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards, goldflow 4s linear infinite; color: #1b2229; box-shadow: 0 0 10px rgba(196, 204, 212, 0.3); }
+.lb-list li.m3, .lb-list li.m3:nth-child(odd) { background: linear-gradient(110deg, #6e3d10, #cd7f32 35%, #f0b078 50%, #cd7f32 65%, #6e3d10); background-size: 220% 100%; animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards, goldflow 4.6s linear infinite; color: #2a1405; box-shadow: 0 0 10px rgba(205, 127, 50, 0.3); }
+.lb-list li.m1 .rk, .lb-list li.m1 .sc, .lb-list li.m2 .rk, .lb-list li.m2 .sc, .lb-list li.m3 .rk, .lb-list li.m3 .sc { color: inherit; }
+.lb-list li.m1.me, .lb-list li.m2.me, .lb-list li.m3.me { box-shadow: inset 0 0 0 2px #fff, 0 0 12px rgba(255, 255, 255, 0.25); }
+.lb-list li.m1::after, .lb-list li.m2::after, .lb-list li.m3::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  right: 22%;
+  width: 5px;
+  height: 5px;
+  background: #fff;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  animation: twinkle 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+.lb-list li.m2::after { right: 40%; animation-delay: 0.7s; }
+.lb-list li.m3::after { right: 55%; animation-delay: 1.3s; }
+@keyframes goldflow { to { background-position: -220% 0; } }
+@keyframes twinkle { 0%, 100% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.6); opacity: 1; } }
 .lb-list .rk { font-weight: 700; color: var(--muted); }
-.lb-list li.me .rk { color: #fff; }
-.lb-list .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+.lb-list .nm { display: flex; align-items: center; gap: 6px; min-width: 0; font-weight: 700; }
+.lb-list .nm-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lb-list .medal { display: inline-flex; flex: none; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35)); }
 .lb-list .sc { font-weight: 700; color: var(--sub); }
-.lb-list li.me .sc { color: #fff; }
+@media (prefers-reduced-motion: reduce) { .lb-list li.m1, .lb-list li.m2, .lb-list li.m3 { animation: none; } .lb-list li::after { display: none; } }
 .lb-empty { padding: 16px 4px; text-align: center; font-size: 0.85rem; color: var(--muted); }
 
 .lb-side { display: none; }
@@ -1674,6 +1695,110 @@ h1.ed-title { font-size: 1.7rem; }
   body.lb-shut .lv-dock { left: 118px; }
   body.lb-shut .lb-tab { left: 0; }
   body.lb-shut .lb-tab svg { transform: rotate(180deg); }
+}
+/* ---------- login, profiles ---------- */
+.name-tabs { display: flex; gap: 4px; margin-bottom: 16px; padding: 4px; border-radius: 10px; background: var(--border); }
+.name-tabs button { flex: 1; height: 34px; border: 0; border-radius: 7px; background: none; color: var(--sub); font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+.name-tabs button.on { background: var(--card); color: var(--text); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }
+.namecard .ed-input + .ed-input { margin-top: 8px; }
+
+.lv-icon { padding: 0; }
+.lv-icon svg { width: 18px; height: 18px; fill: currentColor; }
+
+.pfcard { max-width: 460px; }
+.pf-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; padding-right: 28px; }
+.pf-av { flex: none; width: 84px; height: 84px; display: grid; place-items: center; border-radius: 50%; background: var(--av, #538d4e); box-shadow: 0 0 0 3px var(--card), 0 0 0 5px var(--av, #538d4e), 0 8px 20px rgba(0, 0, 0, 0.4); font-size: 2.6rem; font-weight: 700; color: #fff; line-height: 1; user-select: none; }
+.pf-av.sm { width: 44px; height: 44px; font-size: 1.5rem; box-shadow: none; }
+.pf-id { min-width: 0; }
+.pf-id h2 { margin: 0 0 2px; text-align: left; text-transform: none; letter-spacing: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: Georgia, 'Times New Roman', serif; font-size: 1.8rem; font-weight: 700; }
+.pf-id p { font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+
+.pf-own { display: flex; gap: 6px; margin-bottom: 14px; }
+.pf-own button { flex: 1; height: 32px; border: 1px solid var(--filled); border-radius: 999px; background: none; color: var(--text); font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s; }
+.pf-own button:hover { background: var(--border); }
+.pf-own button.armed { border-color: var(--lose); background: var(--lose); color: #fff; }
+.pf-panel { margin-bottom: 14px; padding: 12px; border-radius: 12px; background: var(--border); animation: rise 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+.pf-pick { display: flex; flex-direction: column; gap: 10px; }
+.pf-emojis, .pf-colors { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.pf-emojis button { width: 38px; height: 38px; border: 2px solid transparent; border-radius: 10px; background: var(--card); font-size: 1.3rem; cursor: pointer; transition: transform 0.12s, border-color 0.2s; }
+.pf-emojis button:hover { transform: scale(1.1); }
+.pf-emojis button.on { border-color: var(--text); }
+.pf-colors button { width: 26px; height: 26px; border: 2px solid transparent; border-radius: 50%; background: var(--c); cursor: pointer; transition: transform 0.12s; }
+.pf-colors button:hover { transform: scale(1.15); }
+.pf-colors button.on { border-color: var(--text); }
+form.pf-panel { display: flex; gap: 8px; }
+form.pf-panel .ed-input { margin: 0; flex: 1; }
+form.pf-panel .btn { flex: none; width: 90px; height: 40px; font-size: 0.9rem; }
+.pf-note { margin-bottom: 12px; text-align: center; font-size: 0.8rem; color: var(--present); }
+.pf-note.good { color: var(--correct); }
+
+.pf-boxes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+.pf-box { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 16px 6px 12px; border: 1px solid var(--card-border); border-radius: 14px; background: var(--border); animation: rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+.pf-box:nth-child(2) { animation-delay: 0.07s; }
+.pf-box:nth-child(3) { animation-delay: 0.14s; }
+.pf-box b { font-family: Georgia, 'Times New Roman', serif; font-size: 2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.pf-box span { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); text-align: center; }
+.pf-box.gold { border-color: #e6b422; background: linear-gradient(160deg, rgba(230, 180, 34, 0.28), rgba(230, 180, 34, 0.06)); box-shadow: 0 0 16px rgba(230, 180, 34, 0.25); }
+.pf-box.gold b { color: #f3c93e; }
+.pf-box.green b { color: var(--correct); }
+
+.pf-medals { display: flex; justify-content: center; gap: 22px; margin-bottom: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pf-medals div { display: flex; align-items: center; gap: 6px; }
+.pf-medals .medal svg { width: 22px; height: 26px; }
+.pf-h { margin: 4px 0 8px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.pf-games { display: flex; flex-direction: column; gap: 6px; max-height: 34vh; overflow-y: auto; }
+.pf-game { padding: 10px 12px; border-radius: 10px; background: var(--border); animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+.pf-game .top { display: flex; justify-content: space-between; gap: 8px; font-size: 0.9rem; font-weight: 700; }
+.pf-game .top em { font-style: normal; color: var(--sub); }
+.pf-game .sub { margin-top: 2px; font-size: 0.78rem; color: var(--muted); }
+.pf-bar { height: 5px; margin-top: 8px; border-radius: 3px; background: var(--card); overflow: hidden; }
+.pf-bar i { display: block; height: 100%; border-radius: 3px; background: var(--correct); transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.dt-prof { width: 100%; flex: none; height: 42px; margin-top: 14px; font-size: 0.9rem; }
+
+@media (max-width: 520px) {
+  .pf-av { width: 68px; height: 68px; font-size: 2.1rem; }
+  .pf-id h2 { font-size: 1.5rem; }
+  .pf-box b { font-size: 1.6rem; }
+}
+/* ---------- finishing touches ---------- */
+.modal { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.card { border-radius: 14px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5); transform: translateY(28px) scale(0.96); transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.25, 1.15); }
+.btn { border-radius: 10px; letter-spacing: 0.03em; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); transition: filter 0.15s, transform 0.1s, box-shadow 0.1s; }
+.btn:active { transform: translateY(2px) scale(0.98); box-shadow: none; }
+.pill { transition: border-color 0.2s, background-color 0.2s, transform 0.12s, box-shadow 0.2s; }
+.pill:hover:not(:disabled) { box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); transform: translateY(-1px); }
+.key { border-radius: 6px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3); transition: background-color 0.3s, transform 0.08s, box-shadow 0.08s; }
+.key:active { transform: translateY(2px) scale(0.95); box-shadow: none; }
+.tile { border-radius: 3px; }
+
+.hub-card { position: relative; overflow: hidden; border-radius: 18px; }
+.hub-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 80% at 50% 0%, var(--glow, rgba(106, 170, 100, 0.16)), transparent 60%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.hub-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45); }
+.hub-card:hover::before { opacity: 1; }
+.hub-card:nth-child(2) { --glow: rgba(176, 124, 200, 0.2); }
+.hub-card:nth-child(3) { --glow: rgba(90, 140, 220, 0.2); }
+.hub-card:nth-child(4) { --glow: rgba(230, 180, 60, 0.2); }
+.hub-card:nth-child(5) { --glow: rgba(220, 110, 90, 0.2); }
+.hub-art { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.hub-card:hover .hub-art { transform: scale(1.08); }
+h1.hub-title { letter-spacing: 0.01em; }
+
+.lbcard, .lb-side { border-radius: 14px; }
+.lb-side .lb-title, .lbcard .lb-title { letter-spacing: 0.01em; }
+.lb-tab { transition: background-color 0.2s, transform 0.2s; }
+.lb-tab:hover { transform: scale(1.08); }
+.lv-chip { transition: transform 0.12s, border-color 0.2s, box-shadow 0.2s; }
+.lv-chip:hover { box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); transform: translateY(-1px); }
+
+@media (max-width: 520px) {
+  .card { padding: 20px 18px 22px; }
+  .hub-cards { gap: 12px; }
+  .hub-card { padding: 20px 14px 16px; }
+  h1.hub-title { font-size: 2.2rem; }
+  .lb-list li { padding: 10px; }
+}
+@media (hover: none) {
+  .hub-card:hover, .lb-list li:hover, .pill:hover:not(:disabled), .lv-chip:hover { transform: none; filter: none; }
 }
 </style>
 </head>
@@ -2157,17 +2282,50 @@ h1.ed-title { font-size: 1.7rem; }
     <button class="daily-random" id="dailyRandom">Play random puzzles</button>
   </div>
 </div>
-<!-- name -->
+<!-- name / log in -->
 <div class="modal" id="nameModal" aria-hidden="true">
   <div class="card namecard">
-    <h2 class="big">Pick a name</h2>
-    <p class="name-sub">Your name shows on the leaderboard when you beat a level. You can't change it later.</p>
+    <div class="name-tabs" id="nameTabs">
+      <button type="button" class="on" data-mode="new">New player</button>
+      <button type="button" data-mode="login">Log in</button>
+    </div>
+    <h2 class="big" id="nameTitle">Pick a name</h2>
+    <p class="name-sub" id="nameSub">Your name shows on the leaderboard. Your password lets you log in on any device and keep your progress.</p>
     <form id="nameForm" autocomplete="off">
       <input class="ed-input" id="nameInput" maxlength="12" placeholder="Your name" aria-label="Your name" spellcheck="false" autocapitalize="off">
+      <input class="ed-input" id="pwInput" type="password" maxlength="40" placeholder="Password" aria-label="Password" autocomplete="off">
       <p class="name-msg" id="nameMsg"></p>
       <button class="btn btn-main name-go" id="nameGo" type="submit">Let's play</button>
       <button class="ed-link hidden" id="nameSkip" type="button">Play without a name this time</button>
     </form>
+  </div>
+</div>
+
+<!-- profile -->
+<div class="modal" id="pfModal" aria-hidden="true">
+  <div class="card pfcard">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <div class="pf-head">
+      <div class="pf-av" id="pfAv"></div>
+      <div class="pf-id">
+        <h2 id="pfName"></h2>
+        <p id="pfJoined"></p>
+      </div>
+    </div>
+    <div class="pf-own hidden" id="pfOwn">
+      <button type="button" id="pfPicBtn">Change picture</button>
+      <button type="button" id="pfPwBtn">Password</button>
+      <button type="button" id="pfOut">Log out</button>
+    </div>
+    <div class="pf-panel hidden" id="pfPick"></div>
+    <form class="pf-panel hidden" id="pfPwForm" autocomplete="off">
+      <input class="ed-input" id="pfPwInput" type="password" maxlength="40" placeholder="New password" aria-label="New password">
+      <button class="btn btn-main" type="submit">Save</button>
+    </form>
+    <p class="pf-note hidden" id="pfNote"></p>
+    <div id="pfBody"></div>
   </div>
 </div>
 
@@ -2202,6 +2360,7 @@ h1.ed-title { font-size: 1.7rem; }
     <h2 id="dtTitle"></h2>
     <p class="lv-sub" id="dtSub"></p>
     <div id="dtBody"></div>
+    <button class="btn btn-ghost dt-prof" id="dtProfile" type="button">View profile</button>
   </div>
 </div>
 
@@ -2211,6 +2370,9 @@ h1.ed-title { font-size: 1.7rem; }
 </button>
 <div class="lv-dock" id="lvDock">
   <button class="lv-chip hidden" id="lvBtn" aria-label="Choose a level"></button>
+  <button class="lv-chip lv-icon" id="pfBtn" aria-label="My profile">
+    <svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zm0 2.25c-3.01 0-9 1.51-9 4.5V21h18v-2.25c0-2.99-5.99-4.5-9-4.5z"/></svg>
+  </button>
   <button class="lv-chip lv-trophy" id="lbBtn" aria-label="Leaderboard">
     <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
   </button>
@@ -6899,6 +7061,7 @@ function lvSave(game, info) {
   const all = store.get('lv-progress', {});
   all[game] = info;
   store.set('lv-progress', all);
+  syncSoon();
 }
 
 const lvCur = game => lvInfo(game).cur;
@@ -6974,42 +7137,82 @@ function nameMsg(text) {
   $('#nameMsg').textContent = text || '';
 }
 
-function askName() {
+let nameMode = 'new';
+
+function setNameMode(mode) {
+  nameMode = mode;
+  const login = mode === 'login';
+  document.querySelectorAll('#nameTabs button').forEach(b => b.classList.toggle('on', b.dataset.mode === mode));
+  $('#nameTitle').textContent = login ? 'Welcome back' : 'Pick a name';
+  $('#nameSub').textContent = login
+    ? 'Log in to get your progress and stats back on this device.'
+    : 'Your name shows on the leaderboard. Your password lets you log in on any device and keep your progress.';
+  $('#nameGo').textContent = login ? 'Log in' : "Let's play";
+  $('#nameInput').maxLength = 12;
+  $('#pwInput').autocomplete = login ? 'current-password' : 'new-password';
   nameMsg('');
+}
+
+function askName(mode) {
+  setNameMode(mode || 'new');
   $('#nameSkip').classList.add('hidden');
   $('#nameInput').value = '';
+  $('#pwInput').value = '';
   openModal(nameModal);
   setTimeout(() => $('#nameInput').focus(), 300);
 }
 
+const NAME_ERRORS = {
+  taken: 'That name is taken. Try another.',
+  bad_name: 'Please pick a different name.',
+  bad_pw: 'Use 4 to 40 characters for the password.',
+  wrong: 'Wrong name or password.',
+  locked: 'Too many tries. Wait 10 minutes and try again.'
+};
+
 async function claimName(e) {
   e.preventDefault();
+  const login = nameMode === 'login';
   const name = $('#nameInput').value.replace(/\s+/g, ' ').trim();
-  const why = nameProblem(name);
+  const pw = $('#pwInput').value;
+  const why = login ? (name ? '' : 'Type your name.') : nameProblem(name);
   if (why) { nameMsg(why); return; }
+  if (!login && (pw.length < 4 || pw.length > 40)) { nameMsg(NAME_ERRORS.bad_pw); return; }
+  if (login && !pw) { nameMsg('Type your password.'); return; }
   const btn = $('#nameGo');
   btn.disabled = true;
-  nameMsg('Checking...');
+  nameMsg(login ? 'Logging in...' : 'Checking...');
   const token = newToken();
-  const res = await rpc('claim_player', { p_name: name, p_token: token });
+  const res = login ? await rpc('login', { p_name: name, p_pw: pw }) : await rpc('register', { p_name: name, p_pw: pw, p_token: token });
   btn.disabled = false;
-  if (res.ok) {
-    me = { name: typeof res.data === 'string' ? res.data : name, token };
-    store.set('lb-name', me.name);
-    store.set('lb-token', token);
-    nameMsg('');
-    closeModal(nameModal);
-    toast('Welcome, ' + me.name + '!', 1600);
-    lvFlush();
-    lbRefresh(true);
-  } else if (res.error === 'taken') {
-    nameMsg('That name is taken. Try another.');
-  } else if (res.error === 'bad_name') {
-    nameMsg('Please pick a different name.');
-  } else {
-    nameMsg("Can't reach the server right now.");
-    $('#nameSkip').classList.remove('hidden');
+  if (!res.ok) {
+    if (NAME_ERRORS[res.error]) nameMsg(NAME_ERRORS[res.error]);
+    else {
+      nameMsg("Can't reach the server right now.");
+      $('#nameSkip').classList.remove('hidden');
+    }
+    return;
   }
+  if (login) {
+    const d = res.data || {};
+    me = { name: d.name || name, token: d.token };
+    // the saved account replaces whatever was on this device
+    store.set('lv-progress', d.progress && typeof d.progress === 'object' ? d.progress : {});
+    store.set('lv-pending', []);
+  } else {
+    me = { name: typeof res.data === 'string' ? res.data : name, token };
+  }
+  verified = true;
+  store.set('lb-name', me.name);
+  store.set('lb-token', me.token);
+  nameMsg('');
+  closeModal(nameModal);
+  toast((login ? 'Welcome back, ' : 'Welcome, ') + me.name + '!', 1600);
+  boardCache.clear();
+  if (login && activeApp !== 'hub') showApp('hub');
+  if (!login) syncSoon();
+  lvFlush();
+  lbRefresh(true);
 }
 
 // asks for a name the first time someone opens a game
@@ -7031,6 +7234,7 @@ async function lvVerify() {
       store.set('lb-name', me.name);
       lbRefresh(true);
     }
+    pullProgress();
   } else {
     me = { name: '', token: '' };
     store.set('lb-name', '');
@@ -7149,6 +7353,19 @@ async function boardData(ctx) {
 
 const lossText = (ctx, s) => (ctx.fmt === 'guesses' ? 'Lost · ' + Math.floor(s / 10) + ' green' : ctx.fmt === 'misses' ? 'Lost · ' + s + '/4' : 'Lost');
 
+const MEDAL = { 1: ['#fff3a8', '#e6b422', '#a87a00'], 2: ['#ffffff', '#c4ccd4', '#7d8791'], 3: ['#f6c79a', '#cd7f32', '#8a4e17'] };
+
+function medalIcon(n) {
+  const [hi, mid, lo] = MEDAL[n];
+  const s = el('span', 'medal');
+  s.innerHTML = '<svg viewBox="0 0 20 24" width="16" height="19" aria-hidden="true">' +
+    '<defs><radialGradient id="mg' + n + '" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="' + hi + '"/><stop offset=".55" stop-color="' + mid + '"/><stop offset="1" stop-color="' + lo + '"/></radialGradient></defs>' +
+    '<path d="M4 0h5l2 8H6zM16 0h-5l-2 8h5z" fill="' + lo + '"/>' +
+    '<circle cx="10" cy="15" r="7.5" fill="url(#mg' + n + ')" stroke="' + lo + '" stroke-width="1"/>' +
+    '<circle cx="10" cy="15" r="4.6" fill="none" stroke="' + lo + '" stroke-opacity=".45"/></svg>';
+  return s;
+}
+
 function boardHtml(ctx, rows) {
   const frag = document.createDocumentFragment();
   frag.appendChild(el('div', 'lb-title', ctx ? ctx.title + (ctx.daily ? '' : ' · Level ' + ctx.level) : 'Top players'));
@@ -7164,17 +7381,21 @@ function boardHtml(ctx, rows) {
     rows.forEach((r, i) => {
       const mine = me.name && r.name.toLowerCase() === me.name.toLowerCase();
       const lost = !!ctx && r.won === false;
-      const li = el('li', (mine ? 'me ' : '') + (lost ? 'lose' : ''));
+      const medal = !lost && i < 3 ? i + 1 : 0;
+      const li = el('li', (mine ? 'me ' : '') + (lost ? 'lose ' : 'win ') + (medal ? 'm' + medal : ''));
       li.style.animationDelay = Math.min(i, 10) * 0.03 + 's';
+      li.dataset.name = r.name;
+      li.tabIndex = 0;
       if (ctx) {
-        li.dataset.name = r.name;
         li.dataset.game = ctx.game;
         li.dataset.level = ctx.level;
         li.dataset.won = lost ? '0' : '1';
-        li.tabIndex = 0;
       }
       const score = !ctx ? r.beaten + (r.beaten === 1 ? ' level' : ' levels') : lost ? lossText(ctx, r.score) : FORMATS[ctx.fmt](r.score);
-      li.append(el('span', 'rk', String(i + 1)), el('span', 'nm', r.name), el('span', 'sc', score));
+      const nm = el('span', 'nm');
+      if (medal) nm.appendChild(medalIcon(medal));
+      nm.appendChild(el('span', 'nm-t', r.name));
+      li.append(el('span', 'rk', String(i + 1)), nm, el('span', 'sc', score));
       list.appendChild(li);
     });
     frag.appendChild(list);
@@ -7335,10 +7556,12 @@ function dtRows(game, level, detail) {
 }
 
 async function lvShowDetail(game, level, name, won) {
+  // guesses can spoil a level, so people who haven't beaten it go to the profile instead
   if (!lvCanSee(game, level)) {
-    toast('Beat this level to see how others played it', 2200);
+    openProfile(name);
     return;
   }
+  $('#dtProfile').dataset.name = name;
   $('#dtTitle').textContent = name;
   $('#dtSub').textContent = (won ? 'Beat' : 'Lost') + ' level ' + (game.startsWith('daily-') ? niceDate(dateOfDay(level)) : level);
   const body = $('#dtBody');
@@ -7353,7 +7576,9 @@ async function lvShowDetail(game, level, name, won) {
 
 function rowClick(e) {
   const li = e.target.closest('li[data-name]');
-  if (li) lvShowDetail(li.dataset.game, Number(li.dataset.level), li.dataset.name, li.dataset.won === '1');
+  if (!li) return;
+  if (!li.dataset.game) openProfile(li.dataset.name);
+  else lvShowDetail(li.dataset.game, Number(li.dataset.level), li.dataset.name, li.dataset.won === '1');
 }
 
 // the side panel can fold away into a small arrow
@@ -7396,6 +7621,279 @@ function initLevels() {
   lvVerify();
   lvFlush();
   lbRefresh(true);
+}
+/* =====================================================================
+   Accounts and profiles: saved progress, profile pictures, stats pages
+   ===================================================================== */
+
+const pfModal = $('#pfModal');
+
+/* ---------- saved progress ---------- */
+
+let syncTimer = 0;
+
+// progress is copied to the account a couple of seconds after it changes
+function syncSoon() {
+  if (!me.token) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => rpc('save_progress', { p_token: me.token, p_progress: store.get('lv-progress', {}) }), 2500);
+}
+
+// keeps every level beaten on either side, and the better score for each
+function mergeProgress(a, b) {
+  const out = {};
+  new Set([...Object.keys(a || {}), ...Object.keys(b || {})]).forEach(game => {
+    const x = (a && a[game]) || { cur: 1, done: {} };
+    const y = (b && b[game]) || { cur: 1, done: {} };
+    const done = Object.assign({}, x.done);
+    Object.keys(y.done || {}).forEach(l => {
+      done[l] = done[l] === undefined ? y.done[l] : Math.min(done[l], y.done[l]);
+    });
+    out[game] = { cur: Math.max(x.cur || 1, y.cur || 1), done };
+  });
+  return out;
+}
+
+async function pullProgress() {
+  if (!me.token) return;
+  const res = await rpc('load_progress', { p_token: me.token });
+  if (!res.ok) return;
+  const local = store.get('lv-progress', {});
+  const merged = mergeProgress(local, res.data && typeof res.data === 'object' ? res.data : {});
+  if (JSON.stringify(merged) !== JSON.stringify(local)) store.set('lv-progress', merged);
+  if (JSON.stringify(merged) !== JSON.stringify(res.data)) syncSoon();
+}
+
+/* ---------- pictures ---------- */
+
+const PF_EMOJIS = ['🦊', '🐼', '🐸', '🐙', '🦁', '🐯', '🐵', '🐧', '🦄', '🐲', '🚀', '⚡', '🔥', '🌵', '🎮', '👾'];
+const PF_COLORS = ['#538d4e', '#b59f3b', '#3a7bd5', '#8e54c9', '#c9543f', '#d0709a', '#2a9d8f', '#6b7280'];
+
+function pfLook(name, pfp) {
+  const m = /^(.+)\|(#[0-9a-fA-F]{6})$/.exec(pfp || '');
+  if (m) return { icon: m[1], color: m[2] };
+  return { icon: (name || '?').charAt(0).toUpperCase(), color: PF_COLORS[hashStr(String(name).toLowerCase()) % PF_COLORS.length] };
+}
+
+function pfPaint(node, name, pfp) {
+  const look = pfLook(name, pfp);
+  node.textContent = look.icon;
+  node.style.setProperty('--av', look.color);
+}
+
+/* ---------- the profile page ---------- */
+
+const GAME_LIST = [
+  ['wordle', 'Wordle', 'guesses'], ['wordle4', 'Wordle · 4 letters', 'guesses'], ['wordle6', 'Wordle · 6 letters', 'guesses'], ['wordle7', 'Wordle · 7 letters', 'guesses'],
+  ['connections', 'Connections', 'misses'], ['connections-u', 'Connections · Unlocked', 'misses'],
+  ['sudoku-easy', 'Sudoku · Easy', 'time'], ['sudoku-medium', 'Sudoku · Medium', 'time'], ['sudoku-hard', 'Sudoku · Hard', 'time'],
+  ['mini', 'Mini Crossword', 'time'], ['anagrams', 'Anagrams', 'hints'],
+  ['daily-wordle', 'Daily Wordle', 'time'], ['daily-connections', 'Daily Connections', 'time']
+];
+
+let pfData = null;
+let pfOutTimer = 0;
+
+const isMe = name => !!me.token && !!name && name.toLowerCase() === me.name.toLowerCase();
+
+function pfNote(text, good) {
+  const n = $('#pfNote');
+  n.textContent = text || '';
+  n.classList.toggle('hidden', !text);
+  n.classList.toggle('good', !!good);
+}
+
+function pfBox(cls, num, label) {
+  const box = el('div', 'pf-box ' + cls);
+  box.append(el('b', '', String(num)), el('span', '', label));
+  return box;
+}
+
+function pfRender(p) {
+  pfData = p;
+  const own = isMe(p.name);
+  pfPaint($('#pfAv'), p.name, p.pfp);
+  $('#pfName').textContent = p.name;
+  $('#pfJoined').textContent = 'Joined ' + new Date(p.joined).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  $('#pfOwn').classList.toggle('hidden', !own);
+  $('#pfPick').classList.add('hidden');
+  $('#pfPwForm').classList.add('hidden');
+  $('#pfPwBtn').textContent = p.has_pw ? 'Password' : 'Add password';
+  pfNote(own && !p.has_pw ? 'Add a password so you can log in on other devices.' : '');
+
+  const games = Array.isArray(p.games) ? p.games : [];
+  const levelGames = games.filter(g => !g.game.startsWith('daily-'));
+  const beaten = levelGames.reduce((n, g) => n + g.won, 0);
+  const played = games.reduce((n, g) => n + g.played, 0);
+  const won = games.reduce((n, g) => n + g.won, 0);
+
+  const body = $('#pfBody');
+  body.innerHTML = '';
+  const boxes = el('div', 'pf-boxes');
+  boxes.append(pfBox('gold', p.first || 0, '1st places'), pfBox('green', beaten, 'Levels beaten'), pfBox('', played, 'Games played'));
+  body.appendChild(boxes);
+
+  const medals = el('div', 'pf-medals');
+  [[1, p.first], [2, p.second], [3, p.third]].forEach(([n, count]) => {
+    const d = el('div');
+    d.append(medalIcon(n), el('span', '', String(count || 0)));
+    medals.appendChild(d);
+  });
+  body.appendChild(medals);
+
+  body.appendChild(el('div', 'pf-h', 'Win rate · ' + (played ? Math.round((won / played) * 100) + '%' : '-')));
+  body.appendChild(el('div', 'pf-h', 'By game'));
+  const list = el('div', 'pf-games');
+  let i = 0;
+  GAME_LIST.forEach(([key, title, fmt]) => {
+    const g = games.find(x => x.game === key);
+    if (!g) return;
+    const row = el('div', 'pf-game');
+    row.style.animationDelay = Math.min(i++, 8) * 0.04 + 's';
+    const top = el('div', 'top');
+    top.append(el('span', '', title), el('em', '', g.best === null || g.best === undefined ? '' : 'Best ' + FORMATS[fmt](g.best)));
+    row.appendChild(top);
+    const lost = g.played - g.won;
+    row.appendChild(el('div', 'sub', g.played + (g.played === 1 ? ' game' : ' games') + ' · ' + g.won + ' won' + (lost ? ' · ' + lost + ' lost' : '')));
+    if (!key.startsWith('daily-')) {
+      const bar = el('div', 'pf-bar');
+      const fill = el('i');
+      fill.style.width = '0%';
+      bar.appendChild(fill);
+      row.appendChild(bar);
+      setTimeout(() => { fill.style.width = Math.min(100, Math.round((g.won / lvMax(key)) * 100)) + '%'; }, 80);
+    }
+    list.appendChild(row);
+  });
+  if (!list.children.length) list.appendChild(el('div', 'lb-empty', 'No games played yet.'));
+  body.appendChild(list);
+}
+
+async function openProfile(name) {
+  if (!name) return;
+  clearTimeout(pfOutTimer);
+  $('#pfOut').textContent = 'Log out';
+  $('#pfOut').classList.remove('armed');
+  $('#pfName').textContent = name;
+  $('#pfJoined').textContent = '';
+  pfPaint($('#pfAv'), name, null);
+  $('#pfOwn').classList.add('hidden');
+  $('#pfPick').classList.add('hidden');
+  $('#pfPwForm').classList.add('hidden');
+  pfNote('');
+  const body = $('#pfBody');
+  body.innerHTML = '';
+  body.appendChild(el('div', 'lb-empty', 'Loading...'));
+  document.querySelectorAll('.modal.open').forEach(m => { if (m !== pfModal) closeModal(m); });
+  openModal(pfModal);
+  const res = await rpc('profile', { p_name: name });
+  if (!pfModal.classList.contains('open') || $('#pfName').textContent !== name) return;
+  if (!res.ok) { body.innerHTML = ''; body.appendChild(el('div', 'lb-empty', "Can't load this profile right now.")); return; }
+  if (!res.data) { body.innerHTML = ''; body.appendChild(el('div', 'lb-empty', 'This player is gone.')); return; }
+  pfRender(res.data);
+}
+
+function pfOpenMine() {
+  if (me.token) openProfile(me.name);
+  else askName();
+}
+
+/* ---------- own profile: picture, password, log out ---------- */
+
+function pfBuildPicker() {
+  const box = $('#pfPick');
+  box.innerHTML = '';
+  const look = pfLook(pfData.name, pfData.pfp);
+  const emojis = el('div', 'pf-emojis');
+  PF_EMOJIS.forEach(e => {
+    const b = el('button', e === look.icon ? 'on' : '', e);
+    b.type = 'button';
+    b.dataset.icon = e;
+    emojis.appendChild(b);
+  });
+  const colors = el('div', 'pf-colors');
+  PF_COLORS.forEach(c => {
+    const b = el('button', c === look.color ? 'on' : '');
+    b.type = 'button';
+    b.dataset.color = c;
+    b.style.setProperty('--c', c);
+    b.setAttribute('aria-label', 'Color ' + c);
+    colors.appendChild(b);
+  });
+  box.append(emojis, colors);
+}
+
+async function pfPick(e) {
+  const b = e.target.closest('button');
+  if (!b || !pfData) return;
+  const look = pfLook(pfData.name, pfData.pfp);
+  const icon = b.dataset.icon || (PF_EMOJIS.includes(look.icon) ? look.icon : PF_EMOJIS[0]);
+  const color = b.dataset.color || look.color;
+  const pfp = icon + '|' + color;
+  pfData.pfp = pfp;
+  pfPaint($('#pfAv'), pfData.name, pfp);
+  pfBuildPicker();
+  const res = await rpc('set_pfp', { p_token: me.token, p_pfp: pfp });
+  if (!res.ok) pfNote("Couldn't save your picture. Try again.");
+}
+
+async function pfSetPassword(e) {
+  e.preventDefault();
+  const pw = $('#pfPwInput').value;
+  if (pw.length < 4 || pw.length > 40) { pfNote(NAME_ERRORS.bad_pw); return; }
+  const res = await rpc('set_password', { p_token: me.token, p_pw: pw });
+  if (!res.ok) { pfNote("Couldn't save that. Try again."); return; }
+  $('#pfPwInput').value = '';
+  $('#pfPwForm').classList.add('hidden');
+  pfData.has_pw = true;
+  $('#pfPwBtn').textContent = 'Password';
+  pfNote('Password saved.', true);
+  syncSoon();
+}
+
+function pfLogOut() {
+  const b = $('#pfOut');
+  if (!b.classList.contains('armed')) {
+    b.classList.add('armed');
+    b.textContent = 'Sure?';
+    pfOutTimer = setTimeout(() => { b.classList.remove('armed'); b.textContent = 'Log out'; }, 3000);
+    return;
+  }
+  clearTimeout(pfOutTimer);
+  clearTimeout(syncTimer);
+  // progress was already copied to the account, so this device starts clean
+  me = { name: '', token: '' };
+  verified = false;
+  store.set('lb-name', '');
+  store.set('lb-token', '');
+  store.set('lv-progress', {});
+  store.set('lv-pending', []);
+  boardCache.clear();
+  closeModal(pfModal);
+  if (activeApp !== 'hub') showApp('hub');
+  toast('Logged out', 1600);
+  lbRefresh(true);
+}
+
+function initProfile() {
+  $('#pfBtn').addEventListener('click', pfOpenMine);
+  $('#dtProfile').addEventListener('click', () => openProfile($('#dtProfile').dataset.name));
+  document.querySelectorAll('#nameTabs button').forEach(b => b.addEventListener('click', () => setNameMode(b.dataset.mode)));
+  $('#pfPicBtn').addEventListener('click', () => {
+    if (!pfData) return;
+    $('#pfPwForm').classList.add('hidden');
+    const box = $('#pfPick');
+    if (box.classList.contains('hidden')) pfBuildPicker();
+    box.classList.toggle('hidden');
+  });
+  $('#pfPick').addEventListener('click', pfPick);
+  $('#pfPwBtn').addEventListener('click', () => {
+    $('#pfPick').classList.add('hidden');
+    $('#pfPwForm').classList.toggle('hidden');
+    if (!$('#pfPwForm').classList.contains('hidden')) $('#pfPwInput').focus();
+  });
+  $('#pfPwForm').addEventListener('submit', pfSetPassword);
+  $('#pfOut').addEventListener('click', pfLogOut);
 }
 
 /* =====================================================================
@@ -8051,6 +8549,7 @@ const PL_ERRORS = {
   taken: 'Someone already has that name.',
   bad_name: 'Use 1 to 12 letters, numbers or spaces.',
   no_player: 'That player is gone. Reload the list.',
+  bad_pw: 'Use 4 to 40 characters for the password.',
   offline: "Can't reach Supabase right now."
 };
 
@@ -8083,6 +8582,7 @@ function edRenderPlayers(rows) {
     top.append(el('b', '', r.name), el('span', 'tag live', r.beaten + (r.beaten === 1 ? ' result' : ' results')));
     const acts = el('div', 'acts');
     const rename = el('button', '', 'Rename');
+    const pwBtn = el('button', '', 'Password');
     const del = el('button', '', 'Delete');
     let armed = null;
     rename.addEventListener('click', () => {
@@ -8111,7 +8611,23 @@ function edRenderPlayers(rows) {
       const res = await edAdmin('admin_delete', { p_name: r.name });
       if (res.ok) { edPlMsg('Deleted ' + r.name); edLoadPlayers(); }
     });
-    acts.append(rename, del);
+    pwBtn.addEventListener('click', () => {
+      const row = el('div', 'ed-row');
+      const input = el('input', 'ed-input');
+      input.placeholder = 'New password';
+      input.maxLength = 40;
+      const save = el('button', 'btn btn-main', 'Save');
+      const cancel = el('button', 'btn btn-ghost', 'Cancel');
+      cancel.addEventListener('click', () => row.remove());
+      save.addEventListener('click', async () => {
+        const res = await edAdmin('admin_reset_password', { p_name: r.name, p_new: input.value });
+        if (res.ok) { edPlMsg('New password set for ' + r.name); row.remove(); }
+      });
+      row.append(input, save, cancel);
+      item.appendChild(row);
+      input.focus();
+    });
+    acts.append(rename, pwBtn, del);
     item.append(top, acts);
     box.appendChild(item);
   });
@@ -8124,7 +8640,7 @@ initMini();
 initAnagrams();
 initHub();
 initEditor();
-initDaily(); initLevels();
+initDaily(); initLevels(); initProfile();
 </script>
 </body>
 </html>
