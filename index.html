@@ -599,10 +599,17 @@ h1 .inf {
 /* menu */
 .hub { overflow-y: auto; }
 .hub-theme { position: absolute; top: 8px; right: 12px; }
+.hub-sound { position: absolute; top: 8px; right: 60px; }
+.hub-sound .off, .hub-sound[aria-pressed='false'] .on { display: none; }
+.hub-sound[aria-pressed='false'] .off { display: block; }
+.hub-streak { margin: -16px 0 18px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--present); }
+.hub-continue { margin: -6px 0 24px; padding: 12px 28px; }
+.hub-continue:not(.hidden) { animation: rise 0.5s 0.05s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+.hub-chip.live { background: var(--present); color: #fff; }
 .hub-inner {
   margin: auto;
   width: 100%;
-  max-width: 620px;
+  max-width: 880px;
   padding: 36px 20px calc(var(--dock) + 8px);
   display: flex;
   flex-direction: column;
@@ -612,12 +619,15 @@ h1 .inf {
 h1.hub-title { font-size: 2.7rem; margin-bottom: 8px; }
 .hub-sub { margin-bottom: 30px; font-size: 0.95rem; color: var(--muted); }
 .hub-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 16px;
   width: 100%;
 }
 .hub-card {
+  flex: 1 1 250px;
+  max-width: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -670,6 +680,9 @@ h1.hub-title { font-size: 2.7rem; margin-bottom: 8px; }
 }
 .app.on .hub-card { animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
 .app.on .hub-card:nth-child(2) { animation-delay: 0.08s; }
+.app.on .hub-card:nth-child(3) { animation-delay: 0.16s; }
+.app.on .hub-card:nth-child(4) { animation-delay: 0.24s; }
+.app.on .hub-card:nth-child(5) { animation-delay: 0.32s; }
 
 /* ---------- Connections ---------- */
 h1.cn-title { font-size: 1.9rem; }
@@ -1275,7 +1288,6 @@ h1.an-title { font-size: 1.6rem; }
   font-weight: 700;
 }
 .hub-art-an i.u { background: var(--present); color: #fff; }
-.app.on .hub-card:nth-child(5) { animation-delay: 0.32s; }
 
 .an-main {
   width: 100%;
@@ -1288,15 +1300,19 @@ h1.an-title { font-size: 1.6rem; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  gap: 14px;
 }
 .an-count { margin-top: 6px; font-size: 0.9rem; color: var(--sub); font-variant-numeric: tabular-nums; }
 .an-count b { color: var(--text); }
 .an-bar { width: 100%; height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; flex: none; }
 .an-bar i { display: block; height: 100%; width: 0; border-radius: 3px; background: var(--correct); transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .an-found {
-  flex: 1 1 60px;
-  min-height: 60px;
+  flex: 0 1 auto;
+  min-height: 90px;
+  max-height: 34vh;
+  align-content: center;
+  justify-content: center;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -1486,6 +1502,47 @@ h1.ed-title { font-size: 1.7rem; }
 .ed-lock .ed-input { margin-top: 0; }
 .ed-lock .ed-msg { min-height: 0; margin: 0; text-align: left; }
 .ed-lock .ed-msg:empty { display: none; }
+/* ---------- leaderboard ---------- */
+.lbcard h2 { margin-bottom: 4px; }
+.board-sub { margin-bottom: 14px; text-align: center; font-size: 0.85rem; color: var(--sub); }
+.board-form { display: flex; gap: 8px; margin-bottom: 8px; }
+.board-form .ed-input { flex: 1; margin: 0; }
+.board-msg { margin-bottom: 6px; text-align: center; font-size: 0.8rem; color: var(--sub); }
+.board-msg:empty { display: none; }
+.board-msg.bad { color: var(--present); }
+.board-list { list-style: none; max-height: 52vh; overflow-y: auto; padding: 0; margin: 0; }
+.board-list li {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 9px 10px;
+  border-radius: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.board-list li:nth-child(odd) { background: var(--border); }
+.board-list li.me { background: var(--correct); color: #fff; }
+.board-list .rk { font-weight: 700; color: var(--muted); }
+.board-list li.me .rk { color: #fff; }
+.board-list .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+.board-list .tm { font-weight: 700; }
+.board-list li.in { animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+.board-empty { padding: 18px 0; text-align: center; color: var(--muted); font-size: 0.85rem; }
+.lb-open { margin: 10px auto 0; display: block; }
+.clock-pill {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 20;
+  padding: 7px 13px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--sub);
+}
 </style>
 </head>
 <body>
@@ -1532,9 +1589,15 @@ h1.ed-title { font-size: 1.7rem; }
   <button class="icon-btn hub-theme" id="hubTheme" aria-label="Switch light or dark theme">
     <svg viewBox="0 0 24 24"><path d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6c3.31 0 6 2.69 6 6s-2.69 6-6 6z"/></svg>
   </button>
+  <button class="icon-btn hub-sound" id="hubSound" aria-label="Sound effects" aria-pressed="false">
+    <svg class="on" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    <svg class="off" viewBox="0 0 24 24"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.8 8.8 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z"/></svg>
+  </button>
   <div class="hub-inner">
     <h1 class="hub-title">Infinite Games<span class="inf">&#8734;</span></h1>
     <p class="hub-sub">Pick a game. Play as many rounds as you like.</p>
+    <div class="hub-streak hidden" id="hubStreak"></div>
+    <button class="btn btn-main hub-continue hidden" id="hubContinue"></button>
     <div class="hub-cards">
       <button class="hub-card" data-app="wordle">
         <div class="hub-art">
@@ -1962,6 +2025,23 @@ h1.ed-title { font-size: 1.7rem; }
     <button class="daily-random" id="dailyRandom">Play random puzzles</button>
   </div>
 </div>
+<!-- daily leaderboard -->
+<div class="modal" id="boardModal" aria-hidden="true">
+  <div class="card lbcard">
+    <button class="close" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <h2 id="boardTitle">Leaderboard</h2>
+    <p class="board-sub" id="boardSub"></p>
+    <form class="board-form hidden" id="boardForm" autocomplete="off">
+      <input class="ed-input" id="boardName" maxlength="12" placeholder="Your name" aria-label="Your name" spellcheck="false">
+      <button class="btn btn-main" id="boardPost" type="submit">Post time</button>
+    </form>
+    <p class="board-msg" id="boardMsg"></p>
+    <ol class="board-list" id="boardList"></ol>
+  </div>
+</div>
+<div class="clock-pill hidden" id="clockPill" aria-label="Time"></div>
 <!-- editor for posting daily puzzles -->
 <div class="app" id="edApp">
   <header>
@@ -2445,7 +2525,7 @@ function freshState(bumpRound = true) {
 
 function saveGame() {
   if (state.daily) {
-    store.set('dw-' + state.daily, { guesses: state.guesses, status: state.status, hard: state.hard });
+    store.set('dw-' + state.daily, { guesses: state.guesses, status: state.status, hard: state.hard, t0: state.t0 || 0, t1: state.t1 || 0 });
     return;
   }
   store.set('iw-game', {
@@ -2712,6 +2792,7 @@ function reject(rowIndex, message, duration) {
 
 function addLetter(ch) {
   if (busy || state.status !== 'playing' || state.current.length >= COLS) return;
+  if (state.daily && !state.t0) state.t0 = Date.now();
   const tile = tiles[state.guesses.length][state.current.length];
   state.current += ch;
   setTile(tile, ch, 'tbd');
@@ -2862,6 +2943,7 @@ function skipRound() {
 
 function recordResult(won) {
   if (state.daily) {
+    if (state.t0) state.t1 = Date.now();
     stats = dailyRecord('w', won, state.guesses.length - 1, state.daily);
     return;
   }
@@ -3264,7 +3346,7 @@ function cnFresh(mode) {
 
 function cnSave() {
   if (cn.mode === 'd') {
-    store.set('dc-' + cn.daily, { order: cn.order, solved: cn.solved, mistakes: cn.mistakes, tried: cn.tried, guesses: cn.guesses, opened: cn.opened, reveals: cn.reveals, status: cn.status });
+    store.set('dc-' + cn.daily, { order: cn.order, solved: cn.solved, mistakes: cn.mistakes, tried: cn.tried, guesses: cn.guesses, opened: cn.opened, reveals: cn.reveals, status: cn.status, t0: cn.t0 || 0, t1: cn.t1 || 0 });
     return;
   }
   store.set(CN_KEYS[cn.mode].game, {
@@ -3394,6 +3476,7 @@ function cnSolveGroup(gi) {
 
 function cnToggle(tile) {
   if (cnBusy || cn.status !== 'playing') return;
+  if (cn.mode === 'd' && !cn.t0) cn.t0 = Date.now();
   const word = tile.dataset.word;
   if (cnIsLocked(word)) {
     mgOpen(word);
@@ -3551,6 +3634,7 @@ async function cnUnlock(word, revealed) {
 
 function cnWin() {
   cn.status = 'won';
+  if (cn.mode === 'd' && cn.t0) cn.t1 = Date.now();
   cnRecord(true);
   cnSave();
   cnSync();
@@ -3562,6 +3646,7 @@ function cnWin() {
 
 async function cnLose() {
   cn.status = 'lost';
+  if (cn.mode === 'd' && cn.t0) cn.t1 = Date.now();
   cnRecord(false);
   cnSave();
   cnSync();
@@ -3793,7 +3878,35 @@ let connEntered = false;
 
 const APP_IDS = { hub: 'hub', wordle: 'wordleApp', conn: 'connApp', sudoku: 'sdApp', mini: 'mcApp', anagrams: 'anApp', editor: 'edApp' };
 
+const HUB_NAMES = { wordle: 'Wordle', conn: 'Connections', sudoku: 'Sudoku', mini: 'Mini Crossword', anagrams: 'Anagrams' };
+const dayKey = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+
+// counts how many days in a row any game was opened
+function hubMarkDay() {
+  const now = new Date();
+  const today = dayKey(now);
+  const run = store.get('hub-days', { last: '', streak: 0 });
+  if (run.last === today) return;
+  now.setDate(now.getDate() - 1);
+  run.streak = run.last === dayKey(now) ? run.streak + 1 : 1;
+  run.last = today;
+  store.set('hub-days', run);
+}
+
 function renderHub() {
+  const run = store.get('hub-days', { last: '', streak: 0 });
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const alive = run.last === dayKey(new Date()) || run.last === dayKey(yesterday);
+  const streak = $('#hubStreak');
+  streak.textContent = run.streak + ' day streak';
+  streak.classList.toggle('hidden', !alive || run.streak < 2);
+  const last = store.get('hub-last', '');
+  const go = $('#hubContinue');
+  go.textContent = HUB_NAMES[last] ? 'Continue ' + HUB_NAMES[last] : '';
+  go.dataset.app = last;
+  go.classList.toggle('hidden', !HUB_NAMES[last]);
+  $('#hubSound').setAttribute('aria-pressed', String(settings.sound));
   const wordlePlayed = [4, 5, 6, 7].reduce((n, len) => n + loadStats(len).played, 0);
   $('#chipWordle').textContent = wordlePlayed ? 'Played ' + wordlePlayed : 'New';
   const connPlayed = cnStatsAll.n.played + cnStatsAll.u.played;
@@ -3802,6 +3915,17 @@ function renderHub() {
   $('#chipSudoku').textContent = sudokuSolved ? 'Solved ' + sudokuSolved : 'New';
   $('#chipMini').textContent = mcStats.solved ? 'Solved ' + mcStats.solved : 'New';
   $('#chipAnagrams').textContent = anStats.solved ? 'Solved ' + anStats.solved : 'New';
+  const live = {
+    wordle: state.status === 'playing' && state.guesses.length > 0,
+    conn: cn.status === 'playing' && cn.guesses.length > 0,
+    anagrams: an.status === 'playing' && an.found.length > 0
+  };
+  const chips = { wordle: '#chipWordle', conn: '#chipConn', anagrams: '#chipAnagrams' };
+  Object.keys(chips).forEach(k => {
+    const chip = $(chips[k]);
+    chip.classList.toggle('live', live[k]);
+    if (live[k]) chip.textContent = 'In progress';
+  });
 }
 
 function enterWordle() {
@@ -3841,6 +3965,7 @@ function showApp(name) {
     document.getElementById(APP_IDS[key]).classList.toggle('on', key === name);
   });
   $('#appsBtn').classList.toggle('on', name !== 'hub');
+  if (HUB_NAMES[name]) { store.set('hub-last', name); hubMarkDay(); }
   if (name === 'hub') renderHub();
   if (name === 'wordle') enterWordle();
   if (name === 'conn') enterConn();
@@ -3856,6 +3981,13 @@ function initHub() {
     card.addEventListener('click', () => showApp(card.dataset.app));
   });
   $('#appsBtn').addEventListener('click', () => showApp('hub'));
+  $('#hubContinue').addEventListener('click', e => showApp(e.currentTarget.dataset.app));
+  $('#hubSound').addEventListener('click', () => {
+    settings.sound = !settings.sound;
+    saveSettings();
+    $('#hubSound').setAttribute('aria-pressed', String(settings.sound));
+    if (settings.sound) play('key');
+  });
   $('#hubTheme').addEventListener('click', () => {
     settings.light = !settings.light;
     saveSettings();
@@ -5738,7 +5870,7 @@ function initMini() {
     if (mc.secs % 5 === 0) mcSave();
   }, 1000);
 }
-const ANAG_ROOTS = 'sunlit newest nudest halest tablet ripest inbred saucer silver lament lawyer lentil refund dreamy ignore normal praise maiden ethnic serial sparse fiddle escort rustle fairly milder magnet pester lazied middle neater lewder skater pedant scream senate falser really fillet packet leaden overly loathe single mascot honest impure polite holder dagger redoes befall latter merest rawest passer banter alcove priest embark falter parsec mother stripe hinder staple sliver linger finale pawned solemn arcane remain bleach burgle fliest fasten island relate strife strung robust fiesta seldom mangle pistol silken hunter facile canker forest stride punter marvel planet sniper presto barley redone streak filler badder spider handle reward editor beaker beacon arisen ascend staler dreary acuter string damper worsen primal steamy pathos punier solace fringe safely averse tamely bustle lather unread aspire girdle balder pierce barest ponies median garter forget remind parole linear molest sorely absent pirate freest cavern dapper hermit strove minute snider grater peanut damned master tavern carton earthy covert shrine'.split(' ');
+const ANAG_ROOTS = 'sunlit newest tablet ripest inbred saucer silver lament lawyer lentil refund dreamy ignore normal praise maiden ethnic serial sparse fiddle escort rustle fairly milder magnet pester middle neater skater pedant scream senate really fillet packet leaden overly loathe single mascot honest impure polite holder dagger befall latter passer banter alcove priest embark falter mother stripe hinder staple sliver linger finale solemn remain bleach burgle fasten island relate strife strung robust fiesta seldom mangle pistol silken hunter facile canker forest stride punter marvel planet sniper barley redone streak filler spider handle reward editor beaker beacon arisen ascend dreary string damper worsen primal steamy pathos solace fringe safely averse tamely bustle lather unread aspire girdle pierce ponies median garter forget remind parole linear molest sorely absent pirate cavern dapper hermit strove minute grater peanut damned master tavern carton earthy covert shrine'.split(' ');
 
 /* =====================================================================
    Anagrams
@@ -6315,6 +6447,9 @@ function renderDaily() {
   const btn = el('button', 'btn btn-main', st.done ? 'View' : st.started ? 'Continue' : 'Play');
   btn.addEventListener('click', () => playDaily(game, today));
   box.append(btn);
+  const lb = el('button', 'btn btn-ghost', 'Leaderboard');
+  lb.addEventListener('click', () => { closeModal(dailyModal); openBoard(game, today); });
+  box.append(lb);
   if (st.done) box.append(el('span', 'st next-daily', countdownText()));
 
   const list = $('#dailyList');
@@ -6367,7 +6502,9 @@ async function wordleStartDaily(date, puzzle) {
     status: good ? saved.status : 'playing',
     hard: good ? !!saved.hard : settings.hard,
     hints: [],
-    daily: date
+    daily: date,
+    t0: good && saved.t0 ? saved.t0 : 0,
+    t1: good && saved.t1 ? saved.t1 : 0
   };
   buildBoard(len);
   stats = dailyStats('w');
@@ -6434,6 +6571,8 @@ function cnLoadDaily(date, entry) {
   (entry.locks || []).forEach(l => {
     game.locks[l.word] = { type: l.type, clue: l.clue, group: PUZZLES[id].findIndex(g => g.words.includes(l.word)) };
   });
+  if (!Number.isFinite(game.t0)) game.t0 = 0;
+  if (!Number.isFinite(game.t1)) game.t1 = 0;
   if (game.status !== 'playing' || game.solved.length === 4) {
     [0, 1, 2, 3].forEach(g => { if (!game.solved.includes(g)) game.solved.push(g); });
     game.order = [];
@@ -6514,6 +6653,186 @@ function initDaily() {
   fromHash();
 
   loadDaily();
+}
+
+/* =====================================================================
+   Daily leaderboard (Supabase) and the puzzle clock
+   ===================================================================== */
+
+const SB_URL = 'https://dohofplqvzxpibcapzul.supabase.co';
+const SB_KEY = 'sb_publishable_uZT6R1WL87Ex1qVOMrztEA_bjh5dGXI';
+const SB_MAX = 3600;
+
+const boardModal = $('#boardModal');
+const boardForm = $('#boardForm');
+const clockPill = $('#clockPill');
+let boardWho = null;
+let boardWatch = 0;
+
+const clockText = secs => Math.floor(secs / 60) + ':' + pad2(secs % 60);
+
+// the clock for whichever daily puzzle is on screen
+function clockFor() {
+  if (activeApp === 'wordle' && state.daily) return { game: 'wordle', date: state.daily, t0: state.t0, t1: state.t1, over: state.status !== 'playing' };
+  if (activeApp === 'conn' && cn.mode === 'd') return { game: 'connections', date: cn.daily, t0: cn.t0, t1: cn.t1, over: cn.status !== 'playing' };
+  return null;
+}
+
+function clockSeconds(c) {
+  if (!c || !c.t0) return 0;
+  return Math.max(0, Math.round(((c.t1 || Date.now()) - c.t0) / 1000));
+}
+
+function tickClock() {
+  const c = clockFor();
+  const show = !!c && !!c.t0 && !modalIsOpen();
+  clockPill.classList.toggle('hidden', !show);
+  if (show) clockPill.textContent = clockText(clockSeconds(c));
+  syncBoardButtons();
+}
+
+/* talking to Supabase */
+
+async function sb(path, opts) {
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 8000);
+  try {
+    const extra = (opts && opts.headers) || {};
+    return await fetch(SB_URL + '/rest/v1/' + path, Object.assign({}, opts, {
+      signal: ctl.signal,
+      headers: Object.assign({ apikey: SB_KEY, 'Content-Type': 'application/json' }, extra)
+    }));
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function boardFetch(game, date) {
+  const res = await sb('scores?select=name,seconds&game=eq.' + game + '&day=eq.' + date + '&order=seconds.asc,created_at.asc&limit=25');
+  if (!res.ok) throw new Error('read ' + res.status);
+  const rows = await res.json();
+  return Array.isArray(rows) ? rows.filter(r => r && typeof r.name === 'string' && Number.isFinite(r.seconds)) : [];
+}
+
+const sentKey = (game, date) => 'lb-sent-' + game + '-' + date;
+const cleanName = s => s.replace(/\s+/g, ' ').trim();
+const nameOk = s => /^[A-Za-z0-9 ._'-]{1,12}$/.test(s);
+
+// the player's own result for a daily puzzle: seconds, or 0 when it can't be posted
+function myResult(game, date) {
+  const saved = store.get(dailyKey(game, date), null);
+  if (!saved || saved.status !== 'won' || !saved.t0 || !saved.t1) return 0;
+  return Math.max(3, Math.round((saved.t1 - saved.t0) / 1000));
+}
+
+function boardMsg(text, bad) {
+  const p = $('#boardMsg');
+  p.textContent = text || '';
+  p.classList.toggle('bad', !!bad);
+}
+
+function boardPaint(rows, mine) {
+  const list = $('#boardList');
+  list.innerHTML = '';
+  if (!rows.length) {
+    list.appendChild(el('div', 'board-empty', 'No times yet. Be the first!'));
+    return;
+  }
+  rows.forEach((r, i) => {
+    const li = el('li', 'in' + (mine && r.name === mine ? ' me' : ''));
+    li.style.animationDelay = Math.min(i, 12) * 0.03 + 's';
+    li.append(el('span', 'rk', String(i + 1)), el('span', 'nm', r.name), el('span', 'tm', clockText(r.seconds)));
+    list.appendChild(li);
+  });
+}
+
+async function boardRefresh(mine) {
+  const who = boardWho;
+  const mark = ++boardWatch;
+  try {
+    const rows = await boardFetch(who.game, who.date);
+    if (mark !== boardWatch) return;
+    boardPaint(rows, mine);
+  } catch (e) {
+    if (mark !== boardWatch) return;
+    $('#boardList').innerHTML = '';
+    boardMsg("Couldn't reach the leaderboard. Try again in a bit.", true);
+  }
+}
+
+function openBoard(game, date) {
+  boardWho = { game, date };
+  const secs = myResult(game, date);
+  const sent = store.get(sentKey(game, date), '');
+  $('#boardTitle').textContent = (game === 'wordle' ? 'Wordle' : 'Connections') + ' Leaderboard';
+  $('#boardSub').textContent = niceDate(date) + (secs ? ' · your time ' + clockText(secs) : '');
+  const canPost = date === todayStr() && secs > 0 && !sent;
+  boardForm.classList.toggle('hidden', !canPost);
+  $('#boardName').value = store.get('lb-name', '');
+  boardMsg(canPost && secs > SB_MAX ? 'That run is over an hour, so it can\'t be posted.' : '', canPost && secs > SB_MAX);
+  if (canPost && secs > SB_MAX) boardForm.classList.add('hidden');
+  $('#boardList').innerHTML = '';
+  boardPaint([], '');
+  $('#boardList').innerHTML = '<div class="board-empty">Loading...</div>';
+  openModal(boardModal);
+  boardRefresh(sent);
+}
+
+async function boardPost(e) {
+  e.preventDefault();
+  const { game, date } = boardWho;
+  const name = cleanName($('#boardName').value);
+  const secs = myResult(game, date);
+  if (!nameOk(name)) { boardMsg('Use 1 to 12 letters, numbers or spaces.', true); return; }
+  if (!secs || secs > SB_MAX) { boardMsg("This time can't be posted.", true); return; }
+  const btn = $('#boardPost');
+  btn.disabled = true;
+  boardMsg('Posting...');
+  try {
+    const res = await sb('scores', {
+      method: 'POST',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify({ day: date, game, name, seconds: secs })
+    });
+    if (res.status === 409) {
+      boardMsg('Someone already used that name today. Try another.', true);
+    } else if (!res.ok) {
+      boardMsg("Couldn't post your time. Try again.", true);
+    } else {
+      store.set('lb-name', name);
+      store.set(sentKey(game, date), name);
+      boardForm.classList.add('hidden');
+      boardMsg('Posted!');
+      play('win');
+      await boardRefresh(name);
+    }
+  } catch (err) {
+    boardMsg("Couldn't reach the leaderboard. Try again.", true);
+  }
+  btn.disabled = false;
+}
+
+function initBoard() {
+  boardForm.addEventListener('submit', boardPost);
+  setInterval(tickClock, 250);
+
+  // a trophy button under each daily end screen, and one on today's card in the daily window
+  [['#endFooter', 'wBoard', 'wordle'], ['#cnEndFooter', 'cnBoard', 'connections']].forEach(([footer, id, game]) => {
+    const b = el('button', 'btn btn-ghost lb-open hidden', 'Leaderboard');
+    b.id = id;
+    b.addEventListener('click', () => {
+      const date = game === 'wordle' ? state.daily : cn.daily;
+      if (date) openBoard(game, date);
+    });
+    $(footer).before(b);
+  });
+}
+
+function syncBoardButtons() {
+  const w = !!(state.daily && state.daily === todayStr() && state.status !== 'playing');
+  const c = !!(cn.mode === 'd' && cn.daily === todayStr() && cn.status !== 'playing');
+  $('#wBoard').classList.toggle('hidden', !w);
+  $('#cnBoard').classList.toggle('hidden', !c);
 }
 
 /* =====================================================================
@@ -7159,7 +7478,7 @@ initMini();
 initAnagrams();
 initHub();
 initEditor();
-initDaily();
+initDaily(); initBoard();
 </script>
 </body>
 </html>
