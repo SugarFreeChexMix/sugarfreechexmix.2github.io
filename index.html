@@ -689,6 +689,7 @@ h1.hub-title { font-size: 2.7rem; margin-bottom: 8px; }
 .app.on .hub-card:nth-child(5) { animation-delay: 0.32s; }
 .app.on .hub-card:nth-child(6) { animation-delay: 0.4s; }
 .app.on .hub-card:nth-child(7) { animation-delay: 0.48s; }
+.app.on .hub-card:nth-child(8) { animation-delay: 0.56s; }
 
 /* ---------- Connections ---------- */
 h1.cn-title { font-size: 1.9rem; }
@@ -1604,6 +1605,49 @@ h1.uw-title { font-size: 1.6rem; }
 .uw-key svg { width: 22px; height: 22px; fill: currentColor; }
 .uw-main button:disabled { opacity: 0.4; pointer-events: none; }
 @media (max-height: 700px) { .uw-tile { width: 46px; height: 46px; font-size: 1.4rem; } .uw-row { grid-template-columns: repeat(5, 46px); } .uw-key { height: 42px; } }
+/* ---------- Hangman ---------- */
+h1.hm-title { font-size: 1.6rem; }
+.hub-art-hm { display: flex; gap: 6px; align-items: flex-end; }
+.hub-art-hm i { width: 22px; height: 30px; display: grid; place-items: end center; border-bottom: 3px solid var(--filled); font-style: normal; font-size: 1.15rem; font-weight: 700; line-height: 1.3; }
+.hub-art-hm i.r { color: var(--correct); border-color: var(--correct); }
+
+.hm-main { width: 100%; max-width: 470px; margin: 0 auto; padding: 4px 8px 0; height: calc(100vh - 51px - var(--dock)); height: calc(100dvh - 51px - var(--dock)); overflow-y: auto; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; }
+.hm-top { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; flex: 1; min-height: 0; }
+.hm-art { width: min(190px, 44vw); max-height: 30vh; fill: none; stroke: var(--text); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.hm-frame { stroke: var(--filled); }
+.hm-part { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.45s ease-out; }
+.hm-part.on { stroke-dashoffset: 0; }
+.hm-art.lost .hm-man { stroke: var(--warn); }
+.hm-art.won .hm-man { stroke: var(--correct); }
+.hm-man { transform-origin: 140px 20px; }
+.hm-art.lost .hm-man { animation: hmswing 1.8s ease-in-out infinite; }
+@keyframes hmswing { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+.hm-face { stroke-width: 3; opacity: 0; transition: opacity 0.3s; }
+.hm-face .eye { fill: var(--text); stroke: none; }
+.hm-art.lost .hm-face, .hm-art.won .hm-face, .hm-art.has-head .hm-face { opacity: 1; }
+.hm-art.lost .hm-face, .hm-art.has-head .hm-face { transform-origin: 140px 20px; }
+.hm-art.lost .hm-face { animation: hmswing 1.8s ease-in-out infinite; stroke: var(--warn); }
+.hm-face .x, .hm-face .smile, .hm-face .sad { display: none; }
+.hm-art.lost .x, .hm-art.lost .sad { display: block; }
+.hm-art.won .smile { display: block; }
+.hm-art.lost .eye, .hm-art.lost .neutral, .hm-art.won .neutral { display: none; }
+.hm-art.won .face-eye, .hm-art.won .eye { display: block; }
+.hm-lives { display: flex; gap: 6px; }
+.hm-lives i { width: 12px; height: 12px; border-radius: 50%; background: var(--correct); transition: background-color 0.3s, transform 0.3s; }
+.hm-lives i.gone { background: var(--border); transform: scale(0.7); }
+.hm-word { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; min-height: 52px; }
+.hm-slot { width: 38px; height: 50px; display: grid; place-items: center; border-bottom: 4px solid var(--filled); font-size: 1.9rem; font-weight: 700; text-transform: uppercase; }
+.hm-slot.hit { border-color: var(--correct); }
+.hm-slot.miss { color: var(--warn); border-color: var(--warn); }
+.hm-wrong { min-height: 22px; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--warn); }
+.hm-bottom { display: flex; flex-direction: column; gap: 8px; padding-bottom: 6px; }
+.hm-main button:disabled { opacity: 0.4; pointer-events: none; }
+.uw-key.right { background: var(--correct); color: #fff; }
+.uw-key.wrong { background: var(--absent); color: #fff; opacity: 0.5; }
+.uw-key.hmk { height: 46px; }
+@media (max-height: 700px) { .hm-slot { height: 42px; font-size: 1.6rem; } .uw-key.hmk { height: 40px; } }
+@media (max-width: 400px) { .hm-slot { width: 32px; } }
+.uw-key.right:disabled { opacity: 1; }
 /* ---------- events, ribbons and belts ---------- */
 .tn-ic { --c: #e6b422; display: inline-flex; flex: none; color: var(--c); filter: drop-shadow(0 0 5px var(--c)); animation: tnglow 2.4s ease-in-out infinite; }
 .tn-ic svg { width: 20px; height: 20px; fill: currentColor; }
@@ -2246,6 +2290,7 @@ body.in-editor .appsbtn { display: none; }
 .hub-card:nth-child(5) { --glow: rgba(220, 110, 90, 0.2); }
 .hub-card:nth-child(6) { --glow: rgba(230, 180, 34, 0.24); }
 .hub-card:nth-child(7) { --glow: rgba(106, 170, 100, 0.22); }
+.hub-card:nth-child(8) { --glow: rgba(200, 120, 200, 0.2); }
 .hub-art { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .hub-card:hover .hub-art { transform: scale(1.08); }
 h1.hub-title { letter-spacing: 0.01em; }
@@ -2381,6 +2426,69 @@ h1.hub-title { letter-spacing: 0.01em; }
 .duo .uw-tile.bad { box-shadow: inset 0 0 0 3px #ff4b4b; }
 .duo .bee-hex { font-weight: 900; }
 .duo .bee-pop { font-weight: 900; }
+/* ---------- color themes (Settings > Themes) ---------- */
+:root[data-theme="ocean"] {
+  --bg: #0b1622; --card: #112334; --card-border: #25415a; --border: #25415a; --filled: #47698a;
+  --text: #eaf4ff; --sub: #c3d6e8; --muted: #7f9bb5; --icon: #c3d6e8;
+  --correct: #2fb3a0; --present: #e0a83a; --absent: #2a3f52; --key: #3b5a78; --key-text: #eaf4ff;
+  --overlay: rgba(5,12,20,.7); --toast-bg: #eaf4ff; --toast-text: #0b1622; --duo-edge: #07101a; --duo-green: #2fb3a0; --duo-yellow: #e0a83a;
+}
+:root[data-theme="sunset"] {
+  --bg: #1a0f14; --card: #261820; --card-border: #4a2d3a; --border: #4a2d3a; --filled: #7a4d5f;
+  --text: #fff0e8; --sub: #f0cfc2; --muted: #a8808a; --icon: #f0cfc2;
+  --correct: #ff7a59; --present: #ffc857; --absent: #4a2d3a; --key: #6b4352; --key-text: #fff0e8;
+  --overlay: rgba(20,8,12,.7); --toast-bg: #fff0e8; --toast-text: #1a0f14; --duo-edge: #12080c; --duo-green: #ff7a59; --duo-yellow: #ffc857;
+}
+:root[data-theme="forest"] {
+  --bg: #0e1a12; --card: #15271b; --card-border: #2d4a37; --border: #2d4a37; --filled: #4f7a5d;
+  --text: #eaf6ec; --sub: #c4dccb; --muted: #7fa48a; --icon: #c4dccb;
+  --correct: #6bbf59; --present: #d9b44a; --absent: #2d4a37; --key: #4a6b54; --key-text: #eaf6ec;
+  --overlay: rgba(6,14,9,.7); --toast-bg: #eaf6ec; --toast-text: #0e1a12; --duo-edge: #08120b; --duo-green: #6bbf59; --duo-yellow: #d9b44a;
+}
+:root[data-theme="grape"] {
+  --bg: #120b1f; --card: #1b1230; --card-border: #3a2a5e; --border: #3a2a5e; --filled: #6b55a0;
+  --text: #f3ecff; --sub: #d6c8f0; --muted: #9482b8; --icon: #d6c8f0;
+  --correct: #b47cff; --present: #ff8bd5; --absent: #3a2a5e; --key: #5a4590; --key-text: #f3ecff;
+  --overlay: rgba(10,5,20,.7); --toast-bg: #f3ecff; --toast-text: #120b1f; --duo-edge: #0c0716; --duo-green: #b47cff; --duo-yellow: #ff8bd5;
+}
+:root[data-theme="paper"] {
+  --bg: #f4ecd8; --card: #fbf5e6; --card-border: #d9ccaa; --border: #d9ccaa; --filled: #a39777;
+  --text: #3b2f1e; --sub: #5a4a33; --muted: #8a7b5d; --icon: #5a4a33;
+  --correct: #7a9a4a; --present: #d9a441; --absent: #a39777; --key: #e0d4b3; --key-text: #3b2f1e;
+  --overlay: rgba(244,236,216,.75); --toast-bg: #3b2f1e; --toast-text: #fbf5e6; --duo-edge: #c9bb96; --duo-green: #7a9a4a; --duo-yellow: #d9a441;
+}
+:root[data-theme="candy"] {
+  --bg: #fff5fa; --card: #ffffff; --card-border: #f3cfe0; --border: #f3cfe0; --filled: #d9a0bb;
+  --text: #4a2a3a; --sub: #7a4a60; --muted: #b58aa0; --icon: #7a4a60;
+  --correct: #3fc796; --present: #ffb938; --absent: #cdb6c4; --key: #f6d9e7; --key-text: #4a2a3a;
+  --overlay: rgba(255,245,250,.75); --toast-bg: #4a2a3a; --toast-text: #ffffff; --duo-edge: #e8bdd1; --duo-green: #3fc796; --duo-yellow: #ffb938;
+}
+:root[data-theme="terminal"] {
+  --bg: #000000; --card: #050d07; --card-border: #14501f; --border: #14501f; --filled: #1f7a30;
+  --text: #4dff7a; --sub: #3ad666; --muted: #238a3e; --icon: #3ad666;
+  --correct: #1fae45; --present: #b8b800; --absent: #12301a; --key: #0f3a1a; --key-text: #4dff7a;
+  --overlay: rgba(0,0,0,.75); --toast-bg: #4dff7a; --toast-text: #000000; --duo-edge: #041a09; --duo-green: #1fae45; --duo-yellow: #b8b800;
+}
+:root[data-theme="terminal"], :root[data-theme="terminal"] button, :root[data-theme="terminal"] input { font-family: 'Courier New', Consolas, monospace; }
+:root[data-theme="terminal"] h1, :root[data-theme="terminal"] .hub-name, :root[data-theme="terminal"] .lb-title { font-family: 'Courier New', Consolas, monospace; }
+:root[data-theme="paper"] h1, :root[data-theme="paper"] .hub-name { color: var(--text); }
+:root[data-theme="paper"] .tile[data-state="correct"], :root[data-theme="paper"] .tile[data-state="present"], :root[data-theme="paper"] .tile[data-state="absent"] { color: #fff; }
+:root[data-theme="paper"] .ed-tabs, :root[data-theme="candy"] .ed-tabs { background: rgba(255, 255, 255, 0.92); }
+
+/* theme picker */
+.lookcard { max-width: 420px; }
+.look-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 10px; margin: 6px 0 14px; }
+.look-sw { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px 8px; border: 2px solid var(--border); border-radius: 14px; background: none; color: var(--text); font-size: 0.74rem; font-weight: 700; cursor: pointer; transition: border-color 0.2s, transform 0.12s; }
+.look-sw:hover { border-color: var(--filled); }
+.look-sw:active { transform: scale(0.95); }
+.look-sw[aria-pressed="true"] { border-color: var(--correct); box-shadow: 0 0 0 1px var(--correct); }
+.look-pre { position: relative; width: 56px; height: 40px; border-radius: 8px; border: 1px solid rgba(128, 128, 128, 0.4); background: var(--b); }
+.look-pre i { position: absolute; bottom: 6px; width: 14px; height: 14px; border-radius: 3px; }
+.look-pre i:nth-child(1) { left: 7px; background: var(--c); }
+.look-pre i:nth-child(2) { left: 21px; background: var(--p); }
+.look-pre i:nth-child(3) { left: 35px; background: var(--a); }
+.look-pre::before { content: ''; position: absolute; top: 7px; left: 7px; width: 26px; height: 5px; border-radius: 3px; background: var(--t); opacity: 0.8; }
+.look-note { margin-bottom: 8px; font-size: 0.78rem; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -2510,6 +2618,14 @@ h1.hub-title { letter-spacing: 0.01em; }
         <div class="hub-name">Unwordle</div>
         <div class="hub-desc">Wordle backwards. The answer is shown, so find the guesses.</div>
         <div class="hub-chip" id="chipUw">New</div>
+      </button>
+      <button class="hub-card" data-app="hangman">
+        <div class="hub-art">
+          <div class="hub-art-hm"><i class="r">H</i><i></i><i class="r">N</i><i>&nbsp;</i><i class="r">M</i><i></i><i class="r">N</i></div>
+        </div>
+        <div class="hub-name">Hangman</div>
+        <div class="hub-desc">Guess the word one letter at a time before the drawing is done.</div>
+        <div class="hub-chip" id="chipHm">New</div>
       </button>
     </div>
   </div>
@@ -2999,6 +3115,89 @@ h1.hub-title { letter-spacing: 0.01em; }
     </ul>
   </div>
 </div>
+<!-- hangman -->
+<div class="app" id="hmApp">
+  <header>
+    <div class="hl">
+      <button class="icon-btn" id="hmHelpBtn" aria-label="How to play">
+        <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+      </button>
+    </div>
+    <h1 class="hm-title">Hangman<span class="inf">&#8734;</span></h1>
+    <div class="hr">
+      <button class="icon-btn" id="hmStatsBtn" aria-label="Statistics">
+        <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"/></svg>
+      </button>
+    </div>
+  </header>
+  <main class="hm-main">
+    <div class="hm-top">
+      <svg class="hm-art" id="hmArt" viewBox="0 0 200 220" aria-hidden="true">
+        <g class="hm-frame">
+          <path d="M20 205H120"/><path d="M60 205V20"/><path d="M60 20H140"/><path d="M140 20V48"/>
+        </g>
+        <g class="hm-man">
+          <circle class="hm-part" cx="140" cy="68" r="20" pathLength="1"/>
+          <path class="hm-part" d="M140 88V142" pathLength="1"/>
+          <path class="hm-part" d="M140 100L115 125" pathLength="1"/>
+          <path class="hm-part" d="M140 100L165 125" pathLength="1"/>
+          <path class="hm-part" d="M140 142L118 180" pathLength="1"/>
+          <path class="hm-part" d="M140 142L162 180" pathLength="1"/>
+        </g>
+        <g class="hm-face">
+          <circle class="eye ok" cx="133" cy="64" r="2.4"/><circle class="eye ok" cx="147" cy="64" r="2.4"/>
+          <path class="x" d="M129 60L137 68M137 60L129 68M143 60L151 68M151 60L143 68"/>
+          <path class="mouth neutral" d="M133 77H147"/>
+          <path class="mouth smile" d="M132 74Q140 83 148 74"/>
+          <path class="mouth sad" d="M133 79Q140 72 147 79"/>
+        </g>
+      </svg>
+      <div class="hm-lives" id="hmLives"></div>
+      <div class="hm-word" id="hmWord" aria-live="polite"></div>
+      <div class="hm-wrong" id="hmWrong"></div>
+    </div>
+    <div class="hm-bottom">
+      <div class="uw-tools">
+        <button class="sd-tool" id="hmHint"><svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg><span>Hint +30s</span></button>
+      </div>
+      <div class="uw-keys" id="hmKeys"></div>
+    </div>
+  </main>
+</div>
+
+<!-- hangman stats -->
+<div class="modal" id="hmStatsModal" aria-hidden="true">
+  <div class="card">
+    <button class="close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <p class="result-line" id="hmResultLine"></p>
+    <h2>Statistics</h2>
+    <div class="stats-row">
+      <div class="stat"><div class="num" id="hmSolved">0</div><div class="lbl">Solved</div></div>
+      <div class="stat"><div class="num" id="hmBest">-</div><div class="lbl">Best Time</div></div>
+      <div class="stat"><div class="num" id="hmClean">0</div><div class="lbl">No Misses</div></div>
+    </div>
+    <div class="end-footer hidden" id="hmEndFooter">
+      <button class="btn btn-main" id="hmAgain">Next Level</button>
+    </div>
+  </div>
+</div>
+
+<!-- hangman help -->
+<div class="modal" id="hmHelpModal" aria-hidden="true">
+  <div class="card help">
+    <button class="close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <h2 class="big">How To Play</h2>
+    <p>Guess the hidden word one letter at a time.</p>
+    <ul>
+      <li>Pick a letter. If it's in the word, it shows up. If not, the drawing gets one more part.</li>
+      <li>Six wrong guesses and the game is over.</li>
+      <li>Your time is your score. A hint reveals a letter and adds 30 seconds.</li>
+      <li>Words get longer as the levels go up.</li>
+    </ul>
+    <hr>
+    <p class="note">You can type letters on a keyboard too.</p>
+  </div>
+</div>
 <!-- events (tournaments) -->
 <div class="modal" id="tnModal" aria-hidden="true">
   <div class="card tncard">
@@ -3012,6 +3211,22 @@ h1.hub-title { letter-spacing: 0.01em; }
   <b id="tnHudTime">0:00</b>
   <span id="tnHudInfo"></span>
   <button id="tnHudEnd" type="button">End</button>
+</div>
+<!-- look: themes and style -->
+<div class="modal" id="lookModal" aria-hidden="true">
+  <div class="card lookcard">
+    <button class="close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <h2>Themes</h2>
+    <p class="look-note">Pick a color theme. Classic uses the dark and light button.</p>
+    <div class="look-grid" id="lookGrid"></div>
+    <div class="setting">
+      <div>
+        <div class="name">Duolingo Style</div>
+        <div class="desc">Rounder, bolder and chunkier</div>
+      </div>
+      <button class="switch" id="lookDuo" role="switch" aria-checked="false" aria-label="Duolingo Style"></button>
+    </div>
+  </div>
 </div>
 <!-- daily puzzles -->
 <div class="modal" id="dailyModal" aria-hidden="true">
@@ -3288,6 +3503,7 @@ h1.hub-title { letter-spacing: 0.01em; }
               <option value="anagrams">Anagrams</option>
               <option value="bee">Spelling Bee</option>
               <option value="unwordle">Unwordle</option>
+              <option value="hangman">Hangman</option>
             </select>
             <input class="ed-input" id="edTestLevel" type="number" min="1" value="1" aria-label="Level">
           </div>
@@ -3405,6 +3621,7 @@ h1.hub-title { letter-spacing: 0.01em; }
             <option value="anagrams">Anagrams</option>
             <option value="mini">Mini Crossword</option>
             <option value="unwordle">Unwordle</option>
+            <option value="hangman">Hangman</option>
           </select>
         </label>
         <label>Minutes<input class="ed-input" id="edTnMin" type="number" min="0.5" max="120" step="0.5" value="5"></label>
@@ -3542,6 +3759,13 @@ h1.hub-title { letter-spacing: 0.01em; }
     </div>
     <div class="setting">
       <div>
+        <div class="name">Themes</div>
+        <div class="desc">Ocean, Sunset, Forest and more</div>
+      </div>
+      <button class="pill" id="themesBtn" type="button">Choose</button>
+    </div>
+    <div class="setting">
+      <div>
         <div class="name">Duolingo Style</div>
         <div class="desc">Rounder, bolder and chunkier. Off keeps the classic look</div>
       </div>
@@ -3645,7 +3869,7 @@ const statsModal = $('#statsModal');
 const helpModal = $('#helpModal');
 const settingsModal = $('#settingsModal');
 
-let settings = Object.assign({ hard: false, contrast: false, light: false, sound: false, duo: false, len: 5 }, store.get('iw-settings', {}));
+let settings = Object.assign({ hard: false, contrast: false, light: false, sound: false, duo: false, theme: '', len: 5 }, store.get('iw-settings', {}));
 if (![4, 5, 6, 7].includes(settings.len)) settings.len = 5;
 
 let COLS = 5;
@@ -4436,6 +4660,8 @@ function applySettings() {
   root.classList.toggle('light', settings.light);
   root.classList.toggle('contrast', settings.contrast);
   root.classList.toggle('duo', settings.duo);
+  if (LOOK_THEMES.some(t => t[0] === settings.theme)) root.dataset.theme = settings.theme; else delete root.dataset.theme;
+  if (typeof lookPaint === 'function') lookPaint();
   if (settings.duo && !document.getElementById('duoFont')) {
     const link = document.createElement('link');
     link.id = 'duoFont';
@@ -4446,7 +4672,7 @@ function applySettings() {
   const hubStyle = document.getElementById('hubStyle');
   if (hubStyle) hubStyle.setAttribute('aria-pressed', String(!!settings.duo));
   $('#duoSwitch').setAttribute('aria-checked', String(!!settings.duo));
-  $('#themeColor').setAttribute('content', settings.duo ? (settings.light ? '#ffffff' : '#131f24') : settings.light ? '#ffffff' : '#000000');
+  $('#themeColor').setAttribute('content', (LOOK_THEMES.find(t => t[0] === settings.theme) || [])[2] || (settings.duo ? (settings.light ? '#ffffff' : '#131f24') : settings.light ? '#ffffff' : '#000000'));
   $('#hardSwitch').setAttribute('aria-checked', String(settings.hard));
   $('#contrastSwitch').setAttribute('aria-checked', String(settings.contrast));
   $('#lightSwitch').setAttribute('aria-checked', String(settings.light));
@@ -4581,6 +4807,7 @@ $('#settingsBtn').addEventListener('click', () => openModal(settingsModal));
 $('#hardSwitch').addEventListener('click', toggleHard);
 $('#contrastSwitch').addEventListener('click', () => { settings.contrast = !settings.contrast; saveSettings(); });
 $('#duoSwitch').addEventListener('click', () => { settings.duo = !settings.duo; saveSettings(); });
+$('#themesBtn').addEventListener('click', () => { closeModal(settingsModal); openModal($('#lookModal')); });
 $('#lightSwitch').addEventListener('click', () => { settings.light = !settings.light; saveSettings(); });
 $('#soundSwitch').addEventListener('click', () => {
   settings.sound = !settings.sound;
@@ -5188,9 +5415,9 @@ let activeApp = 'hub';
 let wordleEntered = false;
 let connEntered = false;
 
-const APP_IDS = { hub: 'hub', wordle: 'wordleApp', conn: 'connApp', sudoku: 'sdApp', mini: 'mcApp', anagrams: 'anApp', bee: 'beeApp', unwordle: 'uwApp', editor: 'edApp' };
+const APP_IDS = { hub: 'hub', wordle: 'wordleApp', conn: 'connApp', sudoku: 'sdApp', mini: 'mcApp', anagrams: 'anApp', bee: 'beeApp', unwordle: 'uwApp', hangman: 'hmApp', editor: 'edApp' };
 
-const HUB_NAMES = { wordle: 'Wordle', conn: 'Connections', sudoku: 'Sudoku', mini: 'Mini Crossword', anagrams: 'Anagrams', bee: 'Spelling Bee', unwordle: 'Unwordle' };
+const HUB_NAMES = { wordle: 'Wordle', conn: 'Connections', sudoku: 'Sudoku', mini: 'Mini Crossword', anagrams: 'Anagrams', bee: 'Spelling Bee', unwordle: 'Unwordle', hangman: 'Hangman' };
 const dayKey = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 
 // counts how many days in a row any game was opened
@@ -5227,6 +5454,7 @@ function renderHub() {
   $('#chipSudoku').textContent = sudokuSolved ? 'Solved ' + sudokuSolved : 'New';
   $('#chipMini').textContent = mcStats.solved ? 'Solved ' + mcStats.solved : 'New';
   $('#chipAnagrams').textContent = anStats.solved ? 'Solved ' + anStats.solved : 'New';
+  $('#chipHm').textContent = hmStats.solved ? 'Solved ' + hmStats.solved : 'New';
   $('#chipUw').textContent = uwStats.solved ? 'Solved ' + uwStats.solved : 'New';
   $('#chipBee').textContent = beeStats.genius ? 'Genius ' + beeStats.genius : 'New';
   const live = {
@@ -5234,9 +5462,10 @@ function renderHub() {
     conn: cn.status === 'playing' && cn.guesses.length > 0,
     anagrams: an.status === 'playing' && an.found.length > 0,
     bee: bee.status === 'playing' && bee.found.length > 0,
-    unwordle: uw.status === 'playing' && uw.words.some(w => w)
+    unwordle: uw.status === 'playing' && uw.words.some(w => w),
+    hangman: hm.status === 'playing' && hm.guessed.length > 0
   };
-  const chips = { wordle: '#chipWordle', conn: '#chipConn', anagrams: '#chipAnagrams', bee: '#chipBee', unwordle: '#chipUw' };
+  const chips = { wordle: '#chipWordle', conn: '#chipConn', anagrams: '#chipAnagrams', bee: '#chipBee', unwordle: '#chipUw', hangman: '#chipHm' };
   Object.keys(chips).forEach(k => {
     const chip = $(chips[k]);
     chip.classList.toggle('live', live[k]);
@@ -5278,6 +5507,7 @@ function showApp(name) {
   clearTimeout(anStatsTimer);
   clearTimeout(beeStatsTimer);
   clearTimeout(uwStatsTimer);
+  clearTimeout(hmStatsTimer);
   activeApp = name;
   Object.keys(APP_IDS).forEach(key => {
     document.getElementById(APP_IDS[key]).classList.toggle('on', key === name);
@@ -5292,6 +5522,7 @@ function showApp(name) {
   if (name === 'anagrams') enterAnagrams();
   if (name === 'bee') enterBee();
   if (name === 'unwordle') enterUnwordle();
+  if (name === 'hangman') enterHangman();
   if (name === 'editor') enterEditor();
 }
 
@@ -5308,10 +5539,7 @@ function initHub() {
     $('#hubSound').setAttribute('aria-pressed', String(settings.sound));
     if (settings.sound) play('key');
   });
-  $('#hubStyle').addEventListener('click', () => {
-    settings.duo = !settings.duo;
-    saveSettings();
-  });
+  $('#hubStyle').addEventListener('click', () => openModal($('#lookModal')));
   $('#hubTheme').addEventListener('click', () => {
     settings.light = !settings.light;
     saveSettings();
@@ -8186,6 +8414,211 @@ function initUnwordle() {
     else if (e.key === 'Enter') { e.preventDefault(); uwSubmit(); }
   });
 }
+/* =====================================================================
+   Hangman
+   ===================================================================== */
+
+const hmStatsModal = $('#hmStatsModal');
+const hmHelpModal = $('#hmHelpModal');
+const hmWordEl = $('#hmWord');
+
+const HM_LEVELS = 150;
+const HM_LIVES = 6;
+const HM_KEYS = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+let hm = null;
+let hmBusy = false;
+let hmStatsTimer = null;
+let hmEntered = false;
+let hmStats = Object.assign({ solved: 0, best: 0, clean: 0 }, store.get('hm-stats', {}));
+
+// 50 five-letter words, then 50 six-letter, then 50 seven-letter
+function hmWordFor(id) {
+  const len = 5 + Math.floor(id / 50);
+  return wordOrder(len)[id % 50];
+}
+
+const hmWrongList = s => s.guessed.filter(ch => !s.word.includes(ch));
+const hmSolved = s => s.word.split('').every(ch => s.guessed.includes(ch));
+
+function hmFresh() {
+  const id = lvCur('hangman') - 1;
+  return { id, word: hmWordFor(id), guessed: [], hints: 0, t0: 0, t1: 0, status: 'playing' };
+}
+
+const hmSave = () => store.set('hm-game', hm);
+
+function hmValid(s) {
+  if (!s || !Number.isInteger(s.id) || s.id < 0 || s.id >= HM_LEVELS || s.word !== hmWordFor(s.id)) return false;
+  if (!Array.isArray(s.guessed) || !s.guessed.every(c => /^[a-z]$/.test(c)) || new Set(s.guessed).size !== s.guessed.length) return false;
+  if (!Number.isInteger(s.hints) || !Number.isFinite(s.t0) || !Number.isFinite(s.t1)) return false;
+  if (!['playing', 'won', 'lost'].includes(s.status)) return false;
+  if (s.status === 'won' && !hmSolved(s)) return false;
+  if (s.status === 'lost' && hmWrongList(s).length < HM_LIVES) return false;
+  return true;
+}
+
+/* drawing */
+
+function hmBuildKeys() {
+  const keys = $('#hmKeys');
+  keys.innerHTML = '';
+  HM_KEYS.forEach((letters, r) => {
+    const row = el('div', 'uw-krow');
+    if (r === 1) row.appendChild(el('button', 'uw-key half'));
+    letters.split('').forEach(ch => { const b = el('button', 'uw-key hmk', ch); b.dataset.k = ch; row.appendChild(b); });
+    if (r === 1) row.appendChild(el('button', 'uw-key half'));
+    keys.appendChild(row);
+  });
+}
+
+function hmPaint(animate) {
+  const wrong = hmWrongList(hm);
+  const over = hm.status !== 'playing';
+  const art = $('#hmArt');
+  art.classList.toggle('lost', hm.status === 'lost');
+  art.classList.toggle('won', hm.status === 'won');
+  art.classList.toggle('has-head', wrong.length > 0);
+  art.querySelectorAll('.hm-part').forEach((p, i) => {
+    if (!animate) p.style.transition = 'none';
+    p.classList.toggle('on', i < wrong.length);
+    if (!animate) { void p.getBoundingClientRect(); p.style.transition = ''; }
+  });
+  $('#hmLives').innerHTML = '';
+  for (let i = 0; i < HM_LIVES; i++) $('#hmLives').appendChild(el('i', i < wrong.length ? 'gone' : ''));
+  hmWordEl.innerHTML = '';
+  hm.word.split('').forEach(ch => {
+    const hit = hm.guessed.includes(ch);
+    hmWordEl.appendChild(el('div', 'hm-slot' + (hit ? ' hit' : hm.status === 'lost' ? ' miss' : ''), hit || hm.status === 'lost' ? ch : ''));
+  });
+  $('#hmWrong').textContent = wrong.length ? 'Wrong: ' + wrong.join(' ') : '';
+  document.querySelectorAll('#hmKeys .uw-key[data-k]').forEach(k => {
+    const ch = k.dataset.k;
+    const used = hm.guessed.includes(ch);
+    k.classList.toggle('right', used && hm.word.includes(ch));
+    k.classList.toggle('wrong', used && !hm.word.includes(ch));
+    k.disabled = used || over;
+  });
+  $('#hmHint').disabled = over;
+}
+
+/* playing */
+
+function hmGuess(ch) {
+  if (hm.status !== 'playing' || hmBusy || hm.guessed.includes(ch) || !/^[a-z]$/.test(ch)) return;
+  if (!hm.t0) hm.t0 = Date.now();
+  hm.guessed.push(ch);
+  const hit = hm.word.includes(ch);
+  play(hit ? 'hint' : 'error');
+  if (hm.status === 'playing' && hmSolved(hm)) hmWin();
+  else if (hmWrongList(hm).length >= HM_LIVES) hmLose();
+  hmSave();
+  hmPaint(true);
+  if (hit && !reduceMotion) {
+    [...hmWordEl.children].forEach((s, i) => {
+      if (hm.word[i] === ch) s.animate([{ transform: 'translateY(-14px) scale(1.2)' }, { transform: 'none' }], { duration: 320, easing: 'ease-out' });
+    });
+  } else if (!hit && !reduceMotion) {
+    $('#hmArt').animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 260 });
+  }
+  if (hm.status === 'won') hmFinishEffects(true);
+  if (hm.status === 'lost') hmFinishEffects(false);
+}
+
+const hmSecs = () => Math.max(1, Math.round(((hm.t1 || Date.now()) - (hm.t0 || Date.now())) / 1000));
+
+function hmWin() {
+  hm.status = 'won';
+  hm.t1 = Date.now();
+  const secs = hmSecs();
+  lvWon('hangman', hm.id + 1, secs, hm.guessed.slice());
+  hmStats.solved++;
+  hmStats.best = hmStats.best ? Math.min(hmStats.best, secs) : secs;
+  if (!hmWrongList(hm).length) hmStats.clean++;
+  store.set('hm-stats', hmStats);
+}
+
+function hmLose() {
+  hm.status = 'lost';
+  hm.t1 = Date.now();
+  lvLost('hangman', hm.id + 1, hmSecs(), hm.guessed.slice());
+}
+
+function hmFinishEffects(won) {
+  if (won) { toast('Solved!', 1500); launchConfetti(); play('win'); } else { toast('Out of guesses', 1600); }
+  hmStatsTimer = setTimeout(hmOpenStats, won ? 2000 : 1600);
+}
+
+function hmHint() {
+  if (hm.status !== 'playing' || hmBusy) return;
+  const left = hm.word.split('').filter(ch => !hm.guessed.includes(ch));
+  if (left.length <= 1) { toast('Just one letter left. You can do it!', 1500); return; }
+  hm.guessed.push(left[Math.floor(Math.random() * left.length)]);
+  hm.hints++;
+  hm.t0 = (hm.t0 || Date.now()) - 30000;
+  hmSave();
+  play('hint');
+  toast('Hint used, +30 seconds', 1200);
+  hmPaint(true);
+}
+
+function hmOpenStats() {
+  clearTimeout(hmStatsTimer);
+  if (activeApp !== 'hangman') return;
+  $('#hmSolved').textContent = hmStats.solved;
+  $('#hmBest').textContent = hmStats.best ? clockText(hmStats.best) : '-';
+  $('#hmClean').textContent = hmStats.clean;
+  const over = hm.status !== 'playing';
+  $('#hmResultLine').textContent = over ? hm.word.toUpperCase() + (hm.status === 'won' ? ' · ' + clockText(hmSecs()) : ' · Try again') : '';
+  $('#hmAgain').textContent = hm.status === 'lost' ? 'Try Again' : 'Next Level';
+  $('#hmEndFooter').classList.toggle('hidden', !over);
+  openModal(hmStatsModal);
+}
+
+async function hmNewRound() {
+  if (hmBusy) return;
+  hmBusy = true;
+  clearTimeout(hmStatsTimer);
+  closeModal(hmStatsModal);
+  clearToasts();
+  stopConfetti();
+  const main = $('.hm-main');
+  if (!reduceMotion) await main.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'ease-in', fill: 'forwards' }).finished;
+  hm = hmFresh();
+  hmPaint(false);
+  hmSave();
+  main.getAnimations().forEach(a => a.cancel());
+  if (!reduceMotion) main.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: 'ease-out' });
+  hmBusy = false;
+}
+
+function enterHangman() {
+  if (hmEntered) return;
+  hmEntered = true;
+  if (!store.get('hm-seen-help', false)) {
+    store.set('hm-seen-help', true);
+    setTimeout(() => { if (activeApp === 'hangman') openModal(hmHelpModal); }, 450);
+  }
+}
+
+function initHangman() {
+  const saved = store.get('hm-game', null);
+  hm = hmValid(saved) ? saved : hmFresh();
+  hmBuildKeys();
+  hmPaint(false);
+  hmSave();
+  $('#hmKeys').addEventListener('click', e => {
+    const k = e.target.closest('.uw-key[data-k]');
+    if (k) hmGuess(k.dataset.k);
+  });
+  $('#hmHint').addEventListener('click', hmHint);
+  $('#hmStatsBtn').addEventListener('click', hmOpenStats);
+  $('#hmHelpBtn').addEventListener('click', () => openModal(hmHelpModal));
+  $('#hmAgain').addEventListener('click', hmNewRound);
+  document.addEventListener('keydown', e => {
+    if (activeApp !== 'hangman' || modalIsOpen() || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (/^[a-zA-Z]$/.test(e.key)) hmGuess(e.key.toLowerCase());
+  });
+}
 
 /* =====================================================================
    Daily puzzles: dates, the daily.json file, the archive window, and
@@ -8655,6 +9088,7 @@ function lvMax(game) {
   if (game === 'anagrams') return ANAG_ROOTS.length;
   if (game === 'bee') return BEE_PUZZLES.length;
   if (game === 'unwordle') return UW_LEVELS;
+  if (game === 'hangman') return HM_LEVELS;
   return 1;
 }
 
@@ -8917,6 +9351,7 @@ function clockFor() {
   if (activeApp === 'conn' && cn.mode === 'd') return { game: 'connections', date: cn.daily, t0: cn.t0, t1: cn.t1 };
   if (activeApp === 'bee') return { game: 'bee', date: '', t0: bee.t0, t1: bee.t1 };
   if (activeApp === 'unwordle') return { game: 'unwordle', date: '', t0: uw.t0, t1: uw.t1 };
+  if (activeApp === 'hangman') return { game: 'hangman', date: '', t0: hm.t0, t1: hm.t1 };
   return null;
 }
 
@@ -8965,6 +9400,7 @@ function lvContext() {
   if (activeApp === 'anagrams') return { game: 'anagrams', level: an.id + 1, title: 'Anagrams', sub: '', fmt: 'hints' };
   if (activeApp === 'bee') return { game: 'bee', level: bee.id + 1, title: 'Spelling Bee', sub: '', fmt: 'time' };
   if (activeApp === 'unwordle') return { game: 'unwordle', level: uw.id + 1, title: 'Unwordle', sub: '', fmt: 'time' };
+  if (activeApp === 'hangman') return { game: 'hangman', level: hm.id + 1, title: 'Hangman', sub: '', fmt: 'time' };
   return null;
 }
 
@@ -9106,6 +9542,7 @@ function lvJump(level) {
   else if (activeApp === 'anagrams') anNewRound();
   else if (activeApp === 'bee') beeNewRound();
   else if (activeApp === 'unwordle') uwNewRound();
+  else if (activeApp === 'hangman') hmNewRound();
 }
 
 /* ---------- the dock and the clock ---------- */
@@ -9169,8 +9606,8 @@ function tickLevels() {
 
   const w = !!(state.daily && state.daily === todayStr() && state.status !== 'playing');
   const d = !!(cn.mode === 'd' && cn.daily === todayStr() && cn.status !== 'playing');
-  $('#wBoard').classList.toggle('hidden', !w);
-  $('#cnBoard').classList.toggle('hidden', !d);
+  $('#wLbBtn').classList.toggle('hidden', !w);
+  $('#cnLbBtn').classList.toggle('hidden', !d);
 
   const key = ctx ? ctx.game + ':' + ctx.level : 'top';
   if (key !== tickKey) {
@@ -9284,7 +9721,7 @@ function initLevels() {
     if (b) lvJump(Number(b.dataset.l));
   });
 
-  [['#endFooter', 'wBoard'], ['#cnEndFooter', 'cnBoard']].forEach(([footer, id]) => {
+  [['#endFooter', 'wLbBtn'], ['#cnEndFooter', 'cnLbBtn']].forEach(([footer, id]) => {
     const b = el('button', 'btn btn-ghost lb-open hidden', 'Leaderboard');
     b.id = id;
     b.addEventListener('click', () => lbOpen());
@@ -9363,7 +9800,7 @@ const GAME_LIST = [
   ['wordle', 'Wordle', 'guesses'], ['wordle4', 'Wordle · 4 letters', 'guesses'], ['wordle6', 'Wordle · 6 letters', 'guesses'], ['wordle7', 'Wordle · 7 letters', 'guesses'],
   ['connections', 'Connections', 'misses'], ['connections-u', 'Connections · Unlocked', 'misses'],
   ['sudoku-easy', 'Sudoku · Easy', 'time'], ['sudoku-medium', 'Sudoku · Medium', 'time'], ['sudoku-hard', 'Sudoku · Hard', 'time'],
-  ['mini', 'Mini Crossword', 'time'], ['anagrams', 'Anagrams', 'hints'], ['bee', 'Spelling Bee', 'time'], ['unwordle', 'Unwordle', 'time'],
+  ['mini', 'Mini Crossword', 'time'], ['anagrams', 'Anagrams', 'hints'], ['bee', 'Spelling Bee', 'time'], ['unwordle', 'Unwordle', 'time'], ['hangman', 'Hangman', 'time'],
   ['daily-wordle', 'Daily Wordle', 'time'], ['daily-connections', 'Daily Connections', 'time']
 ];
 
@@ -10908,7 +11345,8 @@ const TN_GAMES = {
   connections: { app: 'conn', key: 'connections', name: 'Connections' },
   anagrams: { app: 'anagrams', key: 'anagrams', name: 'Anagrams' },
   mini: { app: 'mini', key: 'mini', name: 'Mini Crosswords' },
-  unwordle: { app: 'unwordle', key: 'unwordle', name: 'Unwordles' }
+  unwordle: { app: 'unwordle', key: 'unwordle', name: 'Unwordles' },
+  hangman: { app: 'hangman', key: 'hangman', name: 'Hangmen' }
 };
 const TN_ERRORS = {
   no_player: 'Pick a name first.',
@@ -11115,7 +11553,7 @@ async function tnStart(t) {
   const d = res.data;
   const g = TN_GAMES[d.game];
   lvTestBegin();
-  ['iw-seen-help', 'cn-seen-help', 'an-seen-help', 'mc-seen-help', 'uw-seen-help'].forEach(k => store.set(k, true));
+  ['iw-seen-help', 'cn-seen-help', 'an-seen-help', 'mc-seen-help', 'uw-seen-help', 'hm-seen-help'].forEach(k => store.set(k, true));
   tnRun = { tid: t.id, run: d.run, game: d.game, app: g.app, key: g.key, seconds: d.seconds, start: Date.now(), seq: tnSequence(d.game, d.seed, d.words), idx: 0, solved: 0, last: 0, label: t.label };
   store.set('ed-tn-run', tnRun);
   closeModal(tnModal);
@@ -11156,7 +11594,7 @@ async function tnNext() {
   if (!tnRun || tnEnding) return;
   if (tnLeft() <= 0) { tnFinish(); return; }
   document.querySelectorAll('.modal.open').forEach(closeModal);
-  [statsTimer, cnTimer, sdStatsTimer, mcStatsTimer, anStatsTimer, beeStatsTimer, uwStatsTimer].forEach(clearTimeout);
+  [statsTimer, cnTimer, sdStatsTimer, mcStatsTimer, anStatsTimer, beeStatsTimer, uwStatsTimer, hmStatsTimer].forEach(clearTimeout);
   clearToasts();
   stopConfetti();
   for (let i = 0; i < 40 && typeof busy !== 'undefined' && busy; i++) await sleep(100);
@@ -11467,15 +11905,51 @@ function tnManagerInit() {
   });
   $('#edAwGive').addEventListener('click', edTnGive);
 }
+/* =====================================================================
+   Themes: a color picker that works on top of the classic and Duolingo looks
+   ===================================================================== */
+
+const LOOK_THEMES = [["ocean", "Ocean", "#0b1622", "#2fb3a0", "#e0a83a", "#2a3f52", "#eaf4ff"], ["sunset", "Sunset", "#1a0f14", "#ff7a59", "#ffc857", "#4a2d3a", "#fff0e8"], ["forest", "Forest", "#0e1a12", "#6bbf59", "#d9b44a", "#2d4a37", "#eaf6ec"], ["grape", "Grape", "#120b1f", "#b47cff", "#ff8bd5", "#3a2a5e", "#f3ecff"], ["paper", "Paper", "#f4ecd8", "#7a9a4a", "#d9a441", "#a39777", "#3b2f1e"], ["candy", "Candy", "#fff5fa", "#3fc796", "#ffb938", "#cdb6c4", "#4a2a3a"], ["terminal", "Terminal", "#000000", "#1fae45", "#b8b800", "#12301a", "#4dff7a"]];
+const lookModal = $('#lookModal');
+const lookGrid = $('#lookGrid');
+
+function lookPaint() {
+  const current = LOOK_THEMES.some(t => t[0] === settings.theme) ? settings.theme : '';
+  lookGrid.querySelectorAll('.look-sw').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === current)));
+  $('#lookDuo').setAttribute('aria-checked', String(!!settings.duo));
+}
+
+function lookPick(id) {
+  settings.theme = id;
+  saveSettings();
+  play('key');
+}
+
+function initLook() {
+  const all = [['', 'Classic', '#000000', '#538d4e', '#b59f3b', '#3a3a3c', '#ffffff']].concat(LOOK_THEMES);
+  all.forEach(([id, name, bg, c, p, a, t]) => {
+    const b = el('button', 'look-sw');
+    b.type = 'button';
+    b.dataset.theme = id;
+    const pre = el('span', 'look-pre');
+    pre.style.cssText = '--b:' + bg + ';--c:' + c + ';--p:' + p + ';--a:' + a + ';--t:' + t;
+    pre.append(el('i'), el('i'), el('i'));
+    b.append(pre, el('span', '', name));
+    b.addEventListener('click', () => lookPick(id));
+    lookGrid.appendChild(b);
+  });
+  $('#lookDuo').addEventListener('click', () => { settings.duo = !settings.duo; saveSettings(); });
+  lookPaint();
+}
 
 init();
 initConnections();
 initSudoku();
 initMini();
-initAnagrams(); initBee(); initUnwordle();
+initAnagrams(); initBee(); initUnwordle(); initHangman();
 initHub();
 initEditor();
-initDaily(); initLevels(); initProfile(); initManager(); initTourney();
+initDaily(); initLevels(); initProfile(); initManager(); initTourney(); initLook();
 </script>
 </body>
 </html>
