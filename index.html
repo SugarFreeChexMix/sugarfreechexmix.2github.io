@@ -603,6 +603,7 @@ h1 .inf {
 .hub { overflow-y: auto; }
 .hub-theme { position: absolute; top: 8px; right: 12px; }
 .hub-sound { position: absolute; top: 8px; right: 60px; }
+.hub-style { position: absolute; top: 8px; right: 108px; }
 .hub-sound .off, .hub-sound[aria-pressed='false'] .on { display: none; }
 .hub-sound[aria-pressed='false'] .off { display: block; }
 .hub-streak { margin: -16px 0 18px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--present); }
@@ -686,6 +687,8 @@ h1.hub-title { font-size: 2.7rem; margin-bottom: 8px; }
 .app.on .hub-card:nth-child(3) { animation-delay: 0.16s; }
 .app.on .hub-card:nth-child(4) { animation-delay: 0.24s; }
 .app.on .hub-card:nth-child(5) { animation-delay: 0.32s; }
+.app.on .hub-card:nth-child(6) { animation-delay: 0.4s; }
+.app.on .hub-card:nth-child(7) { animation-delay: 0.48s; }
 
 /* ---------- Connections ---------- */
 h1.cn-title { font-size: 1.9rem; }
@@ -1377,6 +1380,230 @@ h1.an-title { font-size: 1.6rem; }
   .an-tile { width: 42px; height: 50px; }
   .an-slot { width: 40px; height: 46px; font-size: 1.5rem; }
 }
+/* ---------- Spelling Bee ---------- */
+h1.bee-title { font-size: 1.6rem; }
+.bee-gold { color: #e6b422; }
+.hub-art-bee { position: relative; width: 78px; height: 58px; }
+.hub-art-bee i {
+  position: absolute;
+  width: 26px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  background: var(--border);
+  color: var(--text);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  font-style: normal;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.hub-art-bee i:nth-child(1) { left: 0; top: 2px; }
+.hub-art-bee i:nth-child(2) { left: 26px; top: 0; background: #e6b422; color: #2b1f00; }
+.hub-art-bee i:nth-child(3) { left: 52px; top: 2px; }
+.hub-art-bee i:nth-child(4) { left: 13px; top: 28px; }
+.hub-art-bee i:nth-child(5) { left: 39px; top: 28px; }
+
+.bee-main {
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 6px 16px 0;
+  height: calc(100vh - 51px - var(--dock));
+  height: calc(100dvh - 51px - var(--dock));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.bee-rank { width: 100%; display: grid; grid-template-columns: 96px 1fr 36px; gap: 10px; align-items: center; }
+.bee-rank-name { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.04em; transition: color 0.3s; }
+.bee-rank-name.top { color: #e6b422; }
+.bee-pts { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--sub); }
+.bee-track { position: relative; height: 4px; border-radius: 2px; background: var(--border); }
+.bee-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 2px; background: #e6b422; transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.bee-dots { position: absolute; inset: 0; }
+.bee-dots b {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
+}
+.bee-dots b.on { background: #e6b422; border-color: #e6b422; }
+.bee-dots b.now { transform: scale(1.5); }
+
+.bee-found { width: 100%; min-height: 64px; max-height: 96px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start; justify-content: center; }
+.bee-found .an-chip.pan { background: #e6b422; color: #2b1f00; position: relative; }
+.bee-found .an-chip.pan::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  animation: twinkle 1.8s ease-in-out infinite;
+}
+.bee-hold { color: var(--muted); font-size: 0.85rem; align-self: center; }
+
+.bee-word { min-height: 46px; display: flex; align-items: center; justify-content: center; font-size: 1.9rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.bee-word span { display: inline-block; }
+.bee-word .mid { color: #e6b422; }
+.bee-word .off { color: var(--muted); }
+.bee-hint { font-size: 0.85rem; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--muted); }
+.bee-caret { display: inline-block; width: 2px; height: 1.9rem; margin-left: 2px; background: #e6b422; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.bee-comb { --h: 88px; position: relative; width: calc(var(--h) * 3.2); height: calc(var(--h) * 2.9); max-width: 100%; margin: 4px 0; }
+.bee-hex {
+  position: absolute;
+  width: var(--h);
+  height: calc(var(--h) * 1.1547);
+  margin: calc(var(--h) * -0.577) 0 0 calc(var(--h) * -0.5);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: var(--border);
+  color: var(--text);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  font-family: inherit;
+  font-size: calc(var(--h) * 0.38);
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s, transform 0.12s;
+}
+.bee-hex.mid { background: #e6b422; color: #2b1f00; }
+.bee-hex:hover { filter: brightness(1.15); }
+.bee-hex:active, .bee-hex.press { transform: scale(0.9); }
+.bee-hex:focus { outline: none; }
+
+.bee-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.bee-row .btn { min-width: 96px; }
+.bee-shuf {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.3s, border-color 0.2s;
+}
+.bee-shuf:hover { border-color: var(--filled); }
+.bee-shuf:active { transform: rotate(180deg); }
+.bee-shuf svg { width: 24px; height: 24px; fill: currentColor; }
+.bee-main button:disabled { opacity: 0.4; pointer-events: none; }
+
+.bee-pop {
+  position: fixed;
+  left: 50%;
+  top: 38%;
+  z-index: 90;
+  transform: translate(-50%, 0);
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 0.95rem;
+  pointer-events: none;
+  animation: beepop 1.1s ease-out forwards;
+}
+.bee-pop.pan { background: #e6b422; color: #2b1f00; font-size: 1.15rem; box-shadow: 0 0 22px rgba(230, 180, 34, 0.7); }
+@keyframes beepop { 0% { opacity: 0; transform: translate(-50%, 10px) scale(0.8); } 18% { opacity: 1; transform: translate(-50%, 0) scale(1.08); } 70% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -30px); } }
+@media (max-width: 420px) { .bee-comb { --h: 78px; } }
+@media (max-height: 700px) { .bee-comb { --h: 72px; } .bee-found { max-height: 64px; } }
+/* ---------- Unwordle ---------- */
+h1.uw-title { font-size: 1.6rem; }
+.hub-art-uw { display: grid; gap: 4px; }
+.hub-art-uw div { display: flex; gap: 4px; }
+.hub-art-uw i { width: 22px; height: 22px; border-radius: 3px; background: var(--absent); opacity: 0.5; }
+.hub-art-uw i.g { background: var(--correct); }
+.hub-art-uw i.y { background: var(--present); }
+.hub-art-uw div:last-child i { opacity: 1; background: var(--correct); }
+
+.uw-main {
+  width: 100%;
+  max-width: 470px;
+  margin: 0 auto;
+  padding: 6px 8px 0;
+  height: calc(100vh - 51px - var(--dock));
+  height: calc(100dvh - 51px - var(--dock));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+.uw-top { display: flex; flex-direction: column; align-items: center; gap: 12px; flex: 1; justify-content: center; }
+.uw-sub { font-size: 0.8rem; color: var(--muted); text-align: center; }
+.uw-grid { display: grid; gap: 6px; }
+.uw-row { display: grid; grid-template-columns: repeat(5, 54px); gap: 6px; padding: 3px; border-radius: 6px; cursor: pointer; transition: box-shadow 0.2s; }
+.uw-row.active { box-shadow: 0 0 0 2px var(--text); }
+.uw-row.done, .uw-row.fin { cursor: default; }
+.uw-row.fin { margin-top: 8px; }
+.uw-tile {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 1.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--absent);
+  transition: opacity 0.25s, transform 0.12s;
+}
+.uw-tile.g { background: var(--correct); }
+.uw-tile.y { background: var(--present); }
+.uw-row:not(.done):not(.fin) .uw-tile:empty { opacity: 0.65; }
+.uw-row:not(.done):not(.fin) .uw-tile.has { opacity: 0.9; }
+.uw-tile.bad { box-shadow: inset 0 0 0 3px #ff5a52; }
+
+.uw-bottom { display: flex; flex-direction: column; gap: 8px; padding-bottom: 6px; }
+.uw-tools { display: flex; justify-content: center; }
+.uw-keys { display: flex; flex-direction: column; gap: 6px; user-select: none; -webkit-user-select: none; }
+.uw-krow { display: flex; gap: 5px; touch-action: manipulation; }
+.uw-key {
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: var(--key);
+  color: var(--key-text);
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.08s;
+}
+.uw-key:active { transform: scale(0.94); }
+.uw-key.wide { flex: 1.5; font-size: 0.7rem; }
+.uw-key.half { flex: 0.5; visibility: hidden; }
+.uw-key svg { width: 22px; height: 22px; fill: currentColor; }
+.uw-main button:disabled { opacity: 0.4; pointer-events: none; }
+@media (max-height: 700px) { .uw-tile { width: 46px; height: 46px; font-size: 1.4rem; } .uw-row { grid-template-columns: repeat(5, 46px); } .uw-key { height: 42px; } }
 
 /* ---------- daily puzzles and the editor ---------- */
 .hl { gap: 2px; }
@@ -1934,6 +2161,8 @@ body.in-editor .appsbtn { display: none; }
 .hub-card:nth-child(3) { --glow: rgba(90, 140, 220, 0.2); }
 .hub-card:nth-child(4) { --glow: rgba(230, 180, 60, 0.2); }
 .hub-card:nth-child(5) { --glow: rgba(220, 110, 90, 0.2); }
+.hub-card:nth-child(6) { --glow: rgba(230, 180, 34, 0.24); }
+.hub-card:nth-child(7) { --glow: rgba(106, 170, 100, 0.22); }
 .hub-art { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .hub-card:hover .hub-art { transform: scale(1.08); }
 h1.hub-title { letter-spacing: 0.01em; }
@@ -1955,6 +2184,120 @@ h1.hub-title { letter-spacing: 0.01em; }
 @media (hover: none) {
   .hub-card:hover, .lb-list li:hover, .pill:hover:not(:disabled), .lv-chip:hover { transform: none; filter: none; }
 }
+/* ---------- Duolingo style (Settings > Duolingo Style, off by default) ---------- */
+:root.duo {
+  --bg: #131f24; --card: #1f2c34; --card-border: #37464f; --border: #37464f; --filled: #52656d;
+  --text: #ffffff; --sub: #dce6ec; --muted: #8aa0ad; --icon: #dce6ec;
+  --correct: #58cc02; --present: #ffc800; --absent: #37464f;
+  --key: #2b3d47; --key-text: #dce6ec; --overlay: rgba(19, 31, 36, 0.7);
+  --toast-bg: #ffffff; --toast-text: #4b4b4b; --warn: #ff4b4b;
+  --duo-green: #58a700; --duo-yellow: #e5b400; --duo-blue: #1cb0f6; --duo-edge: #1a272e;
+  --duo-font: 'Nunito', 'DIN Round Pro', 'Varela Round', 'Segoe UI Rounded', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}
+:root.duo.light {
+  --bg: #ffffff; --card: #ffffff; --card-border: #e5e5e5; --border: #e5e5e5; --filled: #afafaf;
+  --text: #4b4b4b; --sub: #777777; --muted: #afafaf; --icon: #777777;
+  --absent: #afafaf; --key: #e5e5e5; --key-text: #4b4b4b; --overlay: rgba(255, 255, 255, 0.75);
+  --toast-bg: #4b4b4b; --toast-text: #ffffff; --duo-edge: #cfcfcf;
+}
+:root.duo.contrast { --correct: #ff9600; --present: #1cb0f6; --duo-green: #cc7900; --duo-yellow: #1899d6; }
+
+.duo, .duo body, .duo button, .duo input, .duo select, .duo textarea { font-family: var(--duo-font); }
+.duo h1, .duo .hub-name, .duo .lb-title, .duo .card h2, .duo .pf-name { font-family: var(--duo-font); font-weight: 900; letter-spacing: -0.01em; }
+.duo h1 { color: var(--correct); }
+.duo h1.hub-title { font-size: 2.5rem; }
+.duo .hub-name { font-size: 1.45rem; }
+.duo header { border-bottom-width: 2px; }
+.duo .icon-btn { border-radius: 12px; }
+
+/* tiles and letters get a soft bottom edge */
+.duo .tile { border-radius: 10px; font-weight: 800; }
+.duo .tile[data-state="correct"], .duo .tile[data-state="present"], .duo .tile[data-state="absent"],
+.duo .dt-tile, .duo .uw-tile.g, .duo .uw-tile.y, .duo .uw-tile.x, .duo .an-slot, .duo .mini { box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.18); }
+.duo .dt-tile, .duo .mini, .duo .an-slot, .duo .uw-tile { border-radius: 10px; font-weight: 800; }
+.duo .tile[data-state="correct"], .duo .uw-tile.g { border-color: var(--correct); }
+
+/* chunky buttons */
+.duo .btn, .duo .cn-btn {
+  border: 0; border-radius: 16px; font-weight: 800; letter-spacing: 0.07em;
+  box-shadow: 0 4px 0 var(--duo-edge); transition: transform 0.08s, box-shadow 0.08s, filter 0.15s;
+}
+.duo .btn-main { background: var(--correct); color: #fff; box-shadow: 0 4px 0 var(--duo-green); }
+.duo .btn-ghost { background: var(--card); color: var(--duo-blue); border: 2px solid var(--border); box-shadow: 0 4px 0 var(--border); }
+.duo .btn:hover { filter: brightness(1.06); }
+.duo .btn:active, .duo .cn-btn:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; }
+.duo .btn:disabled, .duo .cn-btn:disabled { box-shadow: none; transform: translateY(4px); }
+.duo .pill, .duo .lv-chip, .duo .appsbtn, .duo .sd-tool, .duo .seg button, .duo .cn-btn.ghost {
+  border: 2px solid var(--border); border-radius: 14px; background: var(--card); color: var(--text); font-weight: 800;
+  box-shadow: 0 3px 0 var(--border); transition: transform 0.08s, box-shadow 0.08s, border-color 0.2s;
+}
+.duo .pill, .duo .lv-chip, .duo .appsbtn { border-radius: 999px; }
+.duo .pill:hover:not(:disabled), .duo .lv-chip:hover, .duo .appsbtn.on:hover { transform: none; box-shadow: 0 3px 0 var(--border); border-color: var(--filled); }
+.duo .pill:active, .duo .lv-chip:active, .duo .appsbtn.on:active, .duo .sd-tool:active, .duo .seg button:active { transform: translateY(3px); box-shadow: 0 0 0 transparent; }
+.duo .pill.next, .duo .seg button.on { background: var(--correct); border-color: var(--correct); box-shadow: 0 3px 0 var(--duo-green); color: #fff; }
+.duo .pill.armed { box-shadow: 0 3px 0 #c93a3a; }
+.duo .lv-trophy { color: var(--present); }
+.duo .clock-pill { border: 2px solid var(--border); font-weight: 800; box-shadow: 0 3px 0 var(--border); }
+
+/* keyboards */
+.duo .key, .duo .uw-key, .duo .mc-kb button {
+  border-radius: 10px; font-weight: 800; box-shadow: 0 3px 0 var(--duo-edge);
+  transition: background-color 0.3s, transform 0.08s, box-shadow 0.08s;
+}
+.duo .key:active, .duo .uw-key:active, .duo .mc-kb button:active { transform: translateY(3px); box-shadow: 0 0 0 transparent; }
+.duo .key[data-state="correct"] { box-shadow: 0 3px 0 var(--duo-green); }
+.duo .key[data-state="present"] { box-shadow: 0 3px 0 var(--duo-yellow); }
+.duo .key[data-state="absent"] { box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3); }
+
+/* panels */
+.duo .card { border: 2px solid var(--card-border); border-radius: 24px; box-shadow: 0 6px 0 var(--card-border); }
+.duo .modal { backdrop-filter: none; -webkit-backdrop-filter: none; }
+.duo .close { border-radius: 12px; }
+.duo .stat .num { font-weight: 800; color: var(--text); }
+.duo .stat .lbl, .duo .setting .desc { font-weight: 700; }
+.duo .setting .name { font-weight: 800; }
+.duo .switch { width: 44px; height: 26px; background: var(--border); }
+.duo .switch[aria-checked="true"] { background: var(--correct); }
+.duo .switch::after { top: 3px; left: 3px; width: 20px; height: 20px; }
+.duo .switch[aria-checked="true"]::after { transform: translateX(18px); }
+.duo .toast { border-radius: 14px; font-weight: 800; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25); }
+.duo .ed-input, .duo .modal input[type="text"], .duo .modal input[type="password"] { border: 2px solid var(--border); border-radius: 14px; background: var(--card); color: var(--text); font-weight: 700; }
+.duo .help p, .duo .help li { font-weight: 600; }
+
+/* menu */
+.duo .hub-card { border: 2px solid var(--card-border); border-radius: 24px; box-shadow: 0 5px 0 var(--card-border); }
+.duo .hub-card::before { display: none; }
+.duo .hub-card:hover { transform: translateY(-2px); border-color: var(--duo-blue); box-shadow: 0 7px 0 var(--duo-blue); }
+.duo .hub-card:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--duo-blue); }
+.duo .hub-desc { font-weight: 600; }
+.duo .hub-chip { font-weight: 800; border-radius: 999px; background: var(--border); }
+.duo .hub-chip.live { background: var(--present); color: #4b3b00; }
+.duo .hub-streak { color: #ff9600; font-weight: 800; }
+.duo .hub-style[aria-pressed="true"] { color: var(--correct); }
+
+/* levels, boards and bars */
+.duo .lb-list li { border-radius: 14px; font-weight: 800; }
+.duo .an-bar, .duo .bee-track, .duo .dist-track, .duo .pf-bar { height: 16px; border-radius: 8px; background: var(--border); }
+.duo .an-bar i, .duo .bee-fill, .duo .bar { border-radius: 8px; position: relative; }
+.duo .an-bar i::after, .duo .bee-fill::after { content: ''; position: absolute; left: 8px; right: 8px; top: 4px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.35); }
+.duo .bee-fill { background: var(--correct); }
+.duo .bee-dots b { width: 14px; height: 14px; margin: -7px 0 0 -7px; }
+.duo .bee-dots b.on { background: var(--correct); border-color: var(--correct); }
+.duo .bee-rank-name.top { color: var(--present); }
+.duo .an-tile, .duo .an-chip, .duo .cn-tile, .duo .cn-group { font-weight: 800; }
+.duo .an-chip { border-radius: 999px; }
+.duo .cn-tile { border-radius: 14px; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.22); }
+.duo .cn-tile.selected, .duo .cn-tile.sel { box-shadow: 0 4px 0 rgba(0, 0, 0, 0.35); }
+.duo .cn-group { border-radius: 14px; }
+.duo .an-tile { box-shadow: 0 4px 0 var(--duo-edge); }
+.duo .an-tile:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; }
+.duo .sd-board, .duo .mc-board { border-radius: 14px; overflow: hidden; }
+.duo .sd-num { border-radius: 12px; font-weight: 800; box-shadow: 0 3px 0 var(--duo-edge); }
+.duo .sd-num:active { transform: translateY(3px); box-shadow: 0 0 0 transparent; }
+.duo .uw-row.active { box-shadow: 0 0 0 3px var(--duo-blue); border-radius: 12px; }
+.duo .uw-tile.bad { box-shadow: inset 0 0 0 3px #ff4b4b; }
+.duo .bee-hex { font-weight: 900; }
+.duo .bee-pop { font-weight: 900; }
 </style>
 </head>
 <body>
@@ -2004,6 +2347,9 @@ h1.hub-title { letter-spacing: 0.01em; }
   <button class="icon-btn hub-sound" id="hubSound" aria-label="Sound effects" aria-pressed="false">
     <svg class="on" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
     <svg class="off" viewBox="0 0 24 24"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.8 8.8 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z"/></svg>
+  </button>
+  <button class="icon-btn hub-style" id="hubStyle" aria-label="Duolingo style" aria-pressed="false">
+    <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c1.1 0 1.5-.8 1.5-1.5 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.8.7-1.5 1.5-1.5H16a5 5 0 0 0 5-5c0-4-4-7.8-9-7.8zM6.5 12a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
   </button>
   <div class="hub-inner">
     <h1 class="hub-title">Infinite Games<span class="inf">&#8734;</span></h1>
@@ -2064,6 +2410,22 @@ h1.hub-title { letter-spacing: 0.01em; }
         <div class="hub-name">Anagrams</div>
         <div class="hub-desc">Make words from six letters, then find the one that uses them all.</div>
         <div class="hub-chip" id="chipAnagrams">New</div>
+      </button>
+      <button class="hub-card" data-app="bee">
+        <div class="hub-art">
+          <div class="hub-art-bee"><i>R</i><i>A</i><i>T</i><i>E</i><i>N</i></div>
+        </div>
+        <div class="hub-name">Spelling Bee</div>
+        <div class="hub-desc">Make words from seven letters. Every word needs the gold one.</div>
+        <div class="hub-chip" id="chipBee">New</div>
+      </button>
+      <button class="hub-card" data-app="unwordle">
+        <div class="hub-art">
+          <div class="hub-art-uw"><div><i class="g"></i><i></i><i class="y"></i><i></i><i></i></div><div><i></i><i class="y"></i><i class="g"></i><i></i><i class="g"></i></div><div><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <div class="hub-name">Unwordle</div>
+        <div class="hub-desc">Wordle backwards. The answer is shown, so find the guesses.</div>
+        <div class="hub-chip" id="chipUw">New</div>
       </button>
     </div>
   </div>
@@ -2425,6 +2787,134 @@ h1.hub-title { letter-spacing: 0.01em; }
     <p class="note">Keys: letters type, Enter tries the word, Backspace deletes, Space shuffles.</p>
   </div>
 </div>
+<!-- spelling bee -->
+<div class="app" id="beeApp">
+  <header>
+    <div class="hl">
+      <button class="icon-btn" id="beeHelpBtn" aria-label="How to play">
+        <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+      </button>
+    </div>
+    <h1 class="bee-title">Spelling Bee<span class="inf">&#8734;</span></h1>
+    <div class="hr">
+      <button class="icon-btn" id="beeStatsBtn" aria-label="Statistics">
+        <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"/></svg>
+      </button>
+    </div>
+  </header>
+  <main class="bee-main">
+    <div class="bee-rank">
+      <div class="bee-rank-name" id="beeRank">Beginner</div>
+      <div class="bee-track" id="beeTrack"><i class="bee-fill" id="beeFill"></i><span class="bee-dots" id="beeDots"></span></div>
+      <div class="bee-pts" id="beePts">0</div>
+    </div>
+    <div class="bee-found" id="beeFound"></div>
+    <div class="bee-word" id="beeWord" aria-live="polite"></div>
+    <div class="bee-comb" id="beeComb"></div>
+    <div class="bee-row">
+      <button class="btn btn-ghost" id="beeDel">Delete</button>
+      <button class="bee-shuf" id="beeShuf" aria-label="Shuffle letters"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+      <button class="btn btn-main" id="beeEnter">Enter</button>
+    </div>
+  </main>
+</div>
+
+<!-- spelling bee stats -->
+<div class="modal" id="beeStatsModal" aria-hidden="true">
+  <div class="card">
+    <button class="close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <p class="result-line" id="beeResultLine"></p>
+    <h2>Statistics</h2>
+    <div class="stats-row">
+      <div class="stat"><div class="num" id="beeGenius">0</div><div class="lbl">Genius</div></div>
+      <div class="stat"><div class="num" id="beeWords">0</div><div class="lbl">Words Found</div></div>
+      <div class="stat"><div class="num" id="beePan">0</div><div class="lbl">Pangrams</div></div>
+      <div class="stat"><div class="num" id="beeBest">-</div><div class="lbl">Best Time</div></div>
+    </div>
+    <div class="end-footer hidden" id="beeEndFooter">
+      <button class="btn btn-ghost" id="beeKeep">Keep Going</button>
+      <button class="btn btn-main" id="beeAgain">Next Level</button>
+    </div>
+  </div>
+</div>
+
+<!-- spelling bee help -->
+<div class="modal" id="beeHelpModal" aria-hidden="true">
+  <div class="card help">
+    <button class="close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <h2 class="big">How To Play</h2>
+    <p>Make words from the seven letters. Every word must use the <b class="bee-gold">gold letter</b>.</p>
+    <ul>
+      <li>Words need 4 or more letters. Letters can be used again.</li>
+      <li>4 letters = 1 point. Longer words = 1 point per letter.</li>
+      <li>A <b>pangram</b> uses all seven letters and gives 7 bonus points.</li>
+      <li>Reach <b>Genius</b> to beat the level. Your time to get there is your score.</li>
+    </ul>
+    <hr>
+    <p class="note">Keys: letters type, Enter tries the word, Backspace deletes, Space shuffles.</p>
+  </div>
+</div>
+<!-- unwordle -->
+<div class="app" id="uwApp">
+  <header>
+    <div class="hl">
+      <button class="icon-btn" id="uwHelpBtn" aria-label="How to play">
+        <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+      </button>
+    </div>
+    <h1 class="uw-title">Unwordle<span class="inf">&#8734;</span></h1>
+    <div class="hr">
+      <button class="icon-btn" id="uwStatsBtn" aria-label="Statistics">
+        <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"/></svg>
+      </button>
+    </div>
+  </header>
+  <main class="uw-main">
+    <div class="uw-top">
+      <div class="uw-sub">Fill the rows with words that make these colors</div>
+      <div class="uw-grid" id="uwGrid"></div>
+    </div>
+    <div class="uw-bottom">
+      <div class="uw-tools">
+        <button class="sd-tool" id="uwHint"><svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg><span>Hint +30s</span></button>
+      </div>
+      <div class="uw-keys" id="uwKeys"></div>
+    </div>
+  </main>
+</div>
+
+<!-- unwordle stats -->
+<div class="modal" id="uwStatsModal" aria-hidden="true">
+  <div class="card">
+    <button class="close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <p class="result-line" id="uwResultLine"></p>
+    <h2>Statistics</h2>
+    <div class="stats-row">
+      <div class="stat"><div class="num" id="uwSolved">0</div><div class="lbl">Solved</div></div>
+      <div class="stat"><div class="num" id="uwBest">-</div><div class="lbl">Best Time</div></div>
+      <div class="stat"><div class="num" id="uwClean">0</div><div class="lbl">No Hints</div></div>
+    </div>
+    <div class="end-footer hidden" id="uwEndFooter">
+      <button class="btn btn-main" id="uwAgain">Next Level</button>
+    </div>
+  </div>
+</div>
+
+<!-- unwordle help -->
+<div class="modal" id="uwHelpModal" aria-hidden="true">
+  <div class="card help">
+    <button class="close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <h2 class="big">How To Play</h2>
+    <p>Wordle backwards. The answer is at the bottom. Fill each row with a real word that gives the colors shown, if that word was a guess for the answer.</p>
+    <ul>
+      <li><b>Green</b>: the letter is in the answer, in that spot.</li>
+      <li><b>Yellow</b>: the letter is in the answer, in a different spot.</li>
+      <li><b>Gray</b>: the letter is not in the answer.</li>
+      <li>Tap a row to pick it. Wrong colors flash red.</li>
+      <li>Your time is your score. A hint adds 30 seconds.</li>
+    </ul>
+  </div>
+</div>
 <!-- daily puzzles -->
 <div class="modal" id="dailyModal" aria-hidden="true">
   <div class="card daily">
@@ -2692,6 +3182,8 @@ h1.hub-title { letter-spacing: 0.01em; }
               <option value="sudoku">Sudoku</option>
               <option value="mini">Mini Crossword</option>
               <option value="anagrams">Anagrams</option>
+              <option value="bee">Spelling Bee</option>
+              <option value="unwordle">Unwordle</option>
             </select>
             <input class="ed-input" id="edTestLevel" type="number" min="1" value="1" aria-label="Level">
           </div>
@@ -2885,6 +3377,13 @@ h1.hub-title { letter-spacing: 0.01em; }
     </div>
     <div class="setting">
       <div>
+        <div class="name">Duolingo Style</div>
+        <div class="desc">Rounder, bolder and chunkier. Off keeps the classic look</div>
+      </div>
+      <button class="switch" id="duoSwitch" role="switch" aria-checked="false" aria-label="Duolingo Style"></button>
+    </div>
+    <div class="setting">
+      <div>
         <div class="name">High Contrast Mode</div>
         <div class="desc">Orange and blue instead of green and yellow</div>
       </div>
@@ -2981,7 +3480,7 @@ const statsModal = $('#statsModal');
 const helpModal = $('#helpModal');
 const settingsModal = $('#settingsModal');
 
-let settings = Object.assign({ hard: false, contrast: false, light: false, sound: false, len: 5 }, store.get('iw-settings', {}));
+let settings = Object.assign({ hard: false, contrast: false, light: false, sound: false, duo: false, len: 5 }, store.get('iw-settings', {}));
 if (![4, 5, 6, 7].includes(settings.len)) settings.len = 5;
 
 let COLS = 5;
@@ -3771,7 +4270,18 @@ function applySettings() {
   const root = document.documentElement;
   root.classList.toggle('light', settings.light);
   root.classList.toggle('contrast', settings.contrast);
-  $('#themeColor').setAttribute('content', settings.light ? '#ffffff' : '#000000');
+  root.classList.toggle('duo', settings.duo);
+  if (settings.duo && !document.getElementById('duoFont')) {
+    const link = document.createElement('link');
+    link.id = 'duoFont';
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap';
+    document.head.appendChild(link);
+  }
+  const hubStyle = document.getElementById('hubStyle');
+  if (hubStyle) hubStyle.setAttribute('aria-pressed', String(!!settings.duo));
+  $('#duoSwitch').setAttribute('aria-checked', String(!!settings.duo));
+  $('#themeColor').setAttribute('content', settings.duo ? (settings.light ? '#ffffff' : '#131f24') : settings.light ? '#ffffff' : '#000000');
   $('#hardSwitch').setAttribute('aria-checked', String(settings.hard));
   $('#contrastSwitch').setAttribute('aria-checked', String(settings.contrast));
   $('#lightSwitch').setAttribute('aria-checked', String(settings.light));
@@ -3905,6 +4415,7 @@ $('#statsBtn').addEventListener('click', openStats);
 $('#settingsBtn').addEventListener('click', () => openModal(settingsModal));
 $('#hardSwitch').addEventListener('click', toggleHard);
 $('#contrastSwitch').addEventListener('click', () => { settings.contrast = !settings.contrast; saveSettings(); });
+$('#duoSwitch').addEventListener('click', () => { settings.duo = !settings.duo; saveSettings(); });
 $('#lightSwitch').addEventListener('click', () => { settings.light = !settings.light; saveSettings(); });
 $('#soundSwitch').addEventListener('click', () => {
   settings.sound = !settings.sound;
@@ -4512,9 +5023,9 @@ let activeApp = 'hub';
 let wordleEntered = false;
 let connEntered = false;
 
-const APP_IDS = { hub: 'hub', wordle: 'wordleApp', conn: 'connApp', sudoku: 'sdApp', mini: 'mcApp', anagrams: 'anApp', editor: 'edApp' };
+const APP_IDS = { hub: 'hub', wordle: 'wordleApp', conn: 'connApp', sudoku: 'sdApp', mini: 'mcApp', anagrams: 'anApp', bee: 'beeApp', unwordle: 'uwApp', editor: 'edApp' };
 
-const HUB_NAMES = { wordle: 'Wordle', conn: 'Connections', sudoku: 'Sudoku', mini: 'Mini Crossword', anagrams: 'Anagrams' };
+const HUB_NAMES = { wordle: 'Wordle', conn: 'Connections', sudoku: 'Sudoku', mini: 'Mini Crossword', anagrams: 'Anagrams', bee: 'Spelling Bee', unwordle: 'Unwordle' };
 const dayKey = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 
 // counts how many days in a row any game was opened
@@ -4551,12 +5062,16 @@ function renderHub() {
   $('#chipSudoku').textContent = sudokuSolved ? 'Solved ' + sudokuSolved : 'New';
   $('#chipMini').textContent = mcStats.solved ? 'Solved ' + mcStats.solved : 'New';
   $('#chipAnagrams').textContent = anStats.solved ? 'Solved ' + anStats.solved : 'New';
+  $('#chipUw').textContent = uwStats.solved ? 'Solved ' + uwStats.solved : 'New';
+  $('#chipBee').textContent = beeStats.genius ? 'Genius ' + beeStats.genius : 'New';
   const live = {
     wordle: state.status === 'playing' && state.guesses.length > 0,
     conn: cn.status === 'playing' && cn.guesses.length > 0,
-    anagrams: an.status === 'playing' && an.found.length > 0
+    anagrams: an.status === 'playing' && an.found.length > 0,
+    bee: bee.status === 'playing' && bee.found.length > 0,
+    unwordle: uw.status === 'playing' && uw.words.some(w => w)
   };
-  const chips = { wordle: '#chipWordle', conn: '#chipConn', anagrams: '#chipAnagrams' };
+  const chips = { wordle: '#chipWordle', conn: '#chipConn', anagrams: '#chipAnagrams', bee: '#chipBee', unwordle: '#chipUw' };
   Object.keys(chips).forEach(k => {
     const chip = $(chips[k]);
     chip.classList.toggle('live', live[k]);
@@ -4596,6 +5111,8 @@ function showApp(name) {
   clearTimeout(sdStatsTimer);
   clearTimeout(mcStatsTimer);
   clearTimeout(anStatsTimer);
+  clearTimeout(beeStatsTimer);
+  clearTimeout(uwStatsTimer);
   activeApp = name;
   Object.keys(APP_IDS).forEach(key => {
     document.getElementById(APP_IDS[key]).classList.toggle('on', key === name);
@@ -4608,6 +5125,8 @@ function showApp(name) {
   if (name === 'sudoku') enterSudoku();
   if (name === 'mini') enterMini();
   if (name === 'anagrams') enterAnagrams();
+  if (name === 'bee') enterBee();
+  if (name === 'unwordle') enterUnwordle();
   if (name === 'editor') enterEditor();
 }
 
@@ -4623,6 +5142,10 @@ function initHub() {
     saveSettings();
     $('#hubSound').setAttribute('aria-pressed', String(settings.sound));
     if (settings.sound) play('key');
+  });
+  $('#hubStyle').addEventListener('click', () => {
+    settings.duo = !settings.duo;
+    saveSettings();
   });
   $('#hubTheme').addEventListener('click', () => {
     settings.light = !settings.light;
@@ -6876,6 +7399,628 @@ function initAnagrams() {
     else if (e.key === ' ') { e.preventDefault(); anShuffleTiles(); }
   });
 }
+// Spelling Bee: the word list and the puzzles (centre letter first, then the points from common words)
+const BEE_WORDS = new Set('abandon abandoned able aboard abode above abroad acacia accent acclaim accord acetate ache achieve acid acidic acne acorn acre acted actin activate activated active actor adapt adapted added addict addictive adding addition additive adept adobe adore adored adorn adorned adult advice advocate advocated aerial aero afar affair afloat afraid afro after afternoon again agar ageing agent aging agitation agrarian agree agreeing ahem aided aiding ailing aiming aircraft aired airing airy akin alamo alarm album alcohol algae alibi align aligning allege allied alligator allocate alloy alluded allure ally aloe aloft along altar altitude alto amber amen amir ammo ample anchor ancient anew anger angling angry animal animate annoy annual antarctic ante antenna antennae anti antigen anymore anyone anything anytime aortic apache apart apiece apnea apparel appeal appear appellate appetite apple applicable appoint arbor arcade arch archaic arched archer archive arctic area arena aria arid armada armed arming armor armpit army aroma arrange arranging array arrive arrogance arrow artery artifact athlete atop attach attain attained attaining attainment attempt attend attendant attended attic attire attitude attorney attract audit audited audition auditor aunt auto avian avid avoiding await awarded aware azalea baba babe backbone bacon badly baggage bagging bail bait baiting balance balanced bald bale ball ballad balm banana banco bane bang banging bank banning barbed barber bard bare baron baroque barre barred barrel barrow batting beacon bead beaded beam beamed bean bear beard bearded bearer beat beaten beating beaver been beer beet began begged begging begin beginning beige being belong belonging benign bent beta betting bible biblical bidder biggie bile bill billed billing billion binge bird bite biting bitten blade blame bland bled bleed blend blended bling blob blog blogging blood blooded bloody blue blur boar board boarded bode bodied boggling boil boiled boiling bold boldly bond bonded bone boner booed boogie boon border bordered bore bored born borne borrow borrowed borrower bound bounded bourbon bowed bower brave bravo bread bred breed breeder bribe bribed bride brie broad broadband broaden broadened broader broadly brood brow bubble bulb bull bummer bureau burr cabal cabinet cable cache cadet cadre cake calf calif call called caller calling calorie came cameo camera cameraman camo cancel canceled cancelled cancer candle cane canning cannon canoe canon canonical cant canteen capable cape capita capital carat caravan card cardiac cardio care cared career cargo caring carnage carp carr carrick carrier carrot cart carve carver catch cattle cavalier cave caveat cavern caviar cedar ceded celeb cell cellar cello cellphone cement cemented cent center centered centre centred centric ceramic cereal cert cervical chai chair chalet chao char charging charm charred chat cheap cheat check cheddar cheek cheeky cheer cheered cheerleader cheetah chit chocolate cider cigar circa circle circled cite cited civic civil clad claim clan clap clean cleaned cleaner clear clearance cleared clearer cleaver cleric clerical clever click clicking cling clinging clinic clinical clip clipped clipper clone clot clue coach coal coat coated coca cocoa coconut cocoon code coded coerced coercion cohen coil coin cola cold colder collect collective collide collided collier colon colonel colonial colored colt coma come comet comma commence commenced commencement commend commended comment commented commerce common concede conceded concept concern concerning concierge condemn condemned condo condone conduct conducted cone conical connect connected connection conte contend contended content contention contentment continent cool cooled cooler cope cord core corn corner corona coroner corridor cotton count counted coveted crack cracking cradle cram crane crank crave craven cream credence credible credit credited creed creep creme creole crib cried crime cringe cripple crippled critic critical criticize criticized crocodile crore cure curing currie cute cyclic cyclical dada dame dang dangling dare dared darn dart data date dated dawned dazzle deactivated dead deaf deal dealer dealt dean dear debacle decade decal deceit deceive deceived decent deceptive decide decided deciding declare declared decode decor decree decreed deduct deducted deed deem deemed deep deeper deer defect defected defective defend defended defer deferred deficit defied define defined definite deformed defy degree deity delete deleted deli deluded delve demo demoted denied denote denoted denounce denounced dent deny depict depicted deport deported depot derail derailed detail detailed detain detained detect detected detective detention deter deterrent detox deviate device devote devoted diagonal dial dialed dialing dialog dice diced dictator died diet dieter differ differed digging dill dilute diluted dine diner ding dining dinner diode dipped dire direct directed dirt ditto diva dive divide divided dividing diving dodge dodged dodger dodging doggie doing dolce dole doll dollar dome donation done donor donut doodle doom doomed door dope dorado dorm dotted down downed downer downing downtown downward drab drain drained drama drawer dread dreaded dream dreamed dreamer dredge drew dribble dried drier drill drilled drizzle droid drone drool drop dropped drown drowned drowning dual duct dude duel duff dull dune duped dyed each eager eagle earl earlier earmarked earn earned earning earring eaten eater eating eccentric eclectic ecommerce edge edged edging edible edict edit edited edition eerie effect effected effective efficient effort either elder elect elective elegant element elemental elevate elevated elicit eligible elite email embark embarked embedded emblem emerge eminent emir emit emperor empire empower empowered enable enabled enact enamel enclave encoded encore ended ending endowed endowment endure endured enemy engage engagement engaging engine engineer engineering enmity enter entered entice entire entirely entity epic epoch equine erect erected erode eroded errand error ethic ethnic euro evade evaluate evaluated even event ever evergreen evicted exceeding explode exploded explore explored explorer expo export exported exporter eyed eyeliner facial fade faded fail faint fair fairer fall fallacy fanatic fanfare fare fared fart fatal fate fatter fear feared feat fecal feed feeder feel feet fell fence fend ferret feud fiat fiend fife fifteen figure figured filing fill filler filling filly find fine fined finite fire fired fitted five flap flat flea flee fleece fling float floor floral flowing fluff focal fodder foil folio following folly font food fool fooling foot footer footnote ford fore forefront form formed former fort forte forum four frantic frat free freed freedom fret friar fridge fried from front frontal fudge fuel full fund funded gaga gage gain gaining gait gall gallant gallon game gamer gaming gamma gang garage garner gate gear gearing gender gendered genera generic genre gent gentle gentleman gentlemen genuine germ getting giant giggle giggling gilded gill gilt girl giro giver giving glacial glad glam glancing gland glaring glee glide gliding globe glow glowing goal goat goblin going gold golf golfing gone gong good googled goon gore gorge gorilla goth gout gown grail grain gram grammar gran grange granger granny gray greece greed green greener greenwood grey grief grieve grieving grill grilling grim grime grin grinning groan grocer groin group grouped grow growing grown growth grunge gunner gunning guru hail hair halal hale hall halo halt hangar hanger hanging happier haram hare harm harp harper hatch hatchet hate hating have headache heal healer health heap hear hearing heat heavier heck hectic heel heir hell hello help hemp hence herein hernia high hike hint hinting hire hiring hitch hitter hitting hiya hogg hole hone honor hope horn horror hour hype iced icing icon iconic idea ideal identified identify identity idiot idle idol ignite ignition ignore ignoring illicit imagery imaginary imaging imagining imam imitate imminent impart impartial import inanimate incentive inception incidence incident incite incur indecent indeed indefinite independent index indexed indexing indicted indie indigo indirect ineffective inefficient ineligible inept inert infant infect infinite info inform infrared ingram inherent inherit inhibit inhibition inhibitor initial initially initiate initiated initiating initiation injured inlet inmate innate inner inning innocence innocent inorganic inpatient inquire intact intel intend intended intent intention inter intern internet intimate into intra intro intuition invading invent inventive invite iodine ionic iron ironic ironing irritate itch item jedi kang keen keep kiln kinetic kink kitchen kite kitten kiwi knack knee knit knob knock knowing label labeled labelled labor labrador lace laced lack lacking ladder laden lagging lagoon laid lair laird lama lamb lame lament lamp land landed landing lane laptop larvae latch late latino latitude latte lauded laureate lava leach lead leader leaf leaned leap leapt learn learner leave ledge leech legal legged legion lend lenient lent lethal letter level leveled levelled liable liar libel lice lick licking lied lieu ligand liking lilac lily lima lime limit limitation limo line linen liner lingo lining link linking lion lipid lite liter litigation litre litter little lizard load loading loaf loathe lobbied lobby lobe local locally locate lodge lodged lodging logged logging login logo lollipop lone long longing loom loop loophole loot looting lord lorry lotion lotto lowe lower lowered loyal lube lull lumbar lumber lunar lure lyme mace machete macho macro madam madame made mage magenta magma magnate magnet mahatma mail maintain make maker malaria male malice mall mallet malt mama mamma mammal mammalian manage management managing mane manga manila manly manner manning manor mantle many marble march mare margin marital maritime mark marked marker maroon marred marriage marrying mart martial match matched mate mater math matte matter mayan mead meager meal mean meant meantime meat meaty mecca meek meet mega melee melt member meme memo memory menace meng mental mentally meow mercer mere merge merger metadata metal mice mile militant militarily military militia mill miller million mime mimic minimal mining minion minor mint miracle mirage mirror mite mitt moan mode modem moment momma monarch money monitor mono mood moor moot more morn moron mort motion motor mott motto mourn mower nacho nagging nail nailing name namely naming nanny napa narrator narrow narrowed narrower natal nation national nationality nationally natural nature naval nave near nearer nearing neat neck need needed needing needle needy negligible neither neon nerd nerve netted netting neural neuron neutral never newer newt nice nicer nicotine niece night nine nineteen nineteenth ninety ninth nitro nodded nodding node noir nominal none nook noon nope norm north notary notation note noted notice noting notion noun null nurture nylon oath oblige obliged ocean octave oddly odor offer offered official officially often ogre oiled oily older omen omit onboard once ongoing onion online only onto onward open opera operate operator opinion opioid opponent opted option optional oracle oral orally orange order ordered organ organic origin original ornate otter ought ounce outdoor oval overboard owed owing owned owner owning pace padded paid pain paint painted pair palace palate pale palette pallet palm palpable pamphlet panda pane panned pant papa papal paper para parallel parcel parr parramatta parrot part partial patent patented path patient patio paycheck peace peaceful peach peak pear pearce pearl peat peck peed peek peel peeled peep peer pegged pellet pence pendant people pepper peptide perform performed performer peril peripheral perm perpetrator perverted petal petit petite petition petitioned phone piano piece pied pier pierce pile piled pill pillar pilot pine pinned pinot pinpoint pint pinto pipe pita pitted place plain plan plant plantation plat plate platoon plea plot poem poet poetic poetry point pointe pointed pole polio poll polled pollen polo poodle pool poop poor poorer pope popped poppy pore port ported portion portray potato potent potion potter pottery potty pour poured powder powdered power powered practical prairie prefer prem premier premiere preorder prep preparatory prepare pretend pretended prevent prevented price prima primal prime primer prior prod prof profile prog prom promo promotion prompt proof prop propel propelled propeller proper property proportion propped proto proton prototype proud pull pulp pure purge purged queer queuing rabble raccoon race raced racer racial racing rack racking radar radial radiator radio raft rage raging raid raided raider rail railing rain rained raining rallied rally ramen rammed ramp ranch rancho rang range ranger ranging rank ranking rant rapper rapport raptor rare rarer rarity rate ratio rave reach reached read reader real realize realized reap reaper reappear rear reared rearing rearrange rebel reborn rebound recall recalled recap receive receiver receiving recent recipe recite recited reclaim recoil recon record recorded recorder recurrence recurring redeem redeemed redeemer redirect redirected redo redwood reef reel refer referee referred refill reform reformed reformer refrain refuge refugee regain regaining reggae regime region regroup reign reigning rein reindeer reiterate relevance relic relied relief rely remade remake remark remarked remember remembered renal rename render rendered renew renewed renown renowned rent rented repair repeal repel repent replace replica replied repo report reported reporter require requiring reread rethink retire retired retreat retro return revamp reveal revenge revere revered reverence reverend revert reverted revive reviving reward rewarded rhino ribbon rice rich ridden riddle riddled ride rider rife riff rifle rift rigging rigor ring ringer ringing rink riot rioting ripe ripper ripple rite ritz river roach road roam roar roared roaring robbed robber robe robin rode rodeo role roll rolled roller rolling romance roof room root rooted rooting rope roper rotary rotate rotor rotting rough round rounded rounder rout rowan rower rowing rubber rubble rudder rude ruff ruin ruined ruining rule ruler rumble rumor rumour rune rung runner running runoff rupee rural taco tact tactic tactical tagging tail tailed tailor tainted tale tall tame tamed tang tangent tangle tango tanned tanning tape taped tapped tariff tarot tart tattoo tattooed teach teal team teamed teammate tear tech tectonic teen teenage teeny teeth tele tell teller tellin temp template tempt tenant tend tended tender tendered tendon tenet tent tenth tenure terrier terror that their them theme themed then thence therein theta thick thigh thin thing thingy think thinker thinner thinning thirteen thirteenth thorn thorough thou though thought through throughout throw tick ticket tidal tide tidy tied tier tiered tiff tight tiki tile tiled till tilt tilted tilting time ting tingling tinker tint tinted tipped tire tired tiring titan titanic title titled toad toil toilet toll tome tonal tone toned tong tonne tool toon toot tooth topped topper tore torn tort tortilla total totaling totalling tote totem tough tour tout towed town tract tractor traffic trail train trait traitor tram tramp trap tray treat treaty tree trend triad trial tried trillion trim trio trip troll trolling troop trooper trope trot trough trout true tuition tuna tune tunnel turd turn turner turret turtle tutor tutu tweed tweet tweeted tying typo tyranny tyrant ultra umbrella unaware unborn uncut undead undefined under underwear undetected undo undone undue unfit unidentified unified uniform union unique unit unnatural unreal unto untrue upped upper urge urging urine utter vacate vacated vain vale valet value valued valve vampire vane vault vaulted veal veer vein veneer vent verb verge veto vetoed vetted vicar vice vine violin viper virgin vivid vivo vocal volcanic volcano volt vote voted wade wait waiter wander wandered wanderer warden wardrobe ware warm warmer warned wartime water watt wear wearer wedge weed weep weirdo went were widow widowed widower wiki willing wind winding window wing wink winn winning wiring wonder wondered wont wood wooded wooden woodward wool word worded wording wore working world worldwide worn worried worth wren wrong wrongdoing wronged wrought xerox yarn yeah year yell yeti zeal'.split(' '));
+const BEE_PUZZLES = [["odefmpr",193],["aeghinr",218],["eadnruw",214],["paceilr",211],["acelnrv",200],["acehlot",152],["edmoprw",183],["adeinpt",215],["dceilor",202],["oabdenr",217],["oimnprt",176],["aehilpr",165],["macenor",155],["idenopt",210],["oadenrw",201],["degnorw",200],["definty",170],["adefinr",157],["refilop",140],["gadilno",193],["gabeint",218],["aenorty",149],["ecinopt",190],["odelprx",160],["labcden",177],["oabderw",181],["odeprtx",186],["nacegor",175],["obdenru",165],["raeimpv",145],["cadehlr",201],["gaimnry",213],["oaeprty",204],["acdiort",160],["oagilnt",185],["aeimrtw",128],["taeimny",160],["cdeinrt",210],["iehknrt",199],["eacilor",161],["rceginv",188],["gacinor",171],["iaghnty",134],["maelnty",118],["tabcein",138],["acehirv",124],["gfilnow",138],["iadeltu",142],["odeilrw",117],["oceginr",136],["igknorw",118],["eamnory",81],["badeorv",165],["baelmru",135],["laginor",105],["iacelmr",147],["ngilort",176],["ecdfitv",161],["laimnot",131],["deijnru",126],["ecdiptv",163],["mabdekr",165],["tcehikn",116],["caeilrv",167],["ebdgilo",154],["ladeirz",117],["lbegino",149],["ialmrty",83],["pailnot",138],["uaelnrt",142],["ecfintv",145],["iaclprt",124],["lacefpu",69],["rbcdeil",139],["acgiknr",130],["cdenotu",157],["cdemnot",187],["faenort",79],["racghin",125],["rdenptv",152],["leinrty",90],["rceginu",156],["lacfioy",83],["macdeht",99],["tcdeirz",135],["raegimy",104],["abceilp",95],["achmnor",114],["ofimnru",86],["nadgiov",133],["fdegiru",112],["echlnop",83],["ladetuv",109],["gaelmnt",121],["iegnqru",141],["tceilov",87],["railmpt",105],["tacdeov",125],["nailoty",144],["iacfnrt",143],["lagiort",81],["nadiotu",113],["lacgikn",107],["oacilnv",98],["nabceko",74],["pdegoru",90],["vacdeit",137],["paehlmt",93],["fdeintu",132],["wdginor",114],["labdory",89],["nbhiort",96],["tdemnow",91],["lcdeipr",99],["eachkpy",71],["aflnort",78],["tadioru",92],["ncdegix",119],["oghrtuw",120],["rabeoqu",72]];
+/* =====================================================================
+   Spelling Bee
+   ===================================================================== */
+
+const beeStatsModal = $('#beeStatsModal');
+const beeHelpModal = $('#beeHelpModal');
+const beeWordEl = $('#beeWord');
+const beeCombEl = $('#beeComb');
+const beeFoundEl = $('#beeFound');
+
+const BEE_MIN = 4;
+const BEE_RANKS = [['Beginner', 0], ['Good', 0.1], ['Great', 0.25], ['Amazing', 0.5], ['Genius', 0.7]];
+const beeCache = {};
+let bee = null;
+let beeCur = '';
+let beeBusy = false;
+let beeStatsTimer = null;
+let beeEntered = false;
+let beeLastRank = 0;
+let beeStats = Object.assign({ genius: 0, words: 0, pangrams: 0, best: 0 }, store.get('bee-stats', {}));
+
+const beePick = () => lvCur('bee') - 1;
+
+function beeInfo(id) {
+  if (beeCache[id]) return beeCache[id];
+  const [letters, common] = BEE_PUZZLES[id];
+  const genius = Math.ceil(common * BEE_RANKS[4][1]);
+  const marks = BEE_RANKS.map(r => Math.ceil(common * r[1]));
+  return (beeCache[id] = { mid: letters[0], outer: letters.slice(1).split('').sort().join(''), all: letters, genius, marks });
+}
+
+const beeIsPangram = (word, all) => all.split('').every(ch => word.includes(ch));
+const beePoints = (word, all) => (word.length === BEE_MIN ? 1 : word.length) + (beeIsPangram(word, all) ? 7 : 0);
+
+function beeLegal(word, info) {
+  return word.length >= BEE_MIN && word.includes(info.mid) && word.split('').every(ch => info.all.includes(ch)) && BEE_WORDS.has(word);
+}
+
+const beeScore = (found, info) => found.reduce((n, w) => n + beePoints(w, info.all), 0);
+
+function beeRankAt(pts, info) {
+  let at = 0;
+  info.marks.forEach((m, i) => { if (pts >= m) at = i; });
+  return at;
+}
+
+function beeFresh() {
+  const id = beePick();
+  const info = beeInfo(id);
+  const rand = mulberry32(hashStr('bee' + id));
+  return { id, order: seededShuffle(info.outer.split(''), rand).join(''), found: [], t0: 0, t1: 0, status: 'playing' };
+}
+
+const beeSave = () => store.set('bee-game', bee);
+
+function beeValid(s) {
+  if (!s || !Number.isInteger(s.id) || s.id < 0 || s.id >= BEE_PUZZLES.length) return false;
+  const info = beeInfo(s.id);
+  if (typeof s.order !== 'string' || s.order.split('').sort().join('') !== info.outer) return false;
+  if (!Array.isArray(s.found) || new Set(s.found).size !== s.found.length) return false;
+  if (!s.found.every(w => typeof w === 'string' && beeLegal(w, info))) return false;
+  if (!Number.isFinite(s.t0) || !Number.isFinite(s.t1)) return false;
+  if (s.status === 'won' && beeScore(s.found, info) < info.genius) return false;
+  return ['playing', 'won'].includes(s.status);
+}
+
+/* drawing */
+
+function beeBuildComb() {
+  const info = beeInfo(bee.id);
+  beeCombEl.innerHTML = '';
+  const make = (ch, x, y, mid) => {
+    const b = el('button', 'bee-hex' + (mid ? ' mid' : ''), ch);
+    b.dataset.l = ch;
+    b.tabIndex = -1;
+    b.style.left = x;
+    b.style.top = y;
+    beeCombEl.appendChild(b);
+    return b;
+  };
+  make(info.mid, '50%', '50%', true);
+  bee.order.split('').forEach((ch, i) => {
+    const a = (i * 60) * Math.PI / 180;
+    const d = 1.07;
+    const b = make(ch, 'calc(50% + var(--h) * ' + (Math.cos(a) * d).toFixed(3) + ')', 'calc(50% + var(--h) * ' + (Math.sin(a) * d).toFixed(3) + ')', false);
+    b.dataset.i = i;
+  });
+  beeCur = '';
+}
+
+const beeHexes = () => [...beeCombEl.querySelectorAll('.bee-hex:not(.mid)')];
+
+function beePaintWord() {
+  const info = beeInfo(bee.id);
+  beeWordEl.innerHTML = '';
+  if (!beeCur) {
+    beeWordEl.appendChild(el('span', 'bee-hint', 'Type or tap the letters'));
+    return;
+  }
+  beeCur.split('').forEach(ch => beeWordEl.appendChild(el('span', ch === info.mid ? 'mid' : '', ch)));
+  beeWordEl.appendChild(el('i', 'bee-caret'));
+}
+
+function beePaintFound() {
+  const info = beeInfo(bee.id);
+  beeFoundEl.innerHTML = '';
+  if (!bee.found.length) beeFoundEl.appendChild(el('span', 'bee-hold', 'Your words show up here'));
+  bee.found.slice().sort().forEach(w => beeFoundEl.appendChild(el('span', 'an-chip' + (beeIsPangram(w, info.all) ? ' pan' : ''), w)));
+}
+
+function beePaintRank(animate) {
+  const info = beeInfo(bee.id);
+  const pts = beeScore(bee.found, info);
+  const at = beeRankAt(pts, info);
+  const name = $('#beeRank');
+  name.textContent = BEE_RANKS[at][0];
+  name.classList.toggle('top', at === 4);
+  $('#beePts').textContent = pts;
+  $('#beeFill').style.width = Math.min(100, (pts / info.genius) * 100) + '%';
+  const dots = $('#beeDots');
+  if (dots.children.length !== BEE_RANKS.length) {
+    dots.innerHTML = '';
+    BEE_RANKS.forEach(() => dots.appendChild(el('b')));
+  }
+  [...dots.children].forEach((d, i) => {
+    d.style.left = Math.min(100, (info.marks[i] / info.genius) * 100) + '%';
+    d.classList.toggle('on', i <= at);
+    d.classList.toggle('now', i === at);
+  });
+  if (animate && at > beeLastRank) {
+    play('win');
+    toast(BEE_RANKS[at][0] + '!', 1300);
+  }
+  beeLastRank = at;
+}
+
+function beePaint() {
+  beePaintFound();
+  beePaintWord();
+  beePaintRank(false);
+}
+
+/* playing */
+
+function beePop(text, pan) {
+  const p = el('div', 'bee-pop' + (pan ? ' pan' : ''), text);
+  document.body.appendChild(p);
+  setTimeout(() => p.remove(), 1200);
+}
+
+function beeShake(msg) {
+  play('error');
+  if (msg) toast(msg, 1100);
+  if (!reduceMotion) {
+    beeWordEl.animate(
+      [{ transform: 'translateX(0)' }, { transform: 'translateX(-7px)' }, { transform: 'translateX(7px)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(0)' }],
+      { duration: 320, easing: 'ease-in-out' }
+    );
+  }
+}
+
+function beeAdd(ch) {
+  if (beeBusy || beeCur.length >= 19) return;
+  const info = beeInfo(bee.id);
+  if (!info.all.includes(ch)) return;
+  if (!bee.t0 && bee.status === 'playing') { bee.t0 = Date.now(); beeSave(); }
+  beeCur += ch;
+  play('key');
+  beePaintWord();
+  const hex = [...beeCombEl.children].find(h => h.dataset.l === ch);
+  if (hex && !reduceMotion) hex.animate([{ transform: 'scale(0.88)' }, { transform: 'scale(1)' }], { duration: 160, easing: 'ease-out' });
+}
+
+function beeDelete() {
+  if (beeBusy || !beeCur) return;
+  beeCur = beeCur.slice(0, -1);
+  beePaintWord();
+}
+
+async function beeSubmit() {
+  if (beeBusy || !beeCur) return;
+  const info = beeInfo(bee.id);
+  const word = beeCur;
+  if (word.length < BEE_MIN) return beeShake('Too short');
+  if (!word.includes(info.mid)) return beeShake('Missing center letter');
+  if (bee.found.includes(word)) return beeShake('Already found');
+  if (!BEE_WORDS.has(word)) return beeShake('Not in word list');
+
+  beeBusy = true;
+  const pan = beeIsPangram(word, info.all);
+  const gain = beePoints(word, info.all);
+  const before = beeScore(bee.found, info);
+  bee.found.push(word);
+  beeStats.words++;
+  if (pan) beeStats.pangrams++;
+  store.set('bee-stats', beeStats);
+  beeSave();
+  play(pan ? 'win' : 'hint');
+  beePop(pan ? 'Pangram! +' + gain : '+' + gain, pan);
+  if (!reduceMotion) {
+    const spans = [...beeWordEl.querySelectorAll('span')];
+    spans.forEach((s, i) => {
+      s.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-10px)' }, { transform: 'translateY(0)' }], { duration: 300, delay: i * 35, easing: 'ease-out' });
+      if (pan) s.style.color = '#e6b422';
+    });
+    await sleep(260 + spans.length * 35);
+  }
+  beeCur = '';
+  beePaintFound();
+  beePaintWord();
+  const chip = [...beeFoundEl.children].find(c => c.textContent === word);
+  if (chip && !reduceMotion) chip.animate([{ transform: 'scale(0.4)', opacity: 0 }, { transform: 'scale(1.15)', opacity: 1, offset: 0.6 }, { transform: 'scale(1)' }], { duration: 380, easing: 'ease-out' });
+  beePaintRank(true);
+  beeBusy = false;
+  if (bee.status === 'playing' && before < info.genius && beeScore(bee.found, info) >= info.genius) beeWin();
+}
+
+function beeShuffleHexes() {
+  if (beeBusy) return;
+  const hexes = beeHexes();
+  const before = new Map(hexes.map(h => [h, h.getBoundingClientRect()]));
+  const next = shuffled(hexes.map(h => h.dataset.l));
+  bee.order = next.join('');
+  const keep = beeCur;
+  beeBuildComb();
+  beeCur = keep;
+  if (!reduceMotion) {
+    beeHexes().forEach(h => {
+      const old = hexes.find(o => o.dataset.l === h.dataset.l);
+      const a = before.get(old);
+      const b = h.getBoundingClientRect();
+      h.animate(
+        [{ transform: 'translate(' + (a.left - b.left) + 'px, ' + (a.top - b.top) + 'px) rotate(-30deg) scale(0.9)' }, { transform: 'none' }],
+        { duration: 420, easing: 'cubic-bezier(0.3, 1.2, 0.4, 1)' }
+      );
+    });
+  }
+  beeSave();
+}
+
+/* winning, stats, new levels */
+
+function beeSecs() {
+  return Math.max(1, Math.round(((bee.t1 || Date.now()) - (bee.t0 || Date.now())) / 1000));
+}
+
+function beeWin() {
+  bee.status = 'won';
+  bee.t1 = Date.now();
+  const secs = beeSecs();
+  lvWon('bee', bee.id + 1, secs, bee.found.slice());
+  beeStats.genius++;
+  beeStats.best = beeStats.best ? Math.min(beeStats.best, secs) : secs;
+  store.set('bee-stats', beeStats);
+  beeSave();
+  if (!reduceMotion) {
+    beeHexes().concat([beeCombEl.querySelector('.mid')]).forEach((h, i) => h.animate(
+      [{ transform: 'scale(1)' }, { transform: 'scale(1.18)', offset: 0.4 }, { transform: 'scale(1)' }],
+      { duration: 520, delay: i * 60, easing: 'ease-in-out' }
+    ));
+  }
+  launchConfetti();
+  beeStatsTimer = setTimeout(beeOpenStats, 2000);
+}
+
+function beeRenderStats() {
+  $('#beeGenius').textContent = beeStats.genius;
+  $('#beeWords').textContent = beeStats.words;
+  $('#beePan').textContent = beeStats.pangrams;
+  $('#beeBest').textContent = beeStats.best ? clockText(beeStats.best) : '-';
+  const won = bee.status === 'won';
+  const info = beeInfo(bee.id);
+  $('#beeResultLine').textContent = won ? 'Genius in ' + clockText(beeSecs()) + ' · ' + bee.found.length + ' words' : BEE_RANKS[beeRankAt(beeScore(bee.found, info), info)][0] + ' · ' + bee.found.length + ' words';
+  $('#beeEndFooter').classList.toggle('hidden', !won);
+}
+
+function beeOpenStats() {
+  clearTimeout(beeStatsTimer);
+  if (activeApp !== 'bee') return;
+  beeRenderStats();
+  openModal(beeStatsModal);
+}
+
+async function beeNewRound() {
+  if (beeBusy) return;
+  beeBusy = true;
+  clearTimeout(beeStatsTimer);
+  closeModal(beeStatsModal);
+  clearToasts();
+  stopConfetti();
+  const main = $('.bee-main');
+  if (!reduceMotion) await main.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'ease-in', fill: 'forwards' }).finished;
+  bee = beeFresh();
+  beeLastRank = 0;
+  beeBuildComb();
+  beePaint();
+  beeSave();
+  main.getAnimations().forEach(a => a.cancel());
+  if (!reduceMotion) {
+    [...beeCombEl.children].forEach((h, i) => h.animate(
+      [{ opacity: 0, transform: 'scale(0.4) rotate(-40deg)' }, { opacity: 1, transform: 'none' }],
+      { duration: 420, delay: i * 55, easing: 'cubic-bezier(0.2, 0.9, 0.3, 1.1)', fill: 'backwards' }
+    ));
+  }
+  beeBusy = false;
+}
+
+function enterBee() {
+  if (beeEntered) return;
+  beeEntered = true;
+  if (bee.status === 'won' && !bee.found.length) return;
+  if (!store.get('bee-seen-help', false)) {
+    store.set('bee-seen-help', true);
+    setTimeout(() => { if (activeApp === 'bee') openModal(beeHelpModal); }, 450);
+  }
+}
+
+function initBee() {
+  const saved = store.get('bee-game', null);
+  bee = beeValid(saved) ? saved : beeFresh();
+  beeBuildComb();
+  beePaint();
+  beeSave();
+
+  beeCombEl.addEventListener('click', e => {
+    const h = e.target.closest('.bee-hex');
+    if (h) beeAdd(h.dataset.l);
+  });
+  $('#beeDel').addEventListener('click', beeDelete);
+  $('#beeEnter').addEventListener('click', beeSubmit);
+  $('#beeShuf').addEventListener('click', beeShuffleHexes);
+  $('#beeStatsBtn').addEventListener('click', beeOpenStats);
+  $('#beeHelpBtn').addEventListener('click', () => openModal(beeHelpModal));
+  $('#beeAgain').addEventListener('click', beeNewRound);
+  $('#beeKeep').addEventListener('click', () => closeModal(beeStatsModal));
+
+  document.addEventListener('keydown', e => {
+    if (activeApp !== 'bee' || modalIsOpen() || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (/^[a-zA-Z]$/.test(e.key)) beeAdd(e.key.toLowerCase());
+    else if (e.key === 'Backspace') beeDelete();
+    else if (e.key === 'Enter') { e.preventDefault(); beeSubmit(); }
+    else if (e.key === ' ') { e.preventDefault(); beeShuffleHexes(); }
+  });
+}
+/* =====================================================================
+   Unwordle: the answer is shown, the player finds the guesses
+   ===================================================================== */
+
+const uwStatsModal = $('#uwStatsModal');
+const uwHelpModal = $('#uwHelpModal');
+const uwGridEl = $('#uwGrid');
+
+const UW_LEVELS = 150;
+const UW_KEYS = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+const uwCache = {};
+let uw = null;
+let uwCurWord = '';
+let uwBusy = false;
+let uwStatsTimer = null;
+let uwEntered = false;
+let uwStats = Object.assign({ solved: 0, best: 0, clean: 0 }, store.get('uw-stats', {}));
+
+const uwCode = (guess, answer) => evaluate(guess, answer).map(s => (s === 'correct' ? 'g' : s === 'present' ? 'y' : 'x')).join('');
+
+// a level is the same every time: the answer, and the color pattern of each row
+function uwPuzzle(id) {
+  if (uwCache[id]) return uwCache[id];
+  const list = wordsFor(5).answers;
+  const answer = wordOrder(5)[id % list.length];
+  const rand = mulberry32(hashStr('uw' + id));
+  const count = 3 + Math.min(2, Math.floor(id / 50));
+  const rows = [];
+  const seen = new Set();
+  for (let tries = 0; rows.length < count && tries < 400; tries++) {
+    const w = list[Math.floor(rand() * list.length)];
+    if (w === answer) continue;
+    const code = uwCode(w, answer);
+    if (seen.has(code) || !/[gy]/.test(code)) continue;
+    seen.add(code);
+    rows.push({ code, sample: w });
+  }
+  return (uwCache[id] = { answer, rows });
+}
+
+const uwFresh = () => {
+  const id = lvCur('unwordle') - 1;
+  return { id, words: uwPuzzle(id).rows.map(() => ''), active: 0, t0: 0, t1: 0, hints: 0, status: 'playing' };
+};
+const uwSave = () => store.set('uw-game', uw);
+
+function uwValid(s) {
+  if (!s || !Number.isInteger(s.id) || s.id < 0 || s.id >= UW_LEVELS) return false;
+  const p = uwPuzzle(s.id);
+  if (!Array.isArray(s.words) || s.words.length !== p.rows.length) return false;
+  if (!s.words.every((w, i) => w === '' || (typeof w === 'string' && wordsFor(5).valid.has(w) && uwCode(w, p.answer) === p.rows[i].code))) return false;
+  if (!Number.isInteger(s.active) || s.active < 0 || s.active >= p.rows.length) return false;
+  if (!Number.isFinite(s.t0) || !Number.isFinite(s.t1) || !Number.isInteger(s.hints)) return false;
+  if (s.status === 'won' && s.words.some(w => !w)) return false;
+  return ['playing', 'won'].includes(s.status);
+}
+
+/* drawing */
+
+function uwBuild() {
+  const p = uwPuzzle(uw.id);
+  uwGridEl.innerHTML = '';
+  p.rows.forEach((r, i) => {
+    const row = el('div', 'uw-row');
+    row.dataset.i = i;
+    r.code.split('').forEach(c => row.appendChild(el('div', 'uw-tile ' + c)));
+    uwGridEl.appendChild(row);
+  });
+  const fin = el('div', 'uw-row fin');
+  p.answer.split('').forEach(ch => fin.appendChild(el('div', 'uw-tile g', ch)));
+  uwGridEl.appendChild(fin);
+  if (!uwGridEl.dataset.bound) {
+    uwGridEl.dataset.bound = '1';
+    uwGridEl.addEventListener('click', e => {
+      const row = e.target.closest('.uw-row[data-i]');
+      if (row && uw.status === 'playing' && !uwBusy && !uw.words[+row.dataset.i]) {
+        uw.active = +row.dataset.i;
+        uwCurWord = '';
+        uwPaint();
+      }
+    });
+  }
+}
+
+function uwPaint() {
+  const rows = [...uwGridEl.querySelectorAll('.uw-row[data-i]')];
+  rows.forEach((row, i) => {
+    const done = !!uw.words[i];
+    const text = done ? uw.words[i] : i === uw.active ? uwCurWord : '';
+    row.classList.toggle('done', done);
+    row.classList.toggle('active', !done && i === uw.active && uw.status === 'playing');
+    [...row.children].forEach((t, k) => {
+      t.textContent = text[k] || '';
+      t.classList.toggle('has', !!text[k]);
+      t.classList.remove('bad');
+    });
+  });
+  $('#uwHint').disabled = uw.status !== 'playing';
+}
+
+/* playing */
+
+function uwShake(row) {
+  play('error');
+  if (!reduceMotion) {
+    row.animate(
+      [{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(0)' }],
+      { duration: 320, easing: 'ease-in-out' }
+    );
+  }
+}
+
+function uwType(ch) {
+  if (uw.status !== 'playing' || uwBusy || uwCurWord.length >= 5) return;
+  if (!uw.t0) { uw.t0 = Date.now(); uwSave(); }
+  uwCurWord += ch;
+  play('key');
+  uwPaint();
+  const row = uwGridEl.children[uw.active];
+  if (row && !reduceMotion) row.children[uwCurWord.length - 1].animate([{ transform: 'scale(1.15)' }, { transform: 'scale(1)' }], { duration: 120 });
+}
+
+function uwDelete() {
+  if (uw.status !== 'playing' || uwBusy || !uwCurWord) return;
+  uwCurWord = uwCurWord.slice(0, -1);
+  uwPaint();
+}
+
+async function uwSubmit() {
+  if (uw.status !== 'playing' || uwBusy) return;
+  const p = uwPuzzle(uw.id);
+  const row = uwGridEl.children[uw.active];
+  const word = uwCurWord;
+  if (word.length < 5) { uwShake(row); toast('Not enough letters', 1000); return; }
+  if (!wordsFor(5).valid.has(word)) { uwShake(row); toast('Not in word list', 1000); return; }
+  const want = p.rows[uw.active].code;
+  const got = uwCode(word, p.answer);
+  if (got !== want) {
+    uwShake(row);
+    got.split('').forEach((c, i) => { if (c !== want[i]) row.children[i].classList.add('bad'); });
+    toast("Those colors don't match", 1300);
+    return;
+  }
+  uwBusy = true;
+  uw.words[uw.active] = word;
+  if (!reduceMotion) {
+    [...row.children].forEach((t, i) => t.animate([{ transform: 'rotateX(0)' }, { transform: 'rotateX(90deg)', offset: 0.5 }, { transform: 'rotateX(0)' }], { duration: 420, delay: i * 70 }));
+    await sleep(420 + 4 * 70);
+  }
+  play('hint');
+  uwCurWord = '';
+  const next = uw.words.findIndex(w => !w);
+  if (next >= 0) uw.active = next;
+  uwSave();
+  uwPaint();
+  uwBusy = false;
+  if (next < 0) uwWin();
+}
+
+function uwHint() {
+  if (uw.status !== 'playing' || uwBusy) return;
+  const p = uwPuzzle(uw.id);
+  const sol = p.rows[uw.active].sample;
+  const n = sol.startsWith(uwCurWord) ? uwCurWord.length + 1 : 1;
+  uwCurWord = sol.slice(0, Math.min(5, n));
+  uw.hints++;
+  uw.t0 = (uw.t0 || Date.now()) - 30000;
+  uwSave();
+  play('hint');
+  uwPaint();
+  toast('Hint used, +30 seconds', 1200);
+}
+
+/* winning, stats, new levels */
+
+const uwSecs = () => Math.max(1, Math.round(((uw.t1 || Date.now()) - (uw.t0 || Date.now())) / 1000));
+
+function uwWin() {
+  uw.status = 'won';
+  uw.t1 = Date.now();
+  const secs = uwSecs();
+  lvWon('unwordle', uw.id + 1, secs, uw.words.concat([uwPuzzle(uw.id).answer]));
+  uwStats.solved++;
+  uwStats.best = uwStats.best ? Math.min(uwStats.best, secs) : secs;
+  if (!uw.hints) uwStats.clean++;
+  store.set('uw-stats', uwStats);
+  uwSave();
+  uwPaint();
+  if (!reduceMotion) {
+    [...uwGridEl.lastChild.children].forEach((t, i) => t.animate(
+      [{ transform: 'translateY(0)' }, { transform: 'translateY(-14px)', offset: 0.4 }, { transform: 'translateY(0)' }],
+      { duration: 520, delay: i * 80, easing: 'ease-in-out' }
+    ));
+  }
+  toast('Solved!', 1600);
+  launchConfetti();
+  uwStatsTimer = setTimeout(uwOpenStats, 2000);
+}
+
+function uwOpenStats() {
+  clearTimeout(uwStatsTimer);
+  if (activeApp !== 'unwordle') return;
+  $('#uwSolved').textContent = uwStats.solved;
+  $('#uwBest').textContent = uwStats.best ? clockText(uwStats.best) : '-';
+  $('#uwClean').textContent = uwStats.clean;
+  const won = uw.status === 'won';
+  $('#uwResultLine').textContent = won ? uwPuzzle(uw.id).answer.toUpperCase() + ' · ' + clockText(uwSecs()) : '';
+  $('#uwEndFooter').classList.toggle('hidden', !won);
+  openModal(uwStatsModal);
+}
+
+async function uwNewRound() {
+  if (uwBusy) return;
+  uwBusy = true;
+  clearTimeout(uwStatsTimer);
+  closeModal(uwStatsModal);
+  clearToasts();
+  stopConfetti();
+  const main = $('.uw-main');
+  if (!reduceMotion) await main.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'ease-in', fill: 'forwards' }).finished;
+  uw = uwFresh();
+  uwCurWord = '';
+  uwBuild();
+  uwPaint();
+  uwSave();
+  main.getAnimations().forEach(a => a.cancel());
+  if (!reduceMotion) {
+    [...uwGridEl.children].forEach((r, i) => r.animate([{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }], { duration: 360, delay: i * 70, easing: 'ease-out', fill: 'backwards' }));
+  }
+  uwBusy = false;
+}
+
+function enterUnwordle() {
+  if (uwEntered) return;
+  uwEntered = true;
+  if (!store.get('uw-seen-help', false)) {
+    store.set('uw-seen-help', true);
+    setTimeout(() => { if (activeApp === 'unwordle') openModal(uwHelpModal); }, 450);
+  }
+}
+
+function initUnwordle() {
+  const saved = store.get('uw-game', null);
+  uw = uwValid(saved) ? saved : uwFresh();
+  const keys = $('#uwKeys');
+  UW_KEYS.forEach((letters, r) => {
+    const row = el('div', 'uw-krow');
+    if (r === 1) row.appendChild(el('button', 'uw-key half'));
+    if (r === 2) { const b = el('button', 'uw-key wide', 'Enter'); b.dataset.k = 'enter'; row.appendChild(b); }
+    letters.split('').forEach(ch => { const b = el('button', 'uw-key', ch); b.dataset.k = ch; row.appendChild(b); });
+    if (r === 1) row.appendChild(el('button', 'uw-key half'));
+    if (r === 2) { const b = el('button', 'uw-key wide', '⌫'); b.dataset.k = 'back'; row.appendChild(b); }
+    keys.appendChild(row);
+  });
+  keys.addEventListener('click', e => {
+    const k = e.target.closest('.uw-key[data-k]');
+    if (!k) return;
+    if (k.dataset.k === 'enter') uwSubmit();
+    else if (k.dataset.k === 'back') uwDelete();
+    else uwType(k.dataset.k);
+  });
+  uwBuild();
+  uwPaint();
+  uwSave();
+  $('#uwHint').addEventListener('click', uwHint);
+  $('#uwStatsBtn').addEventListener('click', uwOpenStats);
+  $('#uwHelpBtn').addEventListener('click', () => openModal(uwHelpModal));
+  $('#uwAgain').addEventListener('click', uwNewRound);
+  document.addEventListener('keydown', e => {
+    if (activeApp !== 'unwordle' || modalIsOpen() || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (/^[a-zA-Z]$/.test(e.key)) uwType(e.key.toLowerCase());
+    else if (e.key === 'Backspace') uwDelete();
+    else if (e.key === 'Enter') { e.preventDefault(); uwSubmit(); }
+  });
+}
 
 /* =====================================================================
    Daily puzzles: dates, the daily.json file, the archive window, and
@@ -7343,6 +8488,8 @@ function lvMax(game) {
   if (game.startsWith('sudoku')) return 99;
   if (game === 'mini') return MC_LIST.length;
   if (game === 'anagrams') return ANAG_ROOTS.length;
+  if (game === 'bee') return BEE_PUZZLES.length;
+  if (game === 'unwordle') return UW_LEVELS;
   return 1;
 }
 
@@ -7599,6 +8746,8 @@ const dayNumber = date => Math.floor(Date.UTC(...date.split('-').map((n, i) => (
 function clockFor() {
   if (activeApp === 'wordle' && state.daily) return { game: 'wordle', date: state.daily, t0: state.t0, t1: state.t1 };
   if (activeApp === 'conn' && cn.mode === 'd') return { game: 'connections', date: cn.daily, t0: cn.t0, t1: cn.t1 };
+  if (activeApp === 'bee') return { game: 'bee', date: '', t0: bee.t0, t1: bee.t1 };
+  if (activeApp === 'unwordle') return { game: 'unwordle', date: '', t0: uw.t0, t1: uw.t1 };
   return null;
 }
 
@@ -7645,6 +8794,8 @@ function lvContext() {
   if (activeApp === 'sudoku') return { game: 'sudoku-' + sd.diff, level: sd.level || 1, title: 'Sudoku', sub: sd.diff, fmt: 'time' };
   if (activeApp === 'mini') return { game: 'mini', level: mc.id + 1, title: 'Mini Crossword', sub: '', fmt: 'time' };
   if (activeApp === 'anagrams') return { game: 'anagrams', level: an.id + 1, title: 'Anagrams', sub: '', fmt: 'hints' };
+  if (activeApp === 'bee') return { game: 'bee', level: bee.id + 1, title: 'Spelling Bee', sub: '', fmt: 'time' };
+  if (activeApp === 'unwordle') return { game: 'unwordle', level: uw.id + 1, title: 'Unwordle', sub: '', fmt: 'time' };
   return null;
 }
 
@@ -7783,6 +8934,8 @@ function lvJump(level) {
   else if (activeApp === 'sudoku') sdSwitch(() => sdMake(sd.diff));
   else if (activeApp === 'mini') mcNewPuzzle();
   else if (activeApp === 'anagrams') anNewRound();
+  else if (activeApp === 'bee') beeNewRound();
+  else if (activeApp === 'unwordle') uwNewRound();
 }
 
 /* ---------- the dock and the clock ---------- */
@@ -8040,7 +9193,7 @@ const GAME_LIST = [
   ['wordle', 'Wordle', 'guesses'], ['wordle4', 'Wordle · 4 letters', 'guesses'], ['wordle6', 'Wordle · 6 letters', 'guesses'], ['wordle7', 'Wordle · 7 letters', 'guesses'],
   ['connections', 'Connections', 'misses'], ['connections-u', 'Connections · Unlocked', 'misses'],
   ['sudoku-easy', 'Sudoku · Easy', 'time'], ['sudoku-medium', 'Sudoku · Medium', 'time'], ['sudoku-hard', 'Sudoku · Hard', 'time'],
-  ['mini', 'Mini Crossword', 'time'], ['anagrams', 'Anagrams', 'hints'],
+  ['mini', 'Mini Crossword', 'time'], ['anagrams', 'Anagrams', 'hints'], ['bee', 'Spelling Bee', 'time'], ['unwordle', 'Unwordle', 'time'],
   ['daily-wordle', 'Daily Wordle', 'time'], ['daily-connections', 'Daily Connections', 'time']
 ];
 
@@ -9563,7 +10716,7 @@ init();
 initConnections();
 initSudoku();
 initMini();
-initAnagrams();
+initAnagrams(); initBee(); initUnwordle();
 initHub();
 initEditor();
 initDaily(); initLevels(); initProfile(); initManager();
