@@ -1604,6 +1604,89 @@ h1.uw-title { font-size: 1.6rem; }
 .uw-key svg { width: 22px; height: 22px; fill: currentColor; }
 .uw-main button:disabled { opacity: 0.4; pointer-events: none; }
 @media (max-height: 700px) { .uw-tile { width: 46px; height: 46px; font-size: 1.4rem; } .uw-row { grid-template-columns: repeat(5, 46px); } .uw-key { height: 42px; } }
+/* ---------- events, ribbons and belts ---------- */
+.tn-ic { --c: #e6b422; display: inline-flex; flex: none; color: var(--c); filter: drop-shadow(0 0 5px var(--c)); animation: tnglow 2.4s ease-in-out infinite; }
+.tn-ic svg { width: 20px; height: 20px; fill: currentColor; }
+.tn-ic.sm svg { width: 15px; height: 15px; }
+.tn-ic.big svg { width: 34px; height: 34px; }
+@keyframes tnglow { 0%, 100% { filter: drop-shadow(0 0 3px var(--c)); } 50% { filter: drop-shadow(0 0 9px var(--c)); } }
+.lb-list .tn-ic { filter: drop-shadow(0 0 4px var(--c)); }
+
+.tn-ribbon {
+  --c: #e6b422;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px 9px 12px;
+  border: 1px solid var(--c);
+  border-radius: 12px;
+  background: linear-gradient(110deg, color-mix(in srgb, var(--c) 30%, transparent), color-mix(in srgb, var(--c) 10%, transparent));
+  box-shadow: 0 0 16px color-mix(in srgb, var(--c) 40%, transparent);
+  font-weight: 700;
+  font-size: 0.9rem;
+  overflow: hidden;
+  animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+.tn-ribbon::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.22) 50%, transparent 65%); background-size: 250% 100%; animation: tnshine 3.5s linear infinite; pointer-events: none; }
+@keyframes tnshine { from { background-position: 150% 0; } to { background-position: -100% 0; } }
+.tn-ribbon .tn-t { min-width: 0; }
+.tn-ribbon small { display: block; margin-top: 1px; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.tn-ribbon.former { --c: #7d8791; box-shadow: none; filter: grayscale(0.8); opacity: 0.75; }
+.tn-ribbon.former .tn-ic { animation: none; filter: none; }
+.tn-ribbon.former::after { display: none; }
+.pf-awards { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+
+.tncard { max-width: 440px; }
+#tnBody { display: flex; flex-direction: column; gap: 10px; max-height: 62vh; overflow-y: auto; }
+.tn-item { --c: #e6b422; display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: none; color: var(--text); text-align: left; cursor: pointer; transition: border-color 0.2s, transform 0.12s; }
+.tn-item:hover { border-color: var(--c); }
+.tn-item:active { transform: scale(0.98); }
+.tn-item b { display: block; font-size: 1rem; }
+.tn-item span.sub { display: block; margin-top: 2px; font-size: 0.78rem; color: var(--muted); }
+.tn-item .live { color: var(--correct); font-weight: 700; }
+.tn-back { align-self: flex-start; border: 0; background: none; color: var(--muted); font-size: 0.85rem; font-weight: 700; cursor: pointer; }
+.tn-back:hover { color: var(--text); }
+.tn-info { font-size: 0.85rem; line-height: 1.45; color: var(--sub); }
+.tn-info p + p { margin-top: 6px; }
+.tn-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.tn-meta span { padding: 4px 10px; border-radius: 999px; background: var(--border); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.tn-go { width: 100%; flex: none; }
+.tn-rows { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.tn-rows li { display: grid; grid-template-columns: 24px 1fr auto; gap: 8px; align-items: center; padding: 7px 10px; border-radius: 6px; background: var(--card-border); font-size: 0.88rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tn-rows li:nth-child(1) { background: linear-gradient(110deg, #8a6a00, #e6b422); color: #2b1f00; }
+.tn-rows li .r { color: inherit; opacity: 0.7; }
+.tn-rows li .s { font-weight: 600; opacity: 0.85; }
+.tn-rows li.me { box-shadow: inset 0 0 0 2px #fff; }
+.tn-h { margin-top: 4px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+.tn-hud { position: fixed; top: 58px; left: 50%; transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 10px; padding: 5px 6px 5px 14px; border: 1px solid #7a5f10; border-radius: 999px; background: var(--bg); box-shadow: 0 0 16px rgba(230, 180, 34, 0.3); font-size: 0.8rem; font-weight: 700; white-space: nowrap; }
+.tn-hud b { font-size: 1rem; font-variant-numeric: tabular-nums; color: #f6d56a; }
+.tn-hud.low b { color: #ff6b63; animation: tnpulse 0.8s ease-in-out infinite; }
+@keyframes tnpulse { 50% { opacity: 0.45; } }
+.tn-hud button { height: 26px; padding: 0 12px; border: 0; border-radius: 999px; background: var(--border); color: var(--text); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; }
+.tn-hud button.armed { background: var(--warn); color: #fff; }
+body.in-run .lv-dock, body.in-run .appsbtn, body.in-run #pfBtn { display: none; }
+
+/* manager */
+.tn-card { --c: #e6b422; }
+.tn-card h3 { display: flex; align-items: center; gap: 8px; }
+.tn-acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tn-acts button { height: 34px; padding: 0 12px; border: 0; border-radius: 8px; background: var(--border); color: var(--text); font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+.tn-acts button.danger { color: #ff6b63; }
+.tn-acts button.armed { background: var(--warn); color: #fff; }
+.tn-form { display: flex; flex-direction: column; gap: 10px; }
+.tn-form label { display: flex; flex-direction: column; gap: 4px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.tn-form .ed-input { margin: 0; text-transform: none; letter-spacing: 0; font-size: 0.95rem; font-weight: 400; }
+.tn-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tn-icons { display: flex; flex-wrap: wrap; gap: 6px; }
+.tn-icons button { width: 42px; height: 42px; display: grid; place-items: center; border: 2px solid transparent; border-radius: 10px; background: var(--border); color: var(--text); cursor: pointer; }
+.tn-icons button.on { border-color: var(--c); color: var(--c); }
+.tn-icons svg { width: 22px; height: 22px; fill: currentColor; }
+.tn-color { height: 42px; padding: 2px; }
+.tn-aw { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.tn-aw small { color: var(--muted); }
+.tn-aw .tn-acts { grid-column: 1 / -1; margin: 0; }
 
 /* ---------- daily puzzles and the editor ---------- */
 .hl { gap: 2px; }
@@ -2356,6 +2439,7 @@ h1.hub-title { letter-spacing: 0.01em; }
     <p class="hub-sub">Pick a game and beat level after level.</p>
     <div class="hub-streak hidden" id="hubStreak"></div>
     <button class="hub-champ hidden" id="hubChamp" type="button"></button>
+    <button class="hub-champ hub-events hidden" id="hubEvents" type="button"></button>
     <button class="btn btn-main hub-continue hidden" id="hubContinue"></button>
     <div class="hub-cards">
       <button class="hub-card" data-app="wordle">
@@ -2915,6 +2999,20 @@ h1.hub-title { letter-spacing: 0.01em; }
     </ul>
   </div>
 </div>
+<!-- events (tournaments) -->
+<div class="modal" id="tnModal" aria-hidden="true">
+  <div class="card tncard">
+    <button class="close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <h2 class="big" id="tnTitle">Events</h2>
+    <div id="tnBody"></div>
+  </div>
+</div>
+
+<div class="tn-hud hidden" id="tnHud">
+  <b id="tnHudTime">0:00</b>
+  <span id="tnHudInfo"></span>
+  <button id="tnHudEnd" type="button">End</button>
+</div>
 <!-- daily puzzles -->
 <div class="modal" id="dailyModal" aria-hidden="true">
   <div class="card daily">
@@ -3145,6 +3243,12 @@ h1.hub-title { letter-spacing: 0.01em; }
         <div class="ed-list" id="edPlList"></div>
       </div>
 
+      <div id="edTabEvents" class="hidden">
+        <button class="btn btn-main ed-wide" id="edTnNew">New event</button>
+        <p class="ed-msg" id="edTnMsg"></p>
+        <div class="ed-list" id="edTnList"></div>
+      </div>
+
       <div id="edTabList" class="hidden">
         <div class="mg-card mg-cal">
           <div class="mg-cal-head">
@@ -3230,6 +3334,7 @@ h1.hub-title { letter-spacing: 0.01em; }
     <button data-tab="conn"><svg viewBox="0 0 24 24"><path d="M4 4h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 10h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 16h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4z"/></svg><span>Connections</span></button>
     <button data-tab="list"><svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V10h14v10z"/></svg><span>Planner</span></button>
     <button data-tab="players"><svg viewBox="0 0 24 24"><path d="M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2c-2.3 0-7 1.2-7 3.5V19h14v-2.5C15 14.2 10.3 13 8 13zm8 0c-.3 0-.6 0-1 .1 1.2.8 2 1.9 2 3.4V19h6v-2.5c0-2.3-4.7-3.5-7-3.5z"/></svg><span>Players</span></button>
+    <button data-tab="events"><svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg><span>Events</span></button>
     <button data-tab="site"><svg viewBox="0 0 24 24"><path d="M19.4 13a7.7 7.7 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.6 7.6 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.6 7.6 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.7 7.7 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1c.5.4 1.1.7 1.7 1L11 21h4l.4-2.9c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg><span>Site</span></button>
   </nav>
 </div>
@@ -3275,6 +3380,66 @@ h1.hub-title { letter-spacing: 0.01em; }
       <button>7</button><button>8</button><button>9</button>
       <button class="ghost" data-k="back">Back</button><button>0</button><button class="ghost" data-k="del">&#9003;</button>
     </div>
+  </div>
+</div>
+
+<!-- manager: event form -->
+<div class="modal" id="edTnSheet" aria-hidden="true">
+  <div class="card plcard">
+    <button class="close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <h2 id="edTnFormTitle">New event</h2>
+    <div class="tn-form">
+      <label>Name<input class="ed-input" id="edTnLabel" maxlength="30" placeholder="Wordle" autocomplete="off"></label>
+      <div id="edTnPrev"></div>
+      <label>Type
+        <select class="ed-input" id="edTnKind">
+          <option value="run">Timed run (most solved)</option>
+          <option value="points">Points across all games</option>
+        </select>
+      </label>
+      <div class="tn-two tn-run-only">
+        <label>Game
+          <select class="ed-input" id="edTnGame">
+            <option value="wordle">Wordle</option>
+            <option value="connections">Connections</option>
+            <option value="anagrams">Anagrams</option>
+            <option value="mini">Mini Crossword</option>
+            <option value="unwordle">Unwordle</option>
+          </select>
+        </label>
+        <label>Minutes<input class="ed-input" id="edTnMin" type="number" min="0.5" max="120" step="0.5" value="5"></label>
+      </div>
+      <label class="tn-run-only">Set words (Wordle only, leave empty for random)<textarea class="ed-input mg-area" id="edTnWords" rows="2" placeholder="crane slate pious"></textarea></label>
+      <div class="tn-two">
+        <label>Starts<input class="ed-input" id="edTnStart" type="datetime-local"></label>
+        <label>Ends<input class="ed-input" id="edTnEnd" type="datetime-local"></label>
+      </div>
+      <label class="tn-run-only">Runs per player<input class="ed-input" id="edTnRuns" type="number" min="1" max="99" value="1"></label>
+      <label>Prize
+        <select class="ed-input" id="edTnAward">
+          <option value="badge">Winner badge (given when it ends)</option>
+          <option value="belt">Champion belt (can be taken)</option>
+        </select>
+      </label>
+      <div class="tn-two">
+        <label>Color<input class="ed-input tn-color" id="edTnColor" type="color" value="#e6b422"></label>
+        <label>Icon<span class="tn-icons" id="edTnIcons"></span></label>
+      </div>
+      <p class="ed-msg" id="edTnFormMsg"></p>
+      <div class="end-footer"><button class="btn btn-ghost" id="edTnCancel" type="button">Cancel</button><button class="btn btn-main" id="edTnSave" type="button">Save</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- manager: awards -->
+<div class="modal" id="edAwSheet" aria-hidden="true">
+  <div class="card plcard">
+    <button class="close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <h2 id="edAwTitle"></h2>
+    <p class="ed-note" id="edAwSub"></p>
+    <div class="ed-row"><input class="ed-input" id="edAwName" placeholder="Player name" autocomplete="off" spellcheck="false"><button class="btn btn-main" id="edAwGive" type="button">Give</button></div>
+    <p class="ed-msg" id="edAwMsg"></p>
+    <div id="edAwList"></div>
   </div>
 </div>
 
@@ -5119,7 +5284,7 @@ function showApp(name) {
   });
   $('#appsBtn').classList.toggle('on', name !== 'hub');
   if (HUB_NAMES[name]) { store.set('hub-last', name); hubMarkDay(); lvGate(); }
-  if (name === 'hub') renderHub();
+  if (name === 'hub') { renderHub(); tnHubRefresh(); }
   if (name === 'wordle') enterWordle();
   if (name === 'conn') enterConn();
   if (name === 'sudoku') enterSudoku();
@@ -8531,6 +8696,7 @@ function lvSetCur(game, level) {
 }
 
 function lvWon(game, level, score, detail) {
+  tnPuzzleEnd(game, true);
   const info = lvInfo(game);
   const before = info.done[level];
   info.done[level] = before === undefined ? score : Math.min(before, score);
@@ -8543,7 +8709,10 @@ function lvWon(game, level, score, detail) {
 }
 
 // a lost round still goes on the board, in red
-const lvLost = (game, level, score, detail) => lvPost(game, level, score, false, detail);
+function lvLost(game, level, score, detail) {
+  tnPuzzleEnd(game, false);
+  lvPost(game, level, score, false, detail);
+}
 
 // how close a lost Wordle was: best row by green letters, then yellow
 function wordleProgress(guesses, answer) {
@@ -8857,6 +9026,7 @@ function boardHtml(ctx, rows) {
       const nm = el('span', 'nm');
       if (medal) nm.appendChild(medalIcon(medal));
       nm.appendChild(el('span', 'nm-t', r.name));
+      if (r.badge) nm.appendChild(tnBadgeEl(r.badge));
       li.append(el('span', 'rk', String(i + 1)), nm, el('span', 'sc', score));
       list.appendChild(li);
     });
@@ -9246,6 +9416,12 @@ function pfRender(p) {
     medals.appendChild(d);
   });
   body.appendChild(medals);
+  if (Array.isArray(p.awards) && p.awards.length) {
+    body.appendChild(el('div', 'pf-h', 'Awards'));
+    const wall = el('div', 'pf-awards');
+    p.awards.forEach(a => wall.appendChild(tnRibbon(a)));
+    body.appendChild(wall);
+  }
 
   body.appendChild(el('div', 'pf-h', 'Win rate · ' + (played ? Math.round((won / played) * 100) + '%' : '-')));
   body.appendChild(el('div', 'pf-h', 'By game'));
@@ -9589,9 +9765,11 @@ function edTab(name) {
   $('#edTabList').classList.toggle('hidden', name !== 'list');
   $('#edTabPlayers').classList.toggle('hidden', name !== 'players');
   $('#edTabSite').classList.toggle('hidden', name !== 'site');
+  $('#edTabEvents').classList.toggle('hidden', name !== 'events');
   $('.ed-main').scrollTop = 0;
   if (name === 'list') edRenderList();
   if (name === 'home') edHomeLoad();
+  if (name === 'events') edTnLoad();
   if (name === 'players' && edAuth && !edPlayers.length) edLoadPlayers();
 }
 
@@ -10711,6 +10889,584 @@ function initManager() {
   mgChampion();
   setInterval(() => { mgAnnouncement(); mgChampion(); }, 300000);
 }
+/* =====================================================================
+   Events: timed tournaments, points tournaments, winner badges and belts
+   ===================================================================== */
+
+const tnModal = $('#tnModal');
+const TN_ICONS = {
+  trophy: 'M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z',
+  crown: 'M5 16 3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z',
+  star: 'M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z',
+  flame: 'M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z',
+  bolt: 'M7 2v11h3v9l7-12h-4l4-8z',
+  heart: 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z',
+  diamond: 'M6 3h12l4 6-10 13L2 9z'
+};
+const TN_GAMES = {
+  wordle: { app: 'wordle', key: 'wordle', name: 'Wordles' },
+  connections: { app: 'conn', key: 'connections', name: 'Connections' },
+  anagrams: { app: 'anagrams', key: 'anagrams', name: 'Anagrams' },
+  mini: { app: 'mini', key: 'mini', name: 'Mini Crosswords' },
+  unwordle: { app: 'unwordle', key: 'unwordle', name: 'Unwordles' }
+};
+const TN_ERRORS = {
+  no_player: 'Pick a name first.',
+  closed: 'This event is closed.',
+  not_started: "This event hasn't started yet.",
+  no_runs: "You've used all your runs.",
+  offline: "Can't reach the server right now."
+};
+
+let tnRun = store.get('ed-tn-run', null);
+let tnList = [];
+let tnListAt = 0;
+let tnAdvancing = false;
+let tnEnding = false;
+
+/* ---------- ribbons and icons ---------- */
+
+function tnIconEl(icon, color, size) {
+  const s = el('span', 'tn-ic' + (size ? ' ' + size : ''));
+  s.style.setProperty('--c', /^#[0-9a-f]{6}$/i.test(color) ? color : '#e6b422');
+  s.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + (TN_ICONS[icon] || TN_ICONS.trophy) + '"/></svg>';
+  return s;
+}
+
+// leaderboard rows carry "icon|#color"
+function tnBadgeEl(spec) {
+  const [icon, color] = String(spec).split('|');
+  return tnIconEl(icon, color, 'sm');
+}
+
+const tnAwardText = a => (a.kind === 'champ' ? (a.status === 'former' ? 'Former ' : 'Current ') + a.label + ' champ' : a.label + ' winner');
+
+function tnRibbon(a) {
+  const r = el('div', 'tn-ribbon' + (a.status === 'former' ? ' former' : ''));
+  r.style.setProperty('--c', a.color);
+  const t = el('div', 'tn-t');
+  t.appendChild(document.createTextNode(tnAwardText(a)));
+  if (a.at) t.appendChild(el('small', '', new Date(a.at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })));
+  r.append(tnIconEl(a.icon, a.color, 'big'), t);
+  return r;
+}
+
+/* ---------- reading the list ---------- */
+
+const tnMins = s => (s % 60 === 0 ? s / 60 + ' min' : clockText(s));
+const tnWhat = t => (t.kind === 'points' ? 'Points across all games' : 'Most ' + TN_GAMES[t.game].name + ' in ' + tnMins(t.seconds));
+
+function tnSpan(ms) {
+  const m = Math.max(1, Math.round(ms / 60000));
+  if (m < 60) return m + 'm';
+  if (m < 2880) return Math.round(m / 60) + 'h';
+  return Math.round(m / 1440) + 'd';
+}
+
+function tnState(t) {
+  const now = Date.now();
+  if (t.done || (t.ends_at && new Date(t.ends_at) < now)) return { live: false, text: 'Ended' };
+  if (new Date(t.starts_at) > now) return { live: false, text: 'Starts in ' + tnSpan(new Date(t.starts_at) - now) };
+  return { live: true, text: t.ends_at ? 'Ends in ' + tnSpan(new Date(t.ends_at) - now) : 'Open now' };
+}
+
+async function tnLoad(force) {
+  if (!force && Date.now() - tnListAt < 60000) return tnList;
+  const res = await rpc('tournaments_list', { p_token: me.token || null });
+  if (!res.ok || !Array.isArray(res.data)) return null;
+  tnList = res.data;
+  tnListAt = Date.now();
+  return tnList;
+}
+
+async function tnHubRefresh() {
+  const btn = $('#hubEvents');
+  if (!btn || tnRun) return;
+  const list = await tnLoad(false);
+  const live = list ? list.filter(t => tnState(t).live) : [];
+  btn.classList.toggle('hidden', !live.length);
+  btn.textContent = live.length ? 'Events · ' + live.length + ' live' : '';
+}
+
+/* ---------- the events window ---------- */
+
+function tnSetTitle(text) { $('#tnTitle').textContent = text; }
+
+async function tnOpen(id) {
+  tnSetTitle('Events');
+  const body = $('#tnBody');
+  body.innerHTML = '';
+  body.appendChild(el('div', 'lb-empty', 'Loading...'));
+  openModal(tnModal);
+  const list = await tnLoad(true);
+  if (!tnModal.classList.contains('open')) return;
+  if (!list) { body.innerHTML = ''; body.appendChild(el('div', 'lb-empty', "Can't load events right now.")); return; }
+  const found = id && list.find(t => t.id === id);
+  if (found) tnDetail(found);
+  else tnShowList();
+}
+
+function tnShowList() {
+  tnSetTitle('Events');
+  const body = $('#tnBody');
+  body.innerHTML = '';
+  if (!tnList.length) { body.appendChild(el('div', 'lb-empty', 'No events right now. Check back soon!')); return; }
+  tnList.forEach(t => {
+    const st = tnState(t);
+    const b = el('button', 'tn-item');
+    b.type = 'button';
+    b.style.setProperty('--c', t.color);
+    const box = el('div');
+    box.appendChild(el('b', '', t.label));
+    const sub = el('span', 'sub');
+    sub.append(tnWhat(t) + ' · ');
+    sub.appendChild(el('span', st.live ? 'live' : '', st.text));
+    box.appendChild(sub);
+    if (t.award === 'belt' && t.holder) box.appendChild(el('span', 'sub', 'Belt: ' + t.holder));
+    b.append(tnIconEl(t.icon, t.color, 'big'), box);
+    b.addEventListener('click', () => tnDetail(t));
+    body.appendChild(b);
+  });
+}
+
+function tnRowText(t, r) {
+  if (t.kind === 'points') return r.solved + ' pts';
+  return r.solved + ' solved' + (r.secs ? ' · ' + clockText(r.secs) : '');
+}
+
+async function tnDetail(t) {
+  const st = tnState(t);
+  tnSetTitle(t.label);
+  const body = $('#tnBody');
+  body.innerHTML = '';
+  const back = el('button', 'tn-back', '‹ All events');
+  back.type = 'button';
+  back.addEventListener('click', tnShowList);
+  body.appendChild(back);
+  body.appendChild(tnRibbon({ kind: t.award === 'belt' ? 'champ' : 'winner', status: 'current', label: t.label, color: t.color, icon: t.icon }));
+  const meta = el('div', 'tn-meta');
+  meta.append(el('span', '', st.text));
+  if (t.kind === 'run') meta.append(el('span', '', t.runs + (t.runs === 1 ? ' run' : ' runs') + ' each'));
+  if (t.award === 'belt') meta.append(el('span', '', t.holder ? 'Holder: ' + t.holder : 'Belt is open'));
+  body.appendChild(meta);
+  const info = el('div', 'tn-info');
+  if (t.kind === 'run') {
+    info.appendChild(el('p', '', 'Solve as many ' + TN_GAMES[t.game].name.toLowerCase() + ' as you can in ' + tnMins(t.seconds) + '. ' + (t.set_words ? 'Everyone gets the same words.' : 'Everyone gets the same puzzles.') + ' If you tie, the faster last solve wins.'));
+    info.appendChild(el('p', '', t.runs > 1 ? 'You can try ' + t.runs + ' times. Your best run counts.' : 'You only get one run, so make it count.'));
+  } else {
+    info.appendChild(el('p', '', 'Beat levels in any game while the event is on. In each game, 1st place earns 10 points, then 7, 5, 3, 2 and 1. Most points wins.'));
+  }
+  info.appendChild(el('p', '', t.award === 'belt' ? 'This is a belt. Whoever is on top wears it, and someone better can take it.' : 'The winner keeps this badge on their profile.'));
+  body.appendChild(info);
+  if (t.kind === 'run' && st.live) {
+    const left = t.runs - (t.my_runs || 0);
+    const go = el('button', 'btn btn-main tn-go', left > 0 ? 'Start run' : 'No runs left');
+    go.disabled = left <= 0;
+    go.addEventListener('click', () => tnConfirmStart(t, go));
+    body.appendChild(go);
+  }
+  body.appendChild(el('div', 'tn-h', 'Standings'));
+  const rows = el('ol', 'tn-rows');
+  rows.appendChild(el('li', '', 'Loading...'));
+  body.appendChild(rows);
+  const res = await rpc('tournament_board', { p_id: t.id });
+  rows.innerHTML = '';
+  const list = res.ok && Array.isArray(res.data) ? res.data : null;
+  if (!list) { rows.appendChild(el('li', '', "Can't load standings.")); return; }
+  if (!list.length) { rows.appendChild(el('li', '', 'No scores yet. Be the first!')); return; }
+  list.forEach((r, i) => {
+    const li = el('li', me.name && r.name.toLowerCase() === me.name.toLowerCase() ? 'me' : '');
+    li.append(el('span', 'r', String(i + 1)), el('span', '', r.name), el('span', 's', tnRowText(t, r)));
+    rows.appendChild(li);
+  });
+}
+
+function tnConfirmStart(t, btn) {
+  if (!btn.classList.contains('armed')) {
+    btn.classList.add('armed');
+    btn.textContent = 'Timer starts now. Tap to go!';
+    setTimeout(() => { if (btn.isConnected) { btn.classList.remove('armed'); btn.textContent = 'Start run'; } }, 3500);
+    return;
+  }
+  tnStart(t);
+}
+
+/* ---------- playing a timed run ---------- */
+
+function tnSequence(game, seed, words) {
+  const key = TN_GAMES[game].key;
+  const max = lvMax(key);
+  if (game === 'wordle' && words) {
+    const order = wordOrder(5);
+    const set = words.split(' ').map(w => order.indexOf(w) + 1).filter(n => n > 0);
+    if (set.length) return set;
+  }
+  const all = [];
+  for (let i = 1; i <= max; i++) all.push(i);
+  return seededShuffle(all, mulberry32(seed)).slice(0, 300);
+}
+
+const tnLeft = () => (tnRun ? Math.max(0, tnRun.seconds - (Date.now() - tnRun.start) / 1000) : 0);
+
+async function tnStart(t) {
+  if (!me.token) { closeModal(tnModal); askName(); return; }
+  const res = await rpc('tournament_start', { p_token: me.token, p_id: t.id });
+  if (!res.ok) { toast(TN_ERRORS[res.error] || "Couldn't start. Try again.", 1800); tnLoad(true); return; }
+  const d = res.data;
+  const g = TN_GAMES[d.game];
+  lvTestBegin();
+  ['iw-seen-help', 'cn-seen-help', 'an-seen-help', 'mc-seen-help', 'uw-seen-help'].forEach(k => store.set(k, true));
+  tnRun = { tid: t.id, run: d.run, game: d.game, app: g.app, key: g.key, seconds: d.seconds, start: Date.now(), seq: tnSequence(d.game, d.seed, d.words), idx: 0, solved: 0, last: 0, label: t.label };
+  store.set('ed-tn-run', tnRun);
+  closeModal(tnModal);
+  tnEnding = false;
+  tnAdvancing = false;
+  tnEnter(true);
+}
+
+async function tnEnter(first) {
+  if (!tnRun) return;
+  document.body.classList.add('in-run');
+  if (activeApp !== tnRun.app) showApp(tnRun.app);
+  if (tnRun.game === 'wordle' && settings.len !== 5) {
+    settings.len = 5;
+    saveSettings();
+    newGame();
+    await sleep(80);
+  }
+  if (first) lvJump(tnRun.seq[0]);
+  tnPaintHud();
+}
+
+// called from lvWon and lvLost
+function tnPuzzleEnd(game, won) {
+  if (!tnRun || tnEnding || tnAdvancing || game !== tnRun.key) return;
+  tnAdvancing = true;
+  if (won) {
+    tnRun.solved++;
+    tnRun.last = Math.round((Date.now() - tnRun.start) / 1000);
+  }
+  tnRun.idx++;
+  store.set('ed-tn-run', tnRun);
+  tnPaintHud();
+  setTimeout(tnNext, won ? 1100 : 1600);
+}
+
+async function tnNext() {
+  if (!tnRun || tnEnding) return;
+  if (tnLeft() <= 0) { tnFinish(); return; }
+  document.querySelectorAll('.modal.open').forEach(closeModal);
+  [statsTimer, cnTimer, sdStatsTimer, mcStatsTimer, anStatsTimer, beeStatsTimer, uwStatsTimer].forEach(clearTimeout);
+  clearToasts();
+  stopConfetti();
+  for (let i = 0; i < 40 && typeof busy !== 'undefined' && busy; i++) await sleep(100);
+  if (activeApp !== tnRun.app) showApp(tnRun.app);
+  lvJump(tnRun.seq[tnRun.idx % tnRun.seq.length]);
+  tnAdvancing = false;
+}
+
+function tnPaintHud() {
+  const hud = $('#tnHud');
+  hud.classList.toggle('hidden', !tnRun);
+  document.body.classList.toggle('in-run', !!tnRun);
+  if (!tnRun) return;
+  const left = Math.ceil(tnLeft());
+  $('#tnHudTime').textContent = clockText(left);
+  $('#tnHudInfo').textContent = tnRun.solved + ' solved';
+  hud.classList.toggle('low', left <= 10);
+}
+
+async function tnSend(r) {
+  return rpc('tournament_finish', { p_token: me.token, p_run: r.run, p_solved: r.solved, p_secs: Math.min(r.seconds, r.last) });
+}
+
+async function tnFinish() {
+  if (!tnRun || tnEnding) return;
+  tnEnding = true;
+  const r = tnRun;
+  const res = await tnSend(r);
+  if (!res.ok && res.error === 'offline') store.set('ed-tn-pending', r);
+  store.set('ed-tn-done', { label: r.label, solved: r.solved, ok: res.ok || res.error === 'offline', tid: r.tid });
+  store.set('ed-tn-run', null);
+  tnRun = null;
+  lvTestRestore();
+  location.hash = '';
+  location.reload();
+}
+
+function tnTick() {
+  if (!tnRun) return;
+  tnPaintHud();
+  if (tnLeft() <= 0 && !tnAdvancing) tnFinish();
+}
+
+// after the page reloads at the end of a run
+function tnAfterRun() {
+  const done = store.get('ed-tn-done', null);
+  if (!done) return;
+  store.set('ed-tn-done', null);
+  setTimeout(() => {
+    toast(done.ok ? "Time's up! " + done.solved + ' solved in ' + done.label : "Time's up, but the score couldn't be saved.", 3500);
+    if (done.ok) tnOpen(done.tid);
+  }, 600);
+}
+
+async function tnRetryPending() {
+  const p = store.get('ed-tn-pending', null);
+  if (!p || !me.token) return;
+  const res = await tnSend(p);
+  if (res.ok || ['bad_run', 'late'].includes(res.error)) store.set('ed-tn-pending', null);
+}
+
+function initTourney() {
+  tnManagerInit();
+  $('#hubEvents').addEventListener('click', () => tnOpen());
+  const end = $('#tnHudEnd');
+  end.addEventListener('click', () => {
+    if (!end.classList.contains('armed')) {
+      end.classList.add('armed');
+      end.textContent = 'Sure?';
+      setTimeout(() => { end.classList.remove('armed'); end.textContent = 'End'; }, 2500);
+      return;
+    }
+    tnFinish();
+  });
+  setInterval(tnTick, 250);
+  tnRetryPending();
+  if (tnRun) {
+    if (tnLeft() <= 0) { tnFinish(); return; }
+    testMode = true;
+    tnEnter(false);
+  } else {
+    tnAfterRun();
+  }
+}
+
+/* =====================================================================
+   Manager: create events, give out and take back awards
+   ===================================================================== */
+
+Object.assign(PL_ERRORS, {
+  bad_tournament: 'Check the name, game and time limit.',
+  bad_words: 'Words must be 5-letter Wordle answers, and only work for Wordle.',
+  no_tournament: 'That event is gone. Reload the list.',
+  bad_action: 'Something went wrong with that award.'
+});
+
+let edTnData = [];
+let edTnEditing = null;
+let edTnIcon = 'trophy';
+const edTnSay = (text, bad) => mgSay('#edTnMsg', text, bad ? 'bad' : '');
+const edTnFormSay = (text, bad) => mgSay('#edTnFormMsg', text, bad ? 'bad' : '');
+const edTnAwSay = (text, bad) => mgSay('#edAwMsg', text, bad ? 'bad' : '');
+
+const tnLocal = iso => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + 'T' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+};
+
+async function edTnLoad() {
+  if (!$('#edAdminPw').value) { edTnSay('Unlock admin first (the box at the top).', true); return; }
+  const res = await edAdmin('admin_tn_list', {}, edTnSay);
+  if (!res.ok) return;
+  edTnSay('');
+  edTnData = Array.isArray(res.data) ? res.data : [];
+  edTnRender();
+}
+
+function edTnRender() {
+  const box = $('#edTnList');
+  box.innerHTML = '';
+  if (!edTnData.length) { box.appendChild(el('div', 'lb-empty', 'No events yet. Tap New event.')); return; }
+  edTnData.forEach(t => {
+    const st = tnState(t);
+    const card = el('div', 'mg-card tn-card');
+    const h = el('h3');
+    h.append(tnIconEl(t.icon, t.color), document.createTextNode(t.label));
+    const lines = [tnWhat(t) + ' · ' + (t.award === 'belt' ? 'Belt' : 'Badge'), st.text + (t.kind === 'run' ? ' · ' + t.entries + (t.entries === 1 ? ' player' : ' players') : '') + (t.holder ? ' · ' + (t.award === 'belt' ? 'Holder ' : 'Winner ') + t.holder : '')];
+    card.append(h, el('p', 'ed-note', lines[0]), el('p', 'ed-note', lines[1]));
+    const acts = el('div', 'tn-acts');
+    const edit = el('button', '', 'Edit');
+    const aw = el('button', '', 'Awards');
+    edit.addEventListener('click', () => edTnForm(t));
+    aw.addEventListener('click', () => edTnAwards(t));
+    acts.append(edit, aw);
+    if (st.live && t.award !== 'belt') {
+      const end = el('button', '', 'End now');
+      armButton(end, 'Sure?', async () => {
+        const res = await edAdmin('admin_tn_end', { p_id: t.id }, edTnSay);
+        if (res.ok) { edTnSay('Ended ' + t.label); edTnLoad(); }
+      });
+      acts.appendChild(end);
+    }
+    const del = el('button', 'danger', 'Delete');
+    armButton(del, 'Sure?', async () => {
+      const res = await edAdmin('admin_tn_delete', { p_id: t.id }, edTnSay);
+      if (res.ok) { edTnSay('Deleted ' + t.label); edTnLoad(); }
+    });
+    acts.appendChild(del);
+    card.appendChild(acts);
+    box.appendChild(card);
+  });
+}
+
+function edTnPreview() {
+  const award = $('#edTnAward').value;
+  const box = $('#edTnPrev');
+  box.innerHTML = '';
+  const label = $('#edTnLabel').value.trim() || 'Name';
+  box.appendChild(tnRibbon({ kind: award === 'belt' ? 'champ' : 'winner', status: 'current', label, color: $('#edTnColor').value, icon: edTnIcon }));
+}
+
+function edTnPaintIcons() {
+  const box = $('#edTnIcons');
+  box.innerHTML = '';
+  Object.keys(TN_ICONS).forEach(k => {
+    const b = el('button', k === edTnIcon ? 'on' : '');
+    b.type = 'button';
+    b.dataset.icon = k;
+    b.setAttribute('aria-label', k);
+    b.style.setProperty('--c', $('#edTnColor').value);
+    b.innerHTML = '<svg viewBox="0 0 24 24"><path d="' + TN_ICONS[k] + '"/></svg>';
+    box.appendChild(b);
+  });
+}
+
+function edTnKindShow() {
+  const run = $('#edTnKind').value === 'run';
+  document.querySelectorAll('.tn-run-only').forEach(n => n.classList.toggle('hidden', !run));
+}
+
+function edTnForm(t) {
+  edTnEditing = t || null;
+  $('#edTnFormTitle').textContent = t ? 'Edit event' : 'New event';
+  $('#edTnLabel').value = t ? t.label : '';
+  $('#edTnKind').value = t ? t.kind : 'run';
+  $('#edTnGame').value = t && t.game ? t.game : 'wordle';
+  $('#edTnMin').value = t && t.seconds ? Math.round((t.seconds / 60) * 100) / 100 : 5;
+  $('#edTnWords').value = t && t.words ? t.words : '';
+  $('#edTnStart').value = tnLocal(t ? t.starts_at : new Date().toISOString());
+  $('#edTnEnd').value = t ? tnLocal(t.ends_at) : tnLocal(new Date(Date.now() + 7 * 864e5).toISOString());
+  $('#edTnRuns').value = t ? t.runs : 1;
+  $('#edTnAward').value = t ? t.award : 'badge';
+  $('#edTnColor').value = t ? t.color : '#e6b422';
+  edTnIcon = t ? t.icon : 'trophy';
+  edTnKindShow();
+  edTnPaintIcons();
+  edTnPreview();
+  edTnFormSay('');
+  openModal($('#edTnSheet'));
+}
+
+async function edTnSave() {
+  const kind = $('#edTnKind').value;
+  const label = $('#edTnLabel').value.trim();
+  if (!label) return edTnFormSay('Type a name for the event.', true);
+  if (label.length > 30) return edTnFormSay('Keep the name to 30 letters.', true);
+  const startV = $('#edTnStart').value;
+  const endV = $('#edTnEnd').value;
+  if (!startV) return edTnFormSay('Pick a start time.', true);
+  if (endV && new Date(endV) <= new Date(startV)) return edTnFormSay('The end has to be after the start.', true);
+  const data = { label, kind, award: $('#edTnAward').value, color: $('#edTnColor').value, icon: edTnIcon, starts_at: new Date(startV).toISOString(), ends_at: endV ? new Date(endV).toISOString() : null };
+  if ($('#edTnAward').value === 'badge' && !endV) return edTnFormSay('A badge event needs an end time. Use a belt if it should never end.', true);
+  if (kind === 'run') {
+    const mins = Number($('#edTnMin').value);
+    if (!(mins >= 0.5 && mins <= 120)) return edTnFormSay('Time limit: 0.5 to 120 minutes.', true);
+    data.game = $('#edTnGame').value;
+    data.seconds = Math.round(mins * 60);
+    data.runs = Math.max(1, Math.min(99, Math.floor(Number($('#edTnRuns').value) || 1)));
+    const words = $('#edTnWords').value.toLowerCase().split(/[\s,]+/).filter(Boolean);
+    if (words.length) {
+      if (data.game !== 'wordle') return edTnFormSay('Set words only work for Wordle. Clear the box.', true);
+      const answers = new Set(wordsFor(5).answers);
+      const bad = words.filter(w => !answers.has(w));
+      if (bad.length) return edTnFormSay('Not usable: ' + bad.slice(0, 5).join(', ') + '. Use 5-letter Wordle answers.', true);
+      data.words = words.join(' ');
+    }
+  }
+  const btn = $('#edTnSave');
+  btn.disabled = true;
+  const res = await edAdmin('admin_tn_save', { p_id: edTnEditing ? edTnEditing.id : null, p_data: data }, edTnFormSay);
+  btn.disabled = false;
+  if (!res.ok) return;
+  closeModal($('#edTnSheet'));
+  edTnSay('Saved ' + label, false);
+  edTnLoad();
+}
+
+async function edTnAwards(t) {
+  $('#edAwTitle').textContent = t.label;
+  $('#edAwSub').textContent = t.award === 'belt' ? 'Belt holders' : 'Badge winners';
+  $('#edAwGive').textContent = t.award === 'belt' ? 'Give belt' : 'Give badge';
+  $('#edAwName').value = '';
+  edTnAwSay('');
+  $('#edAwSheet').dataset.tid = t.id;
+  openModal($('#edAwSheet'));
+  edTnAwLoad(t);
+}
+
+async function edTnAwLoad(t) {
+  const list = $('#edAwList');
+  list.innerHTML = '';
+  const res = await edAdmin('admin_tn_awards', { p_id: t.id }, edTnAwSay);
+  if (!res.ok) return;
+  const rows = Array.isArray(res.data) ? res.data : [];
+  if (!rows.length) { list.appendChild(el('div', 'lb-empty', 'Nobody has this yet.')); return; }
+  rows.forEach(a => {
+    const row = el('div', 'tn-aw');
+    const left = el('div');
+    left.appendChild(el('b', '', a.name));
+    left.appendChild(el('div', '', tnAwardText({ kind: a.kind, status: a.status, label: t.label }) + (a.hidden ? ' · hidden' : '')));
+    row.appendChild(left);
+    row.appendChild(tnRibbon({ kind: a.kind, status: a.status, label: t.label, color: t.color, icon: t.icon }));
+    const acts = el('div', 'tn-acts');
+    const act = (text, action, danger) => {
+      const b = el('button', danger ? 'danger' : '', text);
+      const run = async () => {
+        const r = await edAdmin('admin_award_set', { p_id: t.id, p_name: a.name, p_action: action }, edTnAwSay);
+        if (r.ok) { edTnAwSay(''); edTnAwLoad(t); edTnLoad(); }
+      };
+      if (danger) armButton(b, 'Sure?', run); else b.addEventListener('click', run);
+      acts.appendChild(b);
+    };
+    if (a.status === 'current' && t.award === 'belt') act('Make former', 'former');
+    if (a.status === 'former') act('Make current', 'give');
+    act(a.hidden ? 'Show' : 'Hide', a.hidden ? 'unhide' : 'hide');
+    act(a.status === 'former' ? 'Remove former' : 'Take away', 'remove', true);
+    row.appendChild(acts);
+    list.appendChild(row);
+  });
+}
+
+async function edTnGive() {
+  const name = $('#edAwName').value.trim();
+  const id = Number($('#edAwSheet').dataset.tid);
+  const t = edTnData.find(x => x.id === id);
+  if (!name || !t) return;
+  const res = await edAdmin('admin_award_set', { p_id: id, p_name: name, p_action: 'give' }, edTnAwSay);
+  if (!res.ok) return;
+  $('#edAwName').value = '';
+  edTnAwSay('Given to ' + name, false);
+  edTnAwLoad(t);
+  edTnLoad();
+}
+
+function tnManagerInit() {
+  $('#edTnNew').addEventListener('click', () => edTnForm(null));
+  $('#edTnSave').addEventListener('click', edTnSave);
+  $('#edTnCancel').addEventListener('click', () => closeModal($('#edTnSheet')));
+  $('#edTnKind').addEventListener('change', edTnKindShow);
+  ['#edTnLabel', '#edTnAward', '#edTnColor'].forEach(s => $(s).addEventListener('input', () => { edTnPaintIcons(); edTnPreview(); }));
+  $('#edTnIcons').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    edTnIcon = b.dataset.icon;
+    edTnPaintIcons();
+    edTnPreview();
+  });
+  $('#edAwGive').addEventListener('click', edTnGive);
+}
 
 init();
 initConnections();
@@ -10719,7 +11475,7 @@ initMini();
 initAnagrams(); initBee(); initUnwordle();
 initHub();
 initEditor();
-initDaily(); initLevels(); initProfile(); initManager();
+initDaily(); initLevels(); initProfile(); initManager(); initTourney();
 </script>
 </body>
 </html>
