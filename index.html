@@ -1892,6 +1892,29 @@ body.in-run .lv-dock, body.in-run .appsbtn, body.in-run #pfBtn { display: none; 
 .tn-aw small { color: var(--muted); }
 .tn-aw .tn-acts { grid-column: 1 / -1; margin: 0; }
 
+/* events on the app screen: a gold border that sparkles */
+@property --gold-a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.hub-card.hub-event {
+  position: relative;
+  border: 2px solid transparent;
+  background: linear-gradient(var(--card), var(--card)) padding-box, conic-gradient(from var(--gold-a), #7a5a12, #ffd966, #fff6c9, #e6b422, #7a5a12, #ffd966, #fff6c9, #e6b422, #7a5a12) border-box;
+  box-shadow: 0 0 14px rgba(230, 180, 34, 0.35);
+  animation: goldSpin 5s linear infinite;
+}
+.hub-card.hub-event:hover { border-color: transparent; box-shadow: 0 0 22px rgba(255, 217, 102, 0.6), 0 10px 30px rgba(0, 0, 0, 0.3); }
+.hub-event .hub-chip { background: #e6b422; color: #2a1f00; }
+.hub-event s { position: absolute; width: 10px; height: 10px; background: #fff6c9; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); opacity: 0; animation: twinkle 2.6s ease-in-out infinite; pointer-events: none; }
+.hub-event s:nth-of-type(1) { top: -5px; left: 18%; }
+.hub-event s:nth-of-type(2) { top: 42%; right: -5px; animation-delay: 0.9s; width: 8px; height: 8px; }
+.hub-event s:nth-of-type(3) { bottom: -5px; left: 62%; animation-delay: 1.7s; }
+@keyframes goldSpin { to { --gold-a: 360deg; } }
+@keyframes twinkle { 0%, 100% { opacity: 0; transform: scale(0.3) rotate(0); } 50% { opacity: 1; transform: scale(1) rotate(45deg); } }
+.hub-art-all { flex-wrap: wrap; gap: 4px; height: 84px; align-content: center; }
+.hub-art-all i { font-style: normal; font-size: 0.6rem; font-weight: 700; padding: 3px 6px; border-radius: 5px; background: var(--filled); color: #fff; }
+.hub-art-all i.c { background: var(--correct); }
+.hub-art-all i.p { background: var(--present); }
+@media (prefers-reduced-motion: reduce) { .hub-card.hub-event, .hub-event s { animation: none; } .hub-event s { opacity: 0.8; } }
+
 /* ---------- daily puzzles and the editor ---------- */
 .hl { gap: 2px; }
 .card.daily { max-width: 440px; }
@@ -2796,9 +2819,8 @@ h1.hub-title { letter-spacing: 0.01em; }
     <p class="hub-sub">Pick a game and beat level after level.</p>
     <div class="hub-streak hidden" id="hubStreak"></div>
     <button class="hub-champ hidden" id="hubChamp" type="button"></button>
-    <button class="hub-champ hub-events hidden" id="hubEvents" type="button"></button>
     <button class="btn btn-main hub-continue hidden" id="hubContinue"></button>
-    <div class="hub-cards">
+    <div class="hub-cards" id="hubCards">
       <button class="hub-card" data-app="wordle">
         <div class="hub-art">
           <div class="mini c">W</div><div class="mini p">O</div><div class="mini">R</div><div class="mini c">D</div><div class="mini">L</div><div class="mini c">E</div>
@@ -13784,13 +13806,35 @@ async function tnLoad(force) {
   return tnList;
 }
 
+// the cover of an event card: its game's own art, or a spread of every game for all-game events
+function tnCover(t) {
+  const art = el('div', 'hub-art');
+  const src = t.kind === 'points' ? null : document.querySelector('.hub-card[data-app="' + (TN_GAMES[t.game] || {}).app + '"] .hub-art');
+  if (src) { art.innerHTML = src.innerHTML; art.className = src.className; return art; }
+  art.classList.add('hub-art-all');
+  ['Wordle', 'Connections', 'Sudoku', 'Crossword', 'Anagrams', 'Bee', 'Unwordle', 'Hangman', 'Countries', 'Word Search', 'Flags'].forEach((n, i) => {
+    const chip = el('i', ['c', 'p', '', 'c', 'p', '', 'c', 'p', '', 'c', 'p'][i], n);
+    art.appendChild(chip);
+  });
+  return art;
+}
+
+// each live event is a gold card at the front of the app screen; no events, no card
 async function tnHubRefresh() {
-  const btn = $('#hubEvents');
-  if (!btn || tnRun) return;
+  const box = $('#hubCards');
+  if (!box || tnRun) return;
   const list = await tnLoad(false);
   const live = list ? list.filter(t => tnState(t).live) : [];
-  btn.classList.toggle('hidden', !live.length);
-  btn.textContent = live.length ? 'Events · ' + live.length + ' live' : '';
+  box.querySelectorAll('.hub-event').forEach(c => c.remove());
+  live.slice().reverse().forEach(t => {
+    const card = el('button', 'hub-card hub-event');
+    card.type = 'button';
+    card.dataset.event = t.id;
+    card.append(tnCover(t), el('div', 'hub-name', t.label), el('div', 'hub-desc', tnWhat(t)), el('div', 'hub-chip', tnState(t).text));
+    card.insertAdjacentHTML('beforeend', '<s></s><s></s><s></s>');
+    card.addEventListener('click', () => tnOpen(t.id));
+    box.prepend(card);
+  });
 }
 
 /* ---------- the events window ---------- */
@@ -14025,7 +14069,6 @@ async function tnRetryPending() {
 
 function initTourney() {
   tnManagerInit();
-  $('#hubEvents').addEventListener('click', () => tnOpen());
   const end = $('#tnHudEnd');
   end.addEventListener('click', () => {
     if (!end.classList.contains('armed')) {
