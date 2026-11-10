@@ -2448,6 +2448,9 @@ body.in-editor .appsbtn { display: none; }
 :root.light #edTabs, :root[data-theme="paper"] #edTabs, :root[data-theme="candy"] #edTabs { background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.45)); border-color: rgba(255, 255, 255, 0.85); box-shadow: inset 0 1px 0 #fff, 0 10px 28px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.1); }
 :root.light .ed-glass, :root[data-theme="paper"] .ed-glass, :root[data-theme="candy"] .ed-glass { background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05)); border-color: rgba(0, 0, 0, 0.08); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 3px 10px rgba(0, 0, 0, 0.12); }
 @media (prefers-reduced-motion: reduce) { .ed-glass { transition: none; } }
+#edPlForm select.ed-input { flex: 1.3; min-width: 0; }
+#edPlForm input[type=number] { width: 84px; flex: none; }
+#edPlForm .ed-hint { margin: -2px 0 10px; font-size: 0.78rem; color: var(--muted); line-height: 1.35; }
 /* ---------- finishing touches ---------- */
 .modal { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .card { border-radius: 14px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5); transform: translateY(28px) scale(0.96); transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.25, 1.15); }
@@ -4429,7 +4432,7 @@ function loadStats(len) {
 
 // words come in a fixed order: level 1 is the first word
 function pickWord(len) {
-  return wordOrder(len)[lvCur(wordleKey(len)) - 1];
+  return wordOrder(len)[lvStart(wordleKey(len), lvCur(wordleKey(len)))];
 }
 
 /* ---------- sound ---------- */
@@ -4560,6 +4563,7 @@ function freshState(bumpRound = true) {
   }
   return {
     len,
+    level: lvCur(wordleKey(len)),
     answer: pickWord(len),
     guesses: [],
     current: '',
@@ -4576,6 +4580,7 @@ function saveGame() {
   }
   store.set('iw-game', {
     len: state.len,
+    level: state.level,
     answer: state.answer,
     guesses: state.guesses,
     status: state.status,
@@ -4647,7 +4652,7 @@ function renderControls() {
   const left = MAX_HINTS - state.hints.length;
   $('#hintLeft').textContent = left;
   $('#hintBtn').disabled = over || left <= 0 || !!state.daily;
-  $('#roundLabel').textContent = state.daily ? 'Daily · ' + niceDate(state.daily) : 'Level ' + (wordOrder(state.len).indexOf(state.answer) + 1) + ' · ' + state.len + ' letters';
+  $('#roundLabel').textContent = state.daily ? 'Daily · ' + niceDate(state.daily) : 'Level ' + state.level + ' · ' + state.len + ' letters';
   $('#againBtn').textContent = state.daily ? 'Archive' : lvRetry() ? 'Try Again' : 'Next Level';
 
   const skip = $('#skipBtn');
@@ -4994,8 +4999,8 @@ function recordResult(won) {
     stats = dailyRecord('w', won, state.guesses.length - 1, state.daily);
     return;
   }
-  if (won) lvWon(wordleKey(state.len), wordOrder(state.len).indexOf(state.answer) + 1, state.guesses.length, state.guesses.slice());
-  else if (state.guesses.length) lvLost(wordleKey(state.len), wordOrder(state.len).indexOf(state.answer) + 1, wordleProgress(state.guesses, state.answer), state.guesses.slice());
+  if (won) lvWon(wordleKey(state.len), state.level, state.guesses.length, state.guesses.slice());
+  else if (state.guesses.length) lvLost(wordleKey(state.len), state.level, wordleProgress(state.guesses, state.answer), state.guesses.slice());
   stats.played++;
   if (won) {
     stats.wins++;
@@ -5250,6 +5255,7 @@ function restore(saved) {
   const len = saved.len || 5;
   state = {
     len,
+    level: saved.level || wordOrder(len).indexOf(saved.answer) + 1,
     answer: saved.answer,
     guesses: saved.guesses.slice(),
     current: '',
@@ -5394,7 +5400,7 @@ function cnGroupOf(word) {
 }
 
 // puzzles come in a fixed order: level 1 is puzzle 0
-const cnPick = mode => lvCur(mode === 'u' ? 'connections-u' : 'connections') - 1;
+const cnKey = mode => (mode === 'u' ? 'connections-u' : 'connections');
 
 // adds the pieces that aren't saved: the current picks and, in Unlocked mode, which words are locked
 function cnAttach(game, mode) {
@@ -5405,9 +5411,10 @@ function cnAttach(game, mode) {
 }
 
 function cnFresh(mode) {
-  const id = cnPick(mode);
+  const lvl = lvCur(cnKey(mode)) - 1;
+  const id = lvStart(cnKey(mode), lvl + 1);
   const words = [].concat(...PUZZLES[id].map(g => g.words));
-  return cnAttach({ id, order: seededShuffle(words, mulberry32(hashStr('cn' + id))), solved: [], mistakes: 0, tried: [], guesses: [], status: 'playing' }, mode);
+  return cnAttach({ id, lvl, order: seededShuffle(words, mulberry32(hashStr('cn' + id))), solved: [], mistakes: 0, tried: [], guesses: [], status: 'playing' }, mode);
 }
 
 function cnSave() {
@@ -5417,6 +5424,7 @@ function cnSave() {
   }
   store.set(CN_KEYS[cn.mode].game, {
     id: cn.id,
+    lvl: cn.lvl,
     order: cn.order,
     solved: cn.solved,
     mistakes: cn.mistakes,
@@ -5702,7 +5710,7 @@ function cnWin() {
   cn.status = 'won';
   if (cn.mode === 'd' && cn.t0) cn.t1 = Date.now();
   if (cn.mode === 'd') lvDailyWon('connections', cn.daily, cn.t0, cn.t1, cn.tried.map(k => k.split('|')));
-  else lvWon(cn.mode === 'u' ? 'connections-u' : 'connections', cn.id + 1, cn.mistakes, cn.tried.map(k => k.split('|')));
+  else lvWon(cn.mode === 'u' ? 'connections-u' : 'connections', cn.lvl + 1, cn.mistakes, cn.tried.map(k => k.split('|')));
   cnRecord(true);
   cnSave();
   cnSync();
@@ -5714,7 +5722,7 @@ function cnWin() {
 
 async function cnLose() {
   cn.status = 'lost';
-  if (cn.mode !== 'd') lvLost(cn.mode === 'u' ? 'connections-u' : 'connections', cn.id + 1, cn.solved.length, cn.tried.map(k => k.split('|')));
+  if (cn.mode !== 'd') lvLost(cn.mode === 'u' ? 'connections-u' : 'connections', cn.lvl + 1, cn.solved.length, cn.tried.map(k => k.split('|')));
   if (cn.mode === 'd' && cn.t0) cn.t1 = Date.now();
   cnRecord(false);
   cnSave();
@@ -5757,7 +5765,7 @@ function cnRenderStats() {
   $('#cnWin').textContent = cnStats.played ? Math.round(cnStats.wins / cnStats.played * 100) : 0;
   $('#cnStreak').textContent = cnStats.streak;
   $('#cnMax').textContent = cnStats.maxStreak;
-  $('#cnPuzzleLabel').textContent = cn.mode === 'd' ? 'Daily \u00B7 ' + niceDate(cn.daily) + (Object.keys(cn.locks).length ? ' \u00B7 Unlocked (beta)' : '') : 'Puzzle #' + (cn.id + 1) + (cn.mode === 'u' ? ' \u00B7 Unlocked (beta)' : '');
+  $('#cnPuzzleLabel').textContent = cn.mode === 'd' ? 'Daily \u00B7 ' + niceDate(cn.daily) + (Object.keys(cn.locks).length ? ' \u00B7 Unlocked (beta)' : '') : 'Puzzle #' + (cn.lvl + 1) + (cn.mode === 'u' ? ' \u00B7 Unlocked (beta)' : '');
 
   const line = $('#cnResultLine');
   if (cn.status === 'won') {
@@ -5804,7 +5812,7 @@ function cnOpenStats() {
 
 function cnShareText() {
   const rows = cn.guesses.map(g => g.map(x => CN_EMOJI[x]).join('')).join('\n');
-  const head = cn.mode === 'd' ? 'Connections Daily \u00B7 ' + niceDate(cn.daily) + (Object.keys(cn.locks).length ? ' Unlocked (beta)' : '') + '\n' : 'Connections ∞' + (cn.mode === 'u' ? ' Unlocked (beta)' : '') + '\nPuzzle #' + (cn.id + 1) + '\n';
+  const head = cn.mode === 'd' ? 'Connections Daily \u00B7 ' + niceDate(cn.daily) + (Object.keys(cn.locks).length ? ' Unlocked (beta)' : '') + '\n' : 'Connections ∞' + (cn.mode === 'u' ? ' Unlocked (beta)' : '') + '\nPuzzle #' + (cn.lvl + 1) + '\n';
   const peeks = Object.keys(cn.locks).length && cn.reveals ? '\n🔓 ' + cn.reveals + (cn.reveals === 1 ? ' reveal' : ' reveals') : '';
   return head + rows + peeks;
 }
@@ -5848,6 +5856,8 @@ async function cnNewPuzzle() {
 
 function cnValid(s) {
   if (!s || !Number.isInteger(s.id) || s.id < 0 || s.id >= PUZZLES.length) return false;
+  if (s.lvl === undefined) s.lvl = s.id;
+  if (!Number.isInteger(s.lvl) || s.lvl < 0 || s.lvl >= CN_BASE) return false;
   if (!Array.isArray(s.order) || !Array.isArray(s.solved) || !Array.isArray(s.tried) || !Array.isArray(s.guesses)) return false;
   if (!s.solved.every(g => [0, 1, 2, 3].includes(g)) || new Set(s.solved).size !== s.solved.length) return false;
   if (s.order.length !== 16 - 4 * s.solved.length) return false;
@@ -9320,10 +9330,11 @@ let hmStats = Object.assign({ solved: 0, best: 0, clean: 0 }, store.get('hm-stat
 
 // 50 five-letter words, then 50 six-letter, then 50 seven-letter
 const hmOrders = {};
-function hmWordFor(id) {
+// a retry keeps the level's word length but picks another word from the same bucket
+function hmWordFor(id, tr = 0) {
   const len = 5 + Math.floor(id / 50);
   if (!hmOrders[len]) hmOrders[len] = seededShuffle(wordsFor(len).answers, mulberry32(hashStr('hangman' + len)));
-  return hmOrders[len][id % 50];
+  return hmOrders[len][(id % 50 + tr * 19) % 50];
 }
 
 const hmWrongList = s => s.guessed.filter(ch => !s.word.includes(ch));
@@ -9331,13 +9342,15 @@ const hmSolved = s => s.word.split('').every(ch => s.guessed.includes(ch));
 
 function hmFresh() {
   const id = lvCur('hangman') - 1;
-  return { id, word: hmWordFor(id), guessed: [], hints: 0, t0: 0, t1: 0, status: 'playing' };
+  lvStart('hangman', id + 1);
+  const tr = lvTriesOf('hangman', id + 1);
+  return { id, tr, word: hmWordFor(id, tr), guessed: [], hints: 0, t0: 0, t1: 0, status: 'playing' };
 }
 
 const hmSave = () => store.set('hm-game', hm);
 
 function hmValid(s) {
-  if (!s || !Number.isInteger(s.id) || s.id < 0 || s.id >= HM_LEVELS || s.word !== hmWordFor(s.id)) return false;
+  if (!s || !Number.isInteger(s.id) || s.id < 0 || s.id >= HM_LEVELS || s.word !== hmWordFor(s.id, s.tr || 0)) return false;
   if (!Array.isArray(s.guessed) || !s.guessed.every(c => /^[a-z]$/.test(c)) || new Set(s.guessed).size !== s.guessed.length) return false;
   if (!Number.isInteger(s.hints) || !Number.isFinite(s.t0) || !Number.isFinite(s.t1)) return false;
   if (!['playing', 'won', 'lost'].includes(s.status)) return false;
@@ -11309,18 +11322,33 @@ function lvMax(game) {
 }
 
 // the first level not beaten yet: nobody can play past it
-function lvFrontier(game, done) {
+function lvFrontier(game, done, floor = 0, lost = {}) {
   const max = lvMax(game);
   if (testMode) return max;
-  for (let l = 1; l <= max; l++) if (done[l] === undefined) return l;
+  for (let l = floor + 1; l <= max; l++) if (done[l] === undefined && !lost[l]) return l;
   return max;
+}
+
+// a level picked by hand in the Manager moves the player there once, then play carries on as normal
+function lvApplyAdm(all) {
+  Object.keys(all).forEach(game => {
+    const g = all[game];
+    if (g && g.adm && g.adm.t !== g.ap && Number.isInteger(g.adm.cur)) {
+      g.cur = g.adm.cur;
+      g.floor = g.adm.cur - 1;
+      g.ap = g.adm.t;
+      Object.keys(g.lost || {}).forEach(l => { if (Number(l) >= g.adm.cur) delete g.lost[l]; });
+    }
+  });
+  return all;
 }
 
 function lvInfo(game) {
   const all = store.get('lv-progress', {});
-  const info = Object.assign({ cur: 1, done: {} }, all[game]);
+  const info = Object.assign({ cur: 1, done: {}, tries: {}, lost: {}, floor: 0 }, all[game]);
+  if (!Number.isInteger(info.floor) || info.floor < 0) info.floor = 0;
   if (!Number.isInteger(info.cur) || info.cur < 1) info.cur = 1;
-  info.cur = Math.min(info.cur, lvFrontier(game, info.done));
+  info.cur = Math.min(info.cur, lvFrontier(game, info.done, info.floor, info.lost));
   return info;
 }
 
@@ -11335,13 +11363,14 @@ const lvCur = game => lvInfo(game).cur;
 
 function lvNext(game, level) {
   const done = lvInfo(game).done;
-  const open = lvFrontier(game, done);
-  return done[open] === undefined ? open : (level % lvMax(game)) + 1;
+  const inf = lvInfo(game);
+  const open = lvFrontier(game, done, inf.floor, inf.lost);
+  return done[open] === undefined && !inf.lost[open] ? open : (level % lvMax(game)) + 1;
 }
 
 function lvSetCur(game, level) {
   const info = lvInfo(game);
-  info.cur = Math.min(Math.max(1, level), lvFrontier(game, info.done));
+  info.cur = Math.min(Math.max(1, level), lvFrontier(game, info.done, info.floor, info.lost));
   lvSave(game, info);
 }
 
@@ -11358,9 +11387,39 @@ function lvWon(game, level, score, detail) {
   lvPost(game, level, score, true, detail);
 }
 
+// a step that is coprime with the level count, so every retry lands on a new puzzle
+function lvStep(max) {
+  const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+  let s = Math.max(1, Math.round(max * 0.38));
+  while (gcd(s, max) !== 1) s++;
+  return s;
+}
+
+// which puzzle a level plays: the level's own, or a different one after each lost try
+function lvSlot(game, level, tries) {
+  const max = lvMax(game);
+  return (level - 1 + (tries || 0) * lvStep(max)) % max;
+}
+
+// the puzzle a level plays
+function lvStart(game, level) {
+  return lvSlot(game, level, 0);
+}
+
+// the variant a level is on right now, without moving it
+const lvTriesOf = (game, level) => lvInfo(game).tries[level] || 0;
+
 // a lost round still goes on the board, in red
 function lvLost(game, level, score, detail) {
   tnPuzzleEnd(game, false);
+  const info = lvInfo(game);
+  // no second try: a lost level is used up and play moves on
+  info.lost[level] = true;
+  lvSave(game, info);
+  if (info.cur === level) {
+    info.cur = lvNext(game, level);
+    lvSave(game, info);
+  }
   lvPost(game, level, score, false, detail);
 }
 
@@ -11373,7 +11432,7 @@ function wordleProgress(guesses, answer) {
 }
 
 // after a loss the same level comes back, unless it was skipped
-const lvRetry = () => state.status === 'lost' && lvCur(wordleKey(state.len)) === wordOrder(state.len).indexOf(state.answer) + 1;
+const lvRetry = () => state.status === 'lost' && lvCur(wordleKey(state.len)) === state.level;
 
 /* ---------- the player ---------- */
 
@@ -11472,7 +11531,7 @@ async function claimName(e) {
     const d = res.data || {};
     me = { name: d.name || name, token: d.token };
     // the saved account replaces whatever was on this device
-    store.set('lv-progress', d.progress && typeof d.progress === 'object' ? d.progress : {});
+    store.set('lv-progress', d.progress && typeof d.progress === 'object' ? lvApplyAdm(d.progress) : {});
     store.set('lv-pending', []);
   } else {
     me = { name: typeof res.data === 'string' ? res.data : name, token };
@@ -11605,12 +11664,12 @@ function lvSeeded(seed, make) {
 function lvContext() {
   if (activeApp === 'wordle') {
     if (state.daily) return dailyCtx('wordle', state.daily);
-    const level = wordOrder(state.len).indexOf(state.answer) + 1;
+    const level = state.level;
     return { game: wordleKey(state.len), level, title: 'Wordle', sub: state.len + ' letters', fmt: 'guesses' };
   }
   if (activeApp === 'conn') {
     if (cn.mode === 'd') return dailyCtx('connections', cn.daily);
-    return { game: cn.mode === 'u' ? 'connections-u' : 'connections', level: cn.id + 1, title: 'Connections', sub: cn.mode === 'u' ? 'Unlocked (beta)' : '', fmt: 'misses' };
+    return { game: cn.mode === 'u' ? 'connections-u' : 'connections', level: (cn.lvl === undefined ? cn.id : cn.lvl) + 1, title: 'Connections', sub: cn.mode === 'u' ? 'Unlocked (beta)' : '', fmt: 'misses' };
   }
   if (activeApp === 'sudoku') return { game: 'sudoku-' + sd.diff, level: sd.level || 1, title: 'Sudoku', sub: sd.diff, fmt: 'time' };
   if (activeApp === 'mini') return { game: 'mini', level: mc.id + 1, title: 'Mini Crossword', sub: '', fmt: 'time' };
@@ -11736,7 +11795,7 @@ function lvOpenPicker() {
   const info = lvInfo(ctx.game);
   $('#lvTitle').textContent = ctx.title + ' Levels';
   const beaten = Object.keys(info.done).length;
-  const frontier = lvFrontier(ctx.game, info.done);
+  const frontier = lvFrontier(ctx.game, info.done, info.floor, info.lost);
   $('#lvSub').textContent = beaten + ' of ' + lvMax(ctx.game) + ' beaten. Beat a level to open the next one.';
   const grid = $('#lvGrid');
   grid.innerHTML = '';
@@ -11755,7 +11814,8 @@ function lvOpenPicker() {
 function lvJump(level) {
   const ctx = lvContext();
   if (!ctx || ctx.daily) return;
-  if (level > lvFrontier(ctx.game, lvInfo(ctx.game).done)) return;
+  const li = lvInfo(ctx.game);
+  if (level > lvFrontier(ctx.game, li.done, li.floor, li.lost)) return;
   closeModal(lvModal);
   lvSetCur(ctx.game, level);
   if (activeApp === 'wordle') {
@@ -11866,7 +11926,12 @@ function dtRows(game, level, detail) {
   }
   if (game.startsWith('wordle') || game.startsWith('daily-wordle')) {
     const len = detail[0].length;
-    const answer = game.startsWith('daily-') ? ((DAILY.wordle[dateOfDay(level)] || {}).word || null) : wordOrder(Number(game.slice(6)) || 5)[level - 1];
+    const wl = Number(game.slice(6)) || 5;
+    const last = detail[detail.length - 1];
+    // a retry plays a different word, so a win shows its own answer and a loss uses the level's current one
+    const answer = game.startsWith('daily-') ? ((DAILY.wordle[dateOfDay(level)] || {}).word || null)
+      : wordOrder(wl)[lvSlot(game, level, 0)] === last || wordOrder(wl)[lvSlot(game, level, lvTriesOf(game, level))] === last ? last
+      : wordOrder(wl)[lvSlot(game, level, lvTriesOf(game, level))];
     detail.forEach(g => {
       const row = el('div', 'dt-word');
       const res = answer ? evaluate(g, answer) : null;
@@ -11876,7 +11941,7 @@ function dtRows(game, level, detail) {
     return box;
   }
   if (game.startsWith('connections') || game.startsWith('daily-connections')) {
-    const groups = game.startsWith('daily-') ? (dailyConnIds[dateOfDay(level)] ? PUZZLES[dailyConnIds[dateOfDay(level)].id] : null) : PUZZLES[level - 1];
+    const groups = game.startsWith('daily-') ? (dailyConnIds[dateOfDay(level)] ? PUZZLES[dailyConnIds[dateOfDay(level)].id] : null) : (PUZZLES.find(p => p.some(g => g.words.includes(detail[0][0]))) || PUZZLES[level - 1]);
     detail.forEach(words => {
       const row = el('div', 'dt-group');
       words.forEach(w => {
@@ -11989,9 +12054,15 @@ function mergeProgress(a, b) {
     Object.keys(y.done || {}).forEach(l => {
       done[l] = done[l] === undefined ? y.done[l] : Math.min(done[l], y.done[l]);
     });
-    out[game] = { cur: Math.max(x.cur || 1, y.cur || 1), done };
+    const tries = Object.assign({}, x.tries);
+    Object.keys(y.tries || {}).forEach(l => { tries[l] = Math.max(tries[l] || 0, y.tries[l]); });
+    const lost = {};
+    Object.keys(Object.assign({}, x.lost, y.lost)).forEach(l => { if (done[l] === undefined) lost[l] = true; });
+    out[game] = { cur: Math.max(x.cur || 1, y.cur || 1), done, tries, lost, floor: Math.max(x.floor || 0, y.floor || 0) };
+    const adm = y.adm || x.adm;
+    if (adm) { out[game].adm = adm; out[game].ap = Math.max(x.ap || 0, y.ap || 0); }
   });
-  return out;
+  return lvApplyAdm(out);
 }
 
 async function pullProgress() {
@@ -12917,6 +12988,7 @@ const PL_ERRORS = {
   taken: 'Someone already has that name.',
   bad_name: 'Use 1 to 12 letters, numbers or spaces.',
   no_player: 'That player is gone. Reload the list.',
+  bad_result: 'That level or game was not accepted.',
   bad_pw: 'Use 4 to 40 characters for the password.',
   offline: "Can't reach Supabase right now."
 };
@@ -13181,6 +13253,7 @@ async function edOpenPlayer(name) {
   acts.innerHTML = '';
   const rename = el('button', '', 'Rename');
   const pw = el('button', '', 'Password');
+  const lvl = el('button', '', 'Set level');
   const hide = el('button', '', p.hidden ? 'Show on boards' : 'Hide from boards');
   const del = el('button', 'danger', 'Delete');
   rename.addEventListener('click', () => edPlForm('Rename', 'New name', 12, async value => {
@@ -13195,6 +13268,7 @@ async function edOpenPlayer(name) {
     if (res.ok) { mgSay('#edPlSheetMsg', 'New password set for ' + p.name, 'good'); await edLoadPlayers(); }
     return res.ok;
   }, 'password'));
+  lvl.addEventListener('click', () => edLevelForm(p));
   hide.addEventListener('click', async () => {
     const res = await edAdmin('admin_set_hidden', { p_name: p.name, p_hidden: !p.hidden }, (t, b) => mgSay('#edPlSheetMsg', t, b ? 'bad' : ''));
     if (!res.ok) return;
@@ -13208,9 +13282,53 @@ async function edOpenPlayer(name) {
     await edLoadPlayers();
     edPlMsg('Deleted ' + p.name);
   });
-  acts.append(rename, pw, hide, del);
+  acts.append(rename, pw, lvl, hide, del);
   openModal($('#edPlSheet'));
   edLoadResults(name);
+}
+
+// puts a player on any level by hand. Normal play moves them up on its own.
+async function edLevelForm(p) {
+  const box = $('#edPlForm');
+  box.innerHTML = '';
+  const row = el('div', 'ed-row');
+  const pick = el('select', 'ed-input');
+  GAME_LIST.filter(g => !g[0].startsWith('daily-')).forEach(([key, title]) => pick.appendChild(new Option(title, key)));
+  const input = el('input', 'ed-input');
+  input.type = 'number';
+  input.min = 1;
+  input.inputMode = 'numeric';
+  const save = el('button', 'btn btn-main', 'Save');
+  const cancel = el('button', 'btn btn-ghost', 'Cancel');
+  const hint = el('div', 'ed-hint');
+  let progress = {};
+  const showHint = () => {
+    const max = lvMax(pick.value);
+    const g = progress[pick.value];
+    input.max = max;
+    input.placeholder = '1 to ' + max;
+    hint.textContent = (g ? 'Now on level ' + (g.cur || 1) + ', ' + Object.keys(g.done || {}).length + ' beaten. ' : 'Not started yet. ') + 'Lower numbers send them back, higher ones skip them ahead.';
+  };
+  pick.addEventListener('change', showHint);
+  showHint();
+  cancel.addEventListener('click', () => { box.innerHTML = ''; });
+  save.addEventListener('click', async () => {
+    const level = Math.round(Number(input.value));
+    const max = lvMax(pick.value);
+    if (!level || level < 1 || level > max) { mgSay('#edPlSheetMsg', 'Pick a level from 1 to ' + max + '.', 'bad'); return; }
+    save.disabled = true;
+    const res = await edAdmin('admin_set_level', { p_name: p.name, p_game: pick.value, p_level: level }, (t, b) => mgSay('#edPlSheetMsg', t, b ? 'bad' : ''));
+    save.disabled = false;
+    if (!res.ok) return;
+    progress = (await edAdmin('admin_get_progress', { p_name: p.name }, () => {})).data || progress;
+    showHint();
+    input.value = '';
+    mgSay('#edPlSheetMsg', p.name + ' goes to level ' + level + ' next time they open the site.', 'good');
+  });
+  row.append(pick, input, save, cancel);
+  box.append(row, hint);
+  const got = await edAdmin('admin_get_progress', { p_name: p.name }, () => {});
+  if (got.ok && got.data && typeof got.data === 'object') { progress = got.data; showHint(); }
 }
 
 function edPlForm(label, hint, max, run, type) {
