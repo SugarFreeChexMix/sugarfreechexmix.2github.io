@@ -2309,6 +2309,46 @@ form.pf-panel .btn { flex: none; width: 90px; height: 40px; font-size: 0.9rem; }
 .pw-eye svg { width: 20px; height: 20px; fill: currentColor; }
 .pw-eye .shut, .pw-eye[aria-pressed='true'] .open { display: none; }
 .pw-eye[aria-pressed='true'] .shut { display: block; }
+
+/* profile page: banner, rank, ring */
+.pfcard { padding-top: 0; overflow-x: hidden; }
+.pf-banner { height: 92px; margin: 0 -32px; background: radial-gradient(circle at 20% 120%, rgba(255, 255, 255, 0.28), transparent 55%), linear-gradient(135deg, var(--av, #538d4e), color-mix(in srgb, var(--av, #538d4e) 45%, #000)); }
+.pfcard .close { color: #fff; background: rgba(0, 0, 0, 0.28); border-radius: 50%; }
+.pfcard .pf-head { margin-top: -42px; align-items: flex-end; padding-right: 0; position: relative; }
+.pfcard .pf-av { box-shadow: 0 0 0 4px var(--card), 0 8px 20px rgba(0, 0, 0, 0.45); }
+.pfcard .pf-id { padding-bottom: 4px; }
+.pf-rank { margin-bottom: 16px; padding: 12px 14px; border-radius: 12px; background: var(--border); }
+.pf-rank .top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.pf-rank .top b { font-family: Georgia, 'Times New Roman', serif; font-size: 1.15rem; }
+.pf-rank .top span { font-size: 0.75rem; color: var(--muted); font-weight: 700; }
+.pf-rank .pf-bar { height: 7px; background: var(--card); }
+.pf-rank .pf-bar i { background: linear-gradient(90deg, var(--correct), #8fd18a); }
+.pf-box.ring b { width: 54px; height: 54px; display: grid; place-items: center; border-radius: 50%; font-size: 0.95rem; background: radial-gradient(closest-side, var(--border) 78%, transparent 80%), conic-gradient(var(--present) calc(var(--p) * 1%), var(--card) 0); }
+.pf-box.ring { padding-top: 12px; }
+.pf-played { margin: -4px 0 14px; text-align: center; font-size: 0.75rem; color: var(--muted); }
+@media (max-width: 520px) { .pf-banner { margin: 0 -20px; height: 78px; } .pfcard .pf-head { margin-top: -36px; } }
+
+/* round two: tier badge, patterned banner, game accents */
+.pf-banner { background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1.5px, transparent 1.6px), radial-gradient(circle at 20% 120%, rgba(255, 255, 255, 0.28), transparent 55%), linear-gradient(135deg, var(--av, #538d4e), color-mix(in srgb, var(--av, #538d4e) 45%, #000)); background-size: 16px 16px, auto, auto; }
+.pf-tier { display: inline-block; margin-top: 6px; padding: 3px 10px; border-radius: 999px; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #1a1a1b; background: #9aa0a6; animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+.pf-tier[data-t='1'] { background: #8fd18a; }
+.pf-tier[data-t='2'] { background: #6fb3f2; }
+.pf-tier[data-t='3'] { background: #c9a0f0; }
+.pf-tier[data-t='4'] { background: #f0a36b; }
+.pf-tier[data-t='5'] { background: #ff7d7d; }
+.pf-tier[data-t='6'] { background: linear-gradient(90deg, #ffd966, #fff6c9, #e6b422); box-shadow: 0 0 12px rgba(230, 180, 34, 0.55); }
+.pf-game { border-left: 4px solid var(--filled); }
+.pf-game[data-kind='w'] { border-left-color: var(--correct); }
+.pf-game[data-kind='c'] { border-left-color: #8e54c9; }
+.pf-game[data-kind='s'] { border-left-color: #3a7bd5; }
+.pf-game[data-kind='o'] { border-left-color: var(--present); }
+.pf-lv { margin-top: 5px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; color: var(--muted); }
+.pf-game .pf-bar { margin-top: 6px; }
+.pf-box { transition: transform 0.2s; }
+.pf-box:hover { transform: translateY(-2px); }
+.pfcard .pf-head { align-items: flex-start; margin-bottom: 14px; }
+.pfcard .pf-id { padding: 48px 0 0; }
+@media (max-width: 520px) { .pfcard .pf-id { padding-top: 42px; } }
 /* ---------- manager ---------- */
 #edApp .ed-main { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
 .ed-tabs { position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; display: flex; gap: 0; margin: 0; padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: rgba(10, 10, 11, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
@@ -3812,13 +3852,16 @@ h1.hub-title { letter-spacing: 0.01em; }
     <button class="close" data-close aria-label="Close">
       <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
     </button>
+    <div class="pf-banner" id="pfBanner"></div>
     <div class="pf-head">
       <div class="pf-av" id="pfAv"></div>
       <div class="pf-id">
         <h2 id="pfName"></h2>
         <p id="pfJoined"></p>
+        <span class="pf-tier hidden" id="pfTier"></span>
       </div>
     </div>
+    <div class="pf-rank hidden" id="pfRank"></div>
     <div class="pf-own hidden" id="pfOwn">
       <button type="button" id="pfPicBtn">Change picture</button>
       <button type="button" id="pfPwBtn">Password</button>
@@ -12144,10 +12187,29 @@ function pfBox(cls, num, label) {
   return box;
 }
 
+// a title earned by beating levels, with how far it is to the next one
+const PF_TITLES = [[0, 'Rookie'], [10, 'Solver'], [30, 'Sharp'], [75, 'Veteran'], [150, 'Expert'], [300, 'Master'], [500, 'Legend']];
+
+function pfRank(beaten) {
+  let i = PF_TITLES.length - 1;
+  while (PF_TITLES[i][0] > beaten) i--;
+  const next = PF_TITLES[i + 1];
+  return { index: i, name: PF_TITLES[i][1], next: next ? next[1] : null, from: PF_TITLES[i][0], to: next ? next[0] : null };
+}
+
+function pfRing(pct) {
+  const box = el('div', 'pf-box ring');
+  box.style.setProperty('--p', pct);
+  const b = el('b', '', pct + '%');
+  box.append(b, el('span', '', 'Win rate'));
+  return box;
+}
+
 function pfRender(p) {
   pfData = p;
   const own = isMe(p.name);
   pfPaint($('#pfAv'), p.name, p.pfp);
+  $('#pfBanner').style.setProperty('--av', pfLook(p.name, p.pfp).color);
   $('#pfName').textContent = p.name;
   $('#pfJoined').textContent = 'Joined ' + new Date(p.joined).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
   $('#pfOwn').classList.toggle('hidden', !own);
@@ -12162,11 +12224,29 @@ function pfRender(p) {
   const played = games.reduce((n, g) => n + g.played, 0);
   const won = games.reduce((n, g) => n + g.won, 0);
 
+  const rank = pfRank(beaten);
+  const tier = $('#pfTier');
+  tier.textContent = rank.name;
+  tier.dataset.t = rank.index;
+  tier.classList.remove('hidden');
+  const rk = $('#pfRank');
+  rk.classList.remove('hidden');
+  rk.innerHTML = '';
+  const rtop = el('div', 'top');
+  rtop.append(el('b', '', rank.name), el('span', '', rank.next ? beaten + ' / ' + rank.to + ' to ' + rank.next : 'Top rank'));
+  const rbar = el('div', 'pf-bar');
+  const rfill = el('i');
+  rfill.style.width = '0%';
+  rbar.appendChild(rfill);
+  rk.append(rtop, rbar);
+  setTimeout(() => { rfill.style.width = (rank.to ? Math.round(((beaten - rank.from) / (rank.to - rank.from)) * 100) : 100) + '%'; }, 120);
+
   const body = $('#pfBody');
   body.innerHTML = '';
   const boxes = el('div', 'pf-boxes');
-  boxes.append(pfBox('gold', p.first || 0, '1st places'), pfBox('green', beaten, 'Levels beaten'), pfBox('', played, 'Games played'));
+  boxes.append(pfBox('gold', p.first || 0, '1st places'), pfBox('green', beaten, 'Levels beaten'), pfRing(played ? Math.round((won / played) * 100) : 0));
   body.appendChild(boxes);
+  body.appendChild(el('div', 'pf-played', played + (played === 1 ? ' game' : ' games') + ' played'));
 
   const medals = el('div', 'pf-medals');
   [[1, p.first], [2, p.second], [3, p.third]].forEach(([n, count]) => {
@@ -12182,7 +12262,6 @@ function pfRender(p) {
     body.appendChild(wall);
   }
 
-  body.appendChild(el('div', 'pf-h', 'Win rate · ' + (played ? Math.round((won / played) * 100) + '%' : '-')));
   body.appendChild(el('div', 'pf-h', 'By game'));
   const list = el('div', 'pf-games');
   let i = 0;
@@ -12195,6 +12274,7 @@ function pfRender(p) {
     top.append(el('span', '', title), el('em', '', g.best === null || g.best === undefined ? '' : 'Best ' + FORMATS[fmt](g.best)));
     row.appendChild(top);
     const lost = g.played - g.won;
+    row.dataset.kind = key.startsWith('wordle') ? 'w' : key.startsWith('connections') ? 'c' : key.startsWith('sudoku') ? 's' : 'o';
     row.appendChild(el('div', 'sub', g.played + (g.played === 1 ? ' game' : ' games') + ' · ' + g.won + ' won' + (lost ? ' · ' + lost + ' lost' : '')));
     if (!key.startsWith('daily-')) {
       const bar = el('div', 'pf-bar');
@@ -12203,6 +12283,7 @@ function pfRender(p) {
       bar.appendChild(fill);
       row.appendChild(bar);
       setTimeout(() => { fill.style.width = Math.min(100, Math.round((g.won / lvMax(key)) * 100)) + '%'; }, 80);
+      row.appendChild(el('div', 'pf-lv', g.won + ' of ' + lvMax(key) + ' levels'));
     }
     list.appendChild(row);
   });
@@ -12217,7 +12298,10 @@ async function openProfile(name) {
   $('#pfOut').classList.remove('armed');
   $('#pfName').textContent = name;
   $('#pfJoined').textContent = '';
+  $('#pfRank').classList.add('hidden');
+  $('#pfTier').classList.add('hidden');
   pfPaint($('#pfAv'), name, null);
+  $('#pfBanner').style.setProperty('--av', pfLook(name, null).color);
   $('#pfOwn').classList.add('hidden');
   $('#pfPick').classList.add('hidden');
   $('#pfPwForm').classList.add('hidden');
@@ -14081,6 +14165,9 @@ function initTourney() {
   });
   setInterval(tnTick, 250);
   tnRetryPending();
+  // event cards show on first load too, and stay fresh while the apps screen is open
+  tnHubRefresh();
+  setInterval(() => { if (activeApp === 'hub' && !document.hidden) tnLoad(true).then(tnHubRefresh); }, 60000);
   if (tnRun) {
     if (tnLeft() <= 0) { tnFinish(); return; }
     testMode = true;
