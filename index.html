@@ -1808,6 +1808,54 @@ h1.fl-title { font-size: 1.6rem; }
 .fl-grid img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 5px; display: block; margin-bottom: 3px; }
 #flEndClose { background: none; border: 1px solid var(--border); color: var(--text); }
 @media (prefers-reduced-motion: reduce) { .fl-card.in, .fl-card.right, .fl-card.skip { animation: none; } }
+/* ---------- Chess puzzles ---------- */
+h1.ch-title { font-size: 1.6rem; }
+.hub-art-ch svg { width: 96px; height: 56px; display: block; }
+
+.ch-main { --bs: min(calc(100vw - 16px), 440px, calc(100dvh - 51px - var(--dock) - 170px)); width: 100%; max-width: 470px; margin: 0 auto; padding: 4px 8px 0; height: calc(100vh - 51px - var(--dock)); height: calc(100dvh - 51px - var(--dock)); overflow-y: auto; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.ch-info { width: var(--bs); display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-top: 6px; }
+.ch-turn { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.ch-turn i { width: 14px; height: 14px; border-radius: 50%; background: #f4f4f0; box-shadow: 0 0 0 2px var(--filled); }
+.ch-turn.black i { background: #2a2a2c; box-shadow: 0 0 0 2px var(--sub); }
+.ch-goal { padding: 4px 12px; border-radius: 999px; background: var(--correct); color: #fff; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.ch-wrap { width: var(--bs); height: var(--bs); border-radius: 4px; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45); }
+.ch-board { --lt: #eeeed2; --dk: #769656; position: relative; width: 100%; height: 100%; display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+.ch-sq { position: relative; background: var(--lt); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ch-sq.dk { background: var(--dk); }
+.ch-sq .co { position: absolute; font-size: 11px; font-weight: 800; opacity: 1; pointer-events: none; color: var(--dk); line-height: 1; }
+.ch-sq.dk .co { color: var(--lt); }
+.ch-sq .co.f { right: 3px; bottom: 2px; }
+.ch-sq .co.r { left: 3px; top: 2px; }
+.ch-sq.last::before, .ch-sq.sel::before, .ch-sq.hintsq::before, .ch-sq.sol::before { content: ''; position: absolute; inset: 0; background: rgba(255, 255, 51, 0.5); }
+.ch-sq.sel::before { background: rgba(255, 255, 51, 0.55); }
+.ch-sq.sol::before { background: rgba(83, 200, 90, 0.6); }
+.ch-sq.hintsq::before { background: rgba(80, 160, 255, 0.55); animation: chpulse 1s ease-in-out infinite; }
+.ch-sq.check::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle, rgba(255, 60, 60, 0.85) 0, rgba(255, 60, 60, 0) 70%); }
+.ch-sq.dot::after { content: ''; position: absolute; left: 35%; top: 35%; width: 30%; height: 30%; border-radius: 50%; background: rgba(0, 0, 0, 0.16); }
+.ch-sq.dot.cap::after { left: 0; top: 0; width: 100%; height: 100%; background: radial-gradient(circle, transparent 58%, rgba(0, 0, 0, 0.16) 60%); }
+@keyframes chpulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+.ch-pieces { position: absolute; inset: 0; pointer-events: none; }
+.ch-pc { position: absolute; width: 12.5%; height: 12.5%; transition: left 0.22s ease-out, top 0.22s ease-out, opacity 0.2s; filter: drop-shadow(0 2px 1.5px rgba(0, 0, 0, 0.4)); }
+.ch-pc.out { opacity: 0; }
+.ch-pc svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.ch-pc .body { stroke-width: 1.35; stroke-linejoin: round; stroke-linecap: round; }
+.ch-pc.w .body { fill: url(#chW); stroke: #262626; }
+.ch-pc.b .body { fill: url(#chB); stroke: #0a0a0a; }
+.ch-pc .line { fill: none; stroke-width: 1.2; stroke-linecap: round; }
+.ch-pc.w .line { stroke: #262626; }
+.ch-pc.b .line { stroke: #d6d6da; }
+.ch-pc.w .eye { fill: #262626; }
+.ch-pc.b .eye { fill: #e8e8ec; }
+.ch-pc.drag { transition: none; z-index: 6; filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.45)); }
+.ch-board { touch-action: none; }
+.ch-board.lost .ch-pc.mate { animation: chshake 0.4s; }
+@keyframes chshake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+.ch-msg { min-height: 20px; font-size: 0.85rem; font-weight: 700; color: var(--sub); text-align: center; }
+.ch-msg.good { color: var(--correct); }
+.ch-msg.bad { color: var(--warn); }
 /* ---------- events, ribbons and belts ---------- */
 .tn-ic { --c: #e6b422; display: inline-flex; flex: none; color: var(--c); filter: drop-shadow(0 0 5px var(--c)); animation: tnglow 2.4s ease-in-out infinite; }
 .tn-ic svg { width: 20px; height: 20px; fill: currentColor; }
@@ -2938,6 +2986,14 @@ h1.hub-title { letter-spacing: 0.01em; }
         <div class="hub-desc">Guess the word one letter at a time before the drawing is done.</div>
         <div class="hub-chip" id="chipHm">New</div>
       </button>
+      <button class="hub-card" data-app="chess">
+        <div class="hub-art">
+          <div class="hub-art-ch"><svg viewBox="0 0 96 54" aria-hidden="true"><rect x="0" y="0" width="24" height="18" fill="var(--filled)" opacity=".5"/><rect x="48" y="0" width="24" height="18" fill="var(--filled)" opacity=".5"/><rect x="24" y="18" width="24" height="18" fill="var(--filled)" opacity=".5"/><rect x="72" y="18" width="24" height="18" fill="var(--filled)" opacity=".5"/><rect x="0" y="36" width="24" height="18" fill="var(--filled)" opacity=".5"/><rect x="48" y="36" width="24" height="18" fill="var(--filled)" opacity=".5"/><rect x="48" y="18" width="24" height="18" fill="var(--correct)"/><g transform="translate(47.5 15.5) scale(.56)" fill="#f7f5ee" stroke="#1c1c1e" stroke-width="2" stroke-linejoin="round"><path d="M11 38.5V35h23v3.5z"/><path d="M14 35c0-8 1-12 5-15-3 .5-6-1-7-4.5 1.5-4 6-8.5 11-9l1.5-3 3 3.5c4.5 2.5 7.5 9 7.5 16.5 0 4-.5 8-1 11.5z"/></g></svg></div>
+        </div>
+        <div class="hub-name">Chess Puzzles</div>
+        <div class="hub-desc">Find the winning move. Checkmate in a few moves, or win material.</div>
+        <div class="hub-chip" id="chipCh">New</div>
+      </button>
       <button class="hub-card" data-app="geo">
         <div class="hub-art">
           <div class="hub-art-geo"><svg viewBox="0 0 96 56" aria-hidden="true"><g fill="var(--filled)"><path d="M10 14c6-6 16-8 22-4 4 3 2 8-3 10-3 4-2 9-8 10-6-1-8-6-12-8-3-3-3-6 1-8z"/><path d="M30 34c5-2 9 1 9 6s-3 12-7 14c-4-3-5-9-4-14z"/><path d="M46 12c6-4 14-4 20 0 6-3 14-1 20 4-2 6-8 8-12 10-4 6-10 4-14 0-4 3-8 4-10 12-4 0-6-5-6-10 0-6-2-12 2-16z"/><path d="M70 40c5-2 12 0 14 5-3 5-10 6-14 3z"/></g><path d="M56 14c4-2 9 0 10 4-3 3-8 4-10 1z" fill="var(--correct)"/><path d="M14 17c3-2 7-1 9 1-2 3-6 4-9 2z" fill="var(--correct)"/></svg></div>
@@ -3782,6 +3838,74 @@ h1.hub-title { letter-spacing: 0.01em; }
       <li><b>5 minutes:</b> name as many flags as you can.</li>
       <li><b>Timed:</b> name every flag as fast as you can.</li>
     </ul>
+  </div>
+</div>
+<!-- chess puzzles -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="chW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d4d1c4"/></linearGradient>
+  <linearGradient id="chB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d5d63"/><stop offset="1" stop-color="#1d1d21"/></linearGradient>
+</defs></svg>
+<div class="app" id="chApp">
+  <header>
+    <div class="hl">
+      <button class="icon-btn" id="chHelpBtn" aria-label="How to play">
+        <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+      </button>
+    </div>
+    <h1 class="ch-title">Chess<span class="inf">&#8734;</span></h1>
+    <div class="hr">
+      <button class="icon-btn" id="chStatsBtn" aria-label="Statistics">
+        <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"/></svg>
+      </button>
+    </div>
+  </header>
+  <main class="ch-main">
+    <div class="ch-info">
+      <div class="ch-turn" id="chTurn"><i></i><span id="chTurnText"></span></div>
+      <div class="ch-goal" id="chGoal"></div>
+    </div>
+    <div class="ch-wrap">
+      <div class="ch-board" id="chBoard" aria-label="Chess board"></div>
+    </div>
+    <div class="ch-msg" id="chMsg" aria-live="polite"></div>
+    <div class="uw-tools">
+      <button class="sd-tool" id="chHint"><svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg><span>Hint +30s</span></button>
+    </div>
+  </main>
+</div>
+
+<!-- chess stats -->
+<div class="modal" id="chStatsModal" aria-hidden="true">
+  <div class="card">
+    <button class="close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <p class="result-line" id="chResultLine"></p>
+    <h2>Statistics</h2>
+    <div class="stats-row">
+      <div class="stat"><div class="num" id="chSolved">0</div><div class="lbl">Solved</div></div>
+      <div class="stat"><div class="num" id="chBest">-</div><div class="lbl">Best Time</div></div>
+      <div class="stat"><div class="num" id="chClean">0</div><div class="lbl">No Hints</div></div>
+    </div>
+    <div class="end-footer hidden" id="chEndFooter">
+      <button class="btn btn-main" id="chAgain">Next Level</button>
+    </div>
+  </div>
+</div>
+
+<!-- chess help -->
+<div class="modal" id="chHelpModal" aria-hidden="true">
+  <div class="card help">
+    <button class="close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <h2 class="big">How To Play</h2>
+    <p>Find the best move for the side shown at the bottom.</p>
+    <ul>
+      <li>Tap one of your pieces, then tap the square to move it to.</li>
+      <li>"Mate in 2" means you checkmate on your second move. The other side answers in between.</li>
+      <li>"Winning move" puzzles have one move that wins a lot of material.</li>
+      <li>A wrong move ends the level, so think first. There are no retries.</li>
+      <li>Your time is your score. A hint shows which piece to move and adds 30 seconds.</li>
+    </ul>
+    <hr>
+    <p class="note">Pawns that reach the end become queens.</p>
   </div>
 </div>
 <!-- events (tournaments) -->
@@ -6020,9 +6144,9 @@ let activeApp = 'hub';
 let wordleEntered = false;
 let connEntered = false;
 
-const APP_IDS = { hub: 'hub', wordle: 'wordleApp', conn: 'connApp', sudoku: 'sdApp', mini: 'mcApp', anagrams: 'anApp', bee: 'beeApp', unwordle: 'uwApp', hangman: 'hmApp', geo: 'geoApp', wordsearch: 'wsApp', flags: 'flApp', editor: 'edApp' };
+const APP_IDS = { hub: 'hub', wordle: 'wordleApp', conn: 'connApp', sudoku: 'sdApp', mini: 'mcApp', anagrams: 'anApp', bee: 'beeApp', unwordle: 'uwApp', hangman: 'hmApp', geo: 'geoApp', wordsearch: 'wsApp', flags: 'flApp', chess: 'chApp', editor: 'edApp' };
 
-const HUB_NAMES = { wordle: 'Wordle', conn: 'Connections', sudoku: 'Sudoku', mini: 'Mini Crossword', anagrams: 'Anagrams', bee: 'Spelling Bee', unwordle: 'Unwordle', hangman: 'Hangman', geo: 'Countries', wordsearch: 'Word Search', flags: 'Flags' };
+const HUB_NAMES = { wordle: 'Wordle', conn: 'Connections', sudoku: 'Sudoku', mini: 'Mini Crossword', anagrams: 'Anagrams', bee: 'Spelling Bee', unwordle: 'Unwordle', hangman: 'Hangman', geo: 'Countries', wordsearch: 'Word Search', flags: 'Flags', chess: 'Chess Puzzles' };
 const dayKey = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 
 // counts how many days in a row any game was opened
@@ -6062,6 +6186,7 @@ function renderHub() {
   $('#chipFl').textContent = flStats.played ? 'Played ' + flStats.played : 'New';
   $('#chipWs').textContent = wsStats.solved ? 'Solved ' + wsStats.solved : 'New';
   $('#chipGeo').textContent = geoStats.played ? 'Played ' + geoStats.played : 'New';
+  $('#chipCh').textContent = chStats.solved ? 'Solved ' + chStats.solved : 'New';
   $('#chipHm').textContent = hmStats.solved ? 'Solved ' + hmStats.solved : 'New';
   $('#chipUw').textContent = uwStats.solved ? 'Solved ' + uwStats.solved : 'New';
   $('#chipBee').textContent = beeStats.genius ? 'Genius ' + beeStats.genius : 'New';
@@ -6074,9 +6199,10 @@ function renderHub() {
     hangman: hm.status === 'playing' && hm.guessed.length > 0,
     geo: !!gg && gg.status === 'playing' && gg.found.length > 0,
     wordsearch: ws.status === 'playing' && ws.found.length > 0,
-    flags: !!fg && fg.status === 'playing' && fg.found.length > 0
+    flags: !!fg && fg.status === 'playing' && fg.found.length > 0,
+    chess: ch.status === 'playing' && ch.moves.length > 0
   };
-  const chips = { wordle: '#chipWordle', conn: '#chipConn', anagrams: '#chipAnagrams', bee: '#chipBee', unwordle: '#chipUw', hangman: '#chipHm', geo: '#chipGeo', wordsearch: '#chipWs', flags: '#chipFl' };
+  const chips = { wordle: '#chipWordle', conn: '#chipConn', anagrams: '#chipAnagrams', bee: '#chipBee', unwordle: '#chipUw', hangman: '#chipHm', geo: '#chipGeo', wordsearch: '#chipWs', flags: '#chipFl', chess: '#chipCh' };
   Object.keys(chips).forEach(k => {
     const chip = $(chips[k]);
     chip.classList.toggle('live', live[k]);
@@ -6120,6 +6246,7 @@ function showApp(name) {
   clearTimeout(uwStatsTimer);
   clearTimeout(hmStatsTimer);
   clearTimeout(wsStatsTimer);
+  clearTimeout(chStatsTimer);
   if (activeApp === 'geo') geoLeave();
   if (activeApp === 'flags') flLeave();
   activeApp = name;
@@ -6140,6 +6267,7 @@ function showApp(name) {
   if (name === 'geo') enterGeo();
   if (name === 'wordsearch') enterWordSearch();
   if (name === 'flags') enterFlags();
+  if (name === 'chess') enterChess();
   if (name === 'editor') enterEditor();
 }
 
@@ -9535,8 +9663,8 @@ function hmOpenStats() {
   $('#hmBest').textContent = hmStats.best ? clockText(hmStats.best) : '-';
   $('#hmClean').textContent = hmStats.clean;
   const over = hm.status !== 'playing';
-  $('#hmResultLine').textContent = over ? hm.word.toUpperCase() + (hm.status === 'won' ? ' · ' + clockText(hmSecs()) : ' · Try again') : '';
-  $('#hmAgain').textContent = hm.status === 'lost' ? 'Try Again' : 'Next Level';
+  $('#hmResultLine').textContent = over ? hm.word.toUpperCase() + (hm.status === 'won' ? ' · ' + clockText(hmSecs()) : ' · No retries') : '';
+  $('#hmAgain').textContent = 'Next Level';
   $('#hmEndFooter').classList.toggle('hidden', !over);
   openModal(hmStatsModal);
 }
@@ -10912,6 +11040,545 @@ function initFlags() {
   $('#flEndClose').addEventListener('click', () => closeModal(flEndModal));
   $('#flEndAgain').addEventListener('click', () => { closeModal(flEndModal); stopConfetti(); flStartGame(); });
 }
+/* chess.js (BSD-2) rules engine, minified */
+const Chess = (function () {
+  const exports = {};
+"use strict";function rootNode(t){return null!==t?{comment:t,variations:[]}:{variations:[]}}function node(t,e,r,i,n){const s={move:t,variations:n};return e&&(s.suffix=e),r&&(s.nag=r),null!==i&&(s.comment=i),s}function lineToTree(...t){const[e,...r]=t;let i=e;for(const t of r)null!==t&&(i.variations=[t,...t.variations],t.variations=[],i=t);return e}function pgn(t,e){if(e.marker&&e.marker.comment){let t=e.root;for(;;){const r=t.variations[0];if(!r){t.comment=e.marker.comment;break}t=r}}return{headers:t,root:e.root,result:(e.marker&&e.marker.result)??void 0}}function peg$subclass(t,e){function r(){this.constructor=t}r.prototype=e.prototype,t.prototype=new r}function peg$SyntaxError(t,e,r,i){var n=Error.call(this,t);return Object.setPrototypeOf&&Object.setPrototypeOf(n,peg$SyntaxError.prototype),n.expected=e,n.found=r,n.location=i,n.name="SyntaxError",n}function peg$padEnd(t,e,r){return r=r||" ",t.length>e?t:(e-=t.length,t+(r+=r.repeat(e)).slice(0,e))}function peg$parse(t,e){var r,i,n,s,o={},a=(e=void 0!==e?e:{}).grammarSource,h={pgn:Wt},l=Wt,u="[",c='"',_="]",f=".",p="O-O-O",g="O-O",d="0-0-0",S="0-0",m="$",E="{",b="}",v=";",A="(",O=")",T="1-0",C="0-1",I="1/2-1/2",k="*",y=/^[a-zA-Z]/,x=/^[^"]/,N=/^[0-9]/,P=/^[.]/,w=/^[a-zA-Z1-8\-=]/,K=/^[+#]/,M=/^[!?]/,L=/^[^}]/,R=/^[^\r\n]/,B=/^[ \t\r\n]/,F=$t("tag pair"),q=Dt("[",!1),D=Dt('"',!1),U=Dt("]",!1),$=$t("tag name"),Q=Ut([["a","z"],["A","Z"]],!1,!1),G=$t("tag value"),H=Ut(['"'],!0,!1),W=$t("move number"),V=Ut([["0","9"]],!1,!1),j=Dt(".",!1),Y=Ut(["."],!1,!1),z=$t("standard algebraic notation"),Z=Dt("O-O-O",!1),J=Dt("O-O",!1),X=Dt("0-0-0",!1),tt=Dt("0-0",!1),et=Ut([["a","z"],["A","Z"],["1","8"],"-","="],!1,!1),rt=Ut(["+","#"],!1,!1),it=$t("suffix annotation"),nt=Ut(["!","?"],!1,!1),st=$t("NAG"),ot=Dt("$",!1),at=$t("brace comment"),ht=Dt("{",!1),lt=Ut(["}"],!0,!1),ut=Dt("}",!1),ct=$t("rest of line comment"),_t=Dt(";",!1),ft=Ut(["\r","\n"],!0,!1),pt=$t("variation"),gt=Dt("(",!1),dt=Dt(")",!1),St=$t("game termination marker"),mt=Dt("1-0",!1),Et=Dt("0-1",!1),bt=Dt("1/2-1/2",!1),vt=Dt("*",!1),At=$t("whitespace"),Ot=Ut([" ","\t","\r","\n"],!1,!1),Tt=function(t,e){return pgn(t,e)},Ct=function(t){return Object.fromEntries(t)},It=function(t,e){return[t,e]},kt=function(t,e){return{root:t,marker:e}},yt=function(t,e){return lineToTree(rootNode(t),...e.flat())},xt=function(t,e,r,i,n){return node(t,e,r,i,n)},Nt=function(t){return t},Pt=function(t){return t.replace(/[\r\n]+/g," ")},wt=function(t){return t.trim()},Kt=function(t){return t},Mt=function(t,e){return{result:t,comment:e}},Lt=0|e.peg$currPos,Rt=[{line:1,column:1}],Bt=Lt,Ft=e.peg$maxFailExpected||[],qt=0|e.peg$silentFails;if(e.startRule){if(!(e.startRule in h))throw new Error("Can't start parsing from rule \""+e.startRule+'".');l=h[e.startRule]}function Dt(t,e){return{type:"literal",text:t,ignoreCase:e}}function Ut(t,e,r){return{type:"class",parts:t,inverted:e,ignoreCase:r}}function $t(t){return{type:"other",description:t}}function Qt(e){var r,i=Rt[e];if(i)return i;if(e>=Rt.length)r=Rt.length-1;else for(r=e;!Rt[--r];);for(i={line:(i=Rt[r]).line,column:i.column};r<e;)10===t.charCodeAt(r)?(i.line++,i.column=1):i.column++,r++;return Rt[e]=i,i}function Gt(t,e,r){var i=Qt(t),n=Qt(e);return{source:a,start:{offset:t,line:i.line,column:i.column},end:{offset:e,line:n.line,column:n.column}}}function Ht(t){Lt<Bt||(Lt>Bt&&(Bt=Lt,Ft=[]),Ft.push(t))}function Wt(){var e,r;return e=function(){var t,e;for(t=[],e=Vt();e!==o;)t.push(e),e=Vt();return e=Xt(),Ct(t)}(),r=function(){var e,r;return e=jt(),Xt(),r=function(){var e,r,i;return qt++,e=Lt,t.substr(Lt,3)===T?(r=T,Lt+=3):(r=o,0===qt&&Ht(mt)),r===o&&(t.substr(Lt,3)===C?(r=C,Lt+=3):(r=o,0===qt&&Ht(Et)),r===o&&(t.substr(Lt,7)===I?(r=I,Lt+=7):(r=o,0===qt&&Ht(bt)),r===o&&(42===t.charCodeAt(Lt)?(r=k,Lt++):(r=o,0===qt&&Ht(vt))))),r!==o?(Xt(),(i=Zt())===o&&(i=null),e=Mt(r,i)):(Lt=e,e=o),qt--,e===o&&(r=o,0===qt&&Ht(St)),e}(),r===o&&(r=null),Xt(),kt(e,r)}(),Tt(e,r)}function Vt(){var e,r,i,n,s,a,h;return qt++,e=Lt,Xt(),91===t.charCodeAt(Lt)?(r=u,Lt++):(r=o,0===qt&&Ht(q)),r!==o?(Xt(),i=function(){var e,r,i;if(qt++,e=Lt,r=[],i=t.charAt(Lt),y.test(i)?Lt++:(i=o,0===qt&&Ht(Q)),i!==o)for(;i!==o;)r.push(i),i=t.charAt(Lt),y.test(i)?Lt++:(i=o,0===qt&&Ht(Q));else r=o;return e=r!==o?t.substring(e,Lt):r,qt--,e===o&&(r=o,0===qt&&Ht($)),e}(),i!==o?(Xt(),34===t.charCodeAt(Lt)?(n=c,Lt++):(n=o,0===qt&&Ht(D)),n!==o?(s=function(){var e,r,i;for(qt++,e=Lt,r=[],i=t.charAt(Lt),x.test(i)?Lt++:(i=o,0===qt&&Ht(H));i!==o;)r.push(i),i=t.charAt(Lt),x.test(i)?Lt++:(i=o,0===qt&&Ht(H));return e=t.substring(e,Lt),qt--,r=o,0===qt&&Ht(G),e}(),34===t.charCodeAt(Lt)?(a=c,Lt++):(a=o,0===qt&&Ht(D)),a!==o?(Xt(),93===t.charCodeAt(Lt)?(h=_,Lt++):(h=o,0===qt&&Ht(U)),h!==o?e=It(i,s):(Lt=e,e=o)):(Lt=e,e=o)):(Lt=e,e=o)):(Lt=e,e=o)):(Lt=e,e=o),qt--,e===o&&0===qt&&Ht(F),e}function jt(){var t,e,r;for((t=Zt())===o&&(t=null),e=[],r=Yt();r!==o;)e.push(r),r=Yt();return yt(t,e)}function Yt(){var e,r,i,n,s,a,h,l;if(e=Lt,Xt(),function(){var e,r,i,n,s,a;for(qt++,e=Lt,r=[],i=t.charAt(Lt),N.test(i)?Lt++:(i=o,0===qt&&Ht(V));i!==o;)r.push(i),i=t.charAt(Lt),N.test(i)?Lt++:(i=o,0===qt&&Ht(V));if(46===t.charCodeAt(Lt)?(i=f,Lt++):(i=o,0===qt&&Ht(j)),i!==o){for(n=Xt(),s=[],a=t.charAt(Lt),P.test(a)?Lt++:(a=o,0===qt&&Ht(Y));a!==o;)s.push(a),a=t.charAt(Lt),P.test(a)?Lt++:(a=o,0===qt&&Ht(Y));e=r=[r,i,n,s]}else Lt=e,e=o;qt--,e===o&&(r=o,0===qt&&Ht(W))}(),Xt(),r=function(){var e,r,i,n,s,a;if(qt++,e=Lt,r=Lt,t.substr(Lt,5)===p?(i=p,Lt+=5):(i=o,0===qt&&Ht(Z)),i===o&&(t.substr(Lt,3)===g?(i=g,Lt+=3):(i=o,0===qt&&Ht(J)),i===o&&(t.substr(Lt,5)===d?(i=d,Lt+=5):(i=o,0===qt&&Ht(X)),i===o&&(t.substr(Lt,3)===S?(i=S,Lt+=3):(i=o,0===qt&&Ht(tt)),i===o))))if(i=Lt,n=t.charAt(Lt),y.test(n)?Lt++:(n=o,0===qt&&Ht(Q)),n!==o){if(s=[],a=t.charAt(Lt),w.test(a)?Lt++:(a=o,0===qt&&Ht(et)),a!==o)for(;a!==o;)s.push(a),a=t.charAt(Lt),w.test(a)?Lt++:(a=o,0===qt&&Ht(et));else s=o;s!==o?i=n=[n,s]:(Lt=i,i=o)}else Lt=i,i=o;return i!==o?(n=t.charAt(Lt),K.test(n)?Lt++:(n=o,0===qt&&Ht(rt)),n===o&&(n=null),r=i=[i,n]):(Lt=r,r=o),e=r!==o?t.substring(e,Lt):r,qt--,e===o&&(r=o,0===qt&&Ht(z)),e}(),r!==o){for(i=function(){var e,r,i;for(qt++,e=Lt,r=[],i=t.charAt(Lt),M.test(i)?Lt++:(i=o,0===qt&&Ht(nt));i!==o;)r.push(i),r.length>=2?i=o:(i=t.charAt(Lt),M.test(i)?Lt++:(i=o,0===qt&&Ht(nt)));return r.length<1?(Lt=e,e=o):e=r,qt--,e===o&&(r=o,0===qt&&Ht(it)),e}(),i===o&&(i=null),n=[],s=zt();s!==o;)n.push(s),s=zt();for(s=Xt(),(a=Zt())===o&&(a=null),h=[],l=Jt();l!==o;)h.push(l),l=Jt();e=xt(r,i,n,a,h)}else Lt=e,e=o;return e}function zt(){var e,r,i,n,s;if(qt++,e=Lt,Xt(),36===t.charCodeAt(Lt)?(r=m,Lt++):(r=o,0===qt&&Ht(ot)),r!==o){if(i=Lt,n=[],s=t.charAt(Lt),N.test(s)?Lt++:(s=o,0===qt&&Ht(V)),s!==o)for(;s!==o;)n.push(s),s=t.charAt(Lt),N.test(s)?Lt++:(s=o,0===qt&&Ht(V));else n=o;(i=n!==o?t.substring(i,Lt):n)!==o?e=Nt(i):(Lt=e,e=o)}else Lt=e,e=o;return qt--,e===o&&0===qt&&Ht(st),e}function Zt(){var e;return(e=function(){var e,r,i,n,s;if(qt++,e=Lt,123===t.charCodeAt(Lt)?(r=E,Lt++):(r=o,0===qt&&Ht(ht)),r!==o){for(i=Lt,n=[],s=t.charAt(Lt),L.test(s)?Lt++:(s=o,0===qt&&Ht(lt));s!==o;)n.push(s),s=t.charAt(Lt),L.test(s)?Lt++:(s=o,0===qt&&Ht(lt));i=t.substring(i,Lt),125===t.charCodeAt(Lt)?(n=b,Lt++):(n=o,0===qt&&Ht(ut)),n!==o?e=Pt(i):(Lt=e,e=o)}else Lt=e,e=o;return qt--,e===o&&(r=o,0===qt&&Ht(at)),e}())===o&&(e=function(){var e,r,i,n,s;if(qt++,e=Lt,59===t.charCodeAt(Lt)?(r=v,Lt++):(r=o,0===qt&&Ht(_t)),r!==o){for(i=Lt,n=[],s=t.charAt(Lt),R.test(s)?Lt++:(s=o,0===qt&&Ht(ft));s!==o;)n.push(s),s=t.charAt(Lt),R.test(s)?Lt++:(s=o,0===qt&&Ht(ft));i=t.substring(i,Lt),e=wt(i)}else Lt=e,e=o;return qt--,e===o&&(r=o,0===qt&&Ht(ct)),e}()),e}function Jt(){var e,r,i,n;return qt++,e=Lt,Xt(),40===t.charCodeAt(Lt)?(r=A,Lt++):(r=o,0===qt&&Ht(gt)),r!==o&&(i=jt())!==o?(Xt(),41===t.charCodeAt(Lt)?(n=O,Lt++):(n=o,0===qt&&Ht(dt)),n!==o?e=Kt(i):(Lt=e,e=o)):(Lt=e,e=o),qt--,e===o&&0===qt&&Ht(pt),e}function Xt(){var e,r;for(qt++,e=[],r=t.charAt(Lt),B.test(r)?Lt++:(r=o,0===qt&&Ht(Ot));r!==o;)e.push(r),r=t.charAt(Lt),B.test(r)?Lt++:(r=o,0===qt&&Ht(Ot));return qt--,r=o,0===qt&&Ht(At),e}if(r=l(),e.peg$library)return{peg$result:r,peg$currPos:Lt,peg$FAILED:o,peg$maxFailExpected:Ft,peg$maxFailPos:Bt};if(r!==o&&Lt===t.length)return r;throw r!==o&&Lt<t.length&&Ht({type:"end"}),i=Ft,n=Bt<t.length?t.charAt(Bt):null,s=Bt<t.length?Gt(Bt,Bt+1):Gt(Bt,Bt),new peg$SyntaxError(peg$SyntaxError.buildMessage(i,n),i,n,s)}
+/**
+ * @license
+ * Copyright (c) 2025, Jeff Hlywa (jhlywa@gmail.com)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */peg$subclass(peg$SyntaxError,Error),peg$SyntaxError.prototype.format=function(t){var e="Error: "+this.message;if(this.location){var r,i=null;for(r=0;r<t.length;r++)if(t[r].source===this.location.source){i=t[r].text.split(/\r\n|\n|\r/g);break}var n=this.location.start,s=this.location.source&&"function"==typeof this.location.source.offset?this.location.source.offset(n):n,o=this.location.source+":"+s.line+":"+s.column;if(i){var a=this.location.end,h=peg$padEnd("",s.line.toString().length," "),l=i[n.line-1],u=(n.line===a.line?a.column:l.length+1)-n.column||1;e+="\n --\x3e "+o+"\n"+h+" |\n"+s.line+" | "+l+"\n"+h+" | "+peg$padEnd("",n.column-1," ")+peg$padEnd("",u,"^")}else e+="\n at "+o}return e},peg$SyntaxError.buildMessage=function(t,e){var r={literal:function(t){return'"'+n(t.text)+'"'},class:function(t){var e=t.parts.map(function(t){return Array.isArray(t)?s(t[0])+"-"+s(t[1]):s(t)});return"["+(t.inverted?"^":"")+e.join("")+"]"},any:function(){return"any character"},end:function(){return"end of input"},other:function(t){return t.description}};function i(t){return t.charCodeAt(0).toString(16).toUpperCase()}function n(t){return t.replace(/\\/g,"\\\\").replace(/"/g,'\\"').replace(/\0/g,"\\0").replace(/\t/g,"\\t").replace(/\n/g,"\\n").replace(/\r/g,"\\r").replace(/[\x00-\x0F]/g,function(t){return"\\x0"+i(t)}).replace(/[\x10-\x1F\x7F-\x9F]/g,function(t){return"\\x"+i(t)})}function s(t){return t.replace(/\\/g,"\\\\").replace(/\]/g,"\\]").replace(/\^/g,"\\^").replace(/-/g,"\\-").replace(/\0/g,"\\0").replace(/\t/g,"\\t").replace(/\n/g,"\\n").replace(/\r/g,"\\r").replace(/[\x00-\x0F]/g,function(t){return"\\x0"+i(t)}).replace(/[\x10-\x1F\x7F-\x9F]/g,function(t){return"\\x"+i(t)})}function o(t){return r[t.type](t)}return"Expected "+function(t){var e,r,i=t.map(o);if(i.sort(),i.length>0){for(e=1,r=1;e<i.length;e++)i[e-1]!==i[e]&&(i[r]=i[e],r++);i.length=r}switch(i.length){case 1:return i[0];case 2:return i[0]+" or "+i[1];default:return i.slice(0,-1).join(", ")+", or "+i[i.length-1]}}(t)+" but "+function(t){return t?'"'+n(t)+'"':"end of input"}(e)+" found."};const MASK64=0xffffffffffffffffn;function rotl(t,e){return 0xffffffffffffffffn&(t<<e|t>>64n-e)}function wrappingMul(t,e){return t*e&MASK64}function xoroshiro128(t){return function(){let e=BigInt(t&MASK64),r=BigInt(t>>64n&MASK64);const i=wrappingMul(rotl(wrappingMul(e,5n),7n),9n);return r^=e,e=(rotl(e,24n)^r^r<<16n)&MASK64,r=rotl(r,37n),t=r<<64n|e,i}}const rand=xoroshiro128(0xa187eb39cdcaed8f31c4b365b102e01en),PIECE_KEYS=Array.from({length:2},()=>Array.from({length:6},()=>Array.from({length:128},()=>rand()))),EP_KEYS=Array.from({length:8},()=>rand()),CASTLING_KEYS=Array.from({length:16},()=>rand()),SIDE_KEY=rand(),WHITE="w",BLACK="b",PAWN="p",KNIGHT="n",BISHOP="b",ROOK="r",QUEEN="q",KING="k",DEFAULT_POSITION="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";class Move{color;from;to;piece;captured;promotion;flags;san;lan;before;after;constructor(t,e){const{color:r,piece:i,from:n,to:s,flags:o,captured:a,promotion:h}=e,l=algebraic(n),u=algebraic(s);this.color=r,this.piece=i,this.from=l,this.to=u,this.san=t._moveToSan(e,t._moves({legal:!0})),this.lan=l+u,this.before=t.fen(),t._makeMove(e),this.after=t.fen(),t._undoMove(),this.flags="";for(const t in BITS)BITS[t]&o&&(this.flags+=FLAGS[t]);a&&(this.captured=a),h&&(this.promotion=h,this.lan+=h)}isCapture(){return this.flags.indexOf(FLAGS.CAPTURE)>-1}isPromotion(){return this.flags.indexOf(FLAGS.PROMOTION)>-1}isEnPassant(){return this.flags.indexOf(FLAGS.EP_CAPTURE)>-1}isKingsideCastle(){return this.flags.indexOf(FLAGS.KSIDE_CASTLE)>-1}isQueensideCastle(){return this.flags.indexOf(FLAGS.QSIDE_CASTLE)>-1}isBigPawn(){return this.flags.indexOf(FLAGS.BIG_PAWN)>-1}}const EMPTY=-1,FLAGS={NORMAL:"n",CAPTURE:"c",BIG_PAWN:"b",EP_CAPTURE:"e",PROMOTION:"p",KSIDE_CASTLE:"k",QSIDE_CASTLE:"q",NULL_MOVE:"-"},SQUARES=["a8","b8","c8","d8","e8","f8","g8","h8","a7","b7","c7","d7","e7","f7","g7","h7","a6","b6","c6","d6","e6","f6","g6","h6","a5","b5","c5","d5","e5","f5","g5","h5","a4","b4","c4","d4","e4","f4","g4","h4","a3","b3","c3","d3","e3","f3","g3","h3","a2","b2","c2","d2","e2","f2","g2","h2","a1","b1","c1","d1","e1","f1","g1","h1"],BITS={NORMAL:1,CAPTURE:2,BIG_PAWN:4,EP_CAPTURE:8,PROMOTION:16,KSIDE_CASTLE:32,QSIDE_CASTLE:64,NULL_MOVE:128},SEVEN_TAG_ROSTER={Event:"?",Site:"?",Date:"????.??.??",Round:"?",White:"?",Black:"?",Result:"*"},SUPLEMENTAL_TAGS={WhiteTitle:null,BlackTitle:null,WhiteElo:null,BlackElo:null,WhiteUSCF:null,BlackUSCF:null,WhiteNA:null,BlackNA:null,WhiteType:null,BlackType:null,EventDate:null,EventSponsor:null,Section:null,Stage:null,Board:null,Opening:null,Variation:null,SubVariation:null,ECO:null,NIC:null,Time:null,UTCTime:null,UTCDate:null,TimeControl:null,SetUp:null,FEN:null,Termination:null,Annotator:null,Mode:null,PlyCount:null},HEADER_TEMPLATE={...SEVEN_TAG_ROSTER,...SUPLEMENTAL_TAGS},Ox88={a8:0,b8:1,c8:2,d8:3,e8:4,f8:5,g8:6,h8:7,a7:16,b7:17,c7:18,d7:19,e7:20,f7:21,g7:22,h7:23,a6:32,b6:33,c6:34,d6:35,e6:36,f6:37,g6:38,h6:39,a5:48,b5:49,c5:50,d5:51,e5:52,f5:53,g5:54,h5:55,a4:64,b4:65,c4:66,d4:67,e4:68,f4:69,g4:70,h4:71,a3:80,b3:81,c3:82,d3:83,e3:84,f3:85,g3:86,h3:87,a2:96,b2:97,c2:98,d2:99,e2:100,f2:101,g2:102,h2:103,a1:112,b1:113,c1:114,d1:115,e1:116,f1:117,g1:118,h1:119},PAWN_OFFSETS={b:[16,32,17,15],w:[-16,-32,-17,-15]},PIECE_OFFSETS={n:[-18,-33,-31,-14,18,33,31,14],b:[-17,-15,17,15],r:[-16,1,16,-1],q:[-17,-16,-15,1,17,16,15,-1],k:[-17,-16,-15,1,17,16,15,-1]},ATTACKS=[20,0,0,0,0,0,0,24,0,0,0,0,0,0,20,0,0,20,0,0,0,0,0,24,0,0,0,0,0,20,0,0,0,0,20,0,0,0,0,24,0,0,0,0,20,0,0,0,0,0,0,20,0,0,0,24,0,0,0,20,0,0,0,0,0,0,0,0,20,0,0,24,0,0,20,0,0,0,0,0,0,0,0,0,0,20,2,24,2,20,0,0,0,0,0,0,0,0,0,0,0,2,53,56,53,2,0,0,0,0,0,0,24,24,24,24,24,24,56,0,56,24,24,24,24,24,24,0,0,0,0,0,0,2,53,56,53,2,0,0,0,0,0,0,0,0,0,0,0,20,2,24,2,20,0,0,0,0,0,0,0,0,0,0,20,0,0,24,0,0,20,0,0,0,0,0,0,0,0,20,0,0,0,24,0,0,0,20,0,0,0,0,0,0,20,0,0,0,0,24,0,0,0,0,20,0,0,0,0,20,0,0,0,0,0,24,0,0,0,0,0,20,0,0,20,0,0,0,0,0,0,24,0,0,0,0,0,0,20],RAYS=[17,0,0,0,0,0,0,16,0,0,0,0,0,0,15,0,0,17,0,0,0,0,0,16,0,0,0,0,0,15,0,0,0,0,17,0,0,0,0,16,0,0,0,0,15,0,0,0,0,0,0,17,0,0,0,16,0,0,0,15,0,0,0,0,0,0,0,0,17,0,0,16,0,0,15,0,0,0,0,0,0,0,0,0,0,17,0,16,0,15,0,0,0,0,0,0,0,0,0,0,0,0,17,16,15,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,-15,-16,-17,0,0,0,0,0,0,0,0,0,0,0,0,-15,0,-16,0,-17,0,0,0,0,0,0,0,0,0,0,-15,0,0,-16,0,0,-17,0,0,0,0,0,0,0,0,-15,0,0,0,-16,0,0,0,-17,0,0,0,0,0,0,-15,0,0,0,0,-16,0,0,0,0,-17,0,0,0,0,-15,0,0,0,0,0,-16,0,0,0,0,0,-17,0,0,-15,0,0,0,0,0,0,-16,0,0,0,0,0,0,-17],PIECE_MASKS={p:1,n:2,b:4,r:8,q:16,k:32},SYMBOLS="pnbrqkPNBRQK",PROMOTIONS=["n","b","r","q"],RANK_1=7,RANK_2=6,RANK_7=1,RANK_8=0,SIDES={[KING]:BITS.KSIDE_CASTLE,[QUEEN]:BITS.QSIDE_CASTLE},ROOKS={w:[{square:Ox88.a1,flag:BITS.QSIDE_CASTLE},{square:Ox88.h1,flag:BITS.KSIDE_CASTLE}],b:[{square:Ox88.a8,flag:BITS.QSIDE_CASTLE},{square:Ox88.h8,flag:BITS.KSIDE_CASTLE}]},SECOND_RANK={b:1,w:6},SAN_NULLMOVE="--";function rank(t){return t>>4}function file(t){return 15&t}function isDigit(t){return-1!=="0123456789".indexOf(t)}function algebraic(t){const e=file(t),r=rank(t);return"abcdefgh".substring(e,e+1)+"87654321".substring(r,r+1)}function swapColor(t){return"w"===t?"b":"w"}function validateFen(t){const e=t.split(/\s+/);if(6!==e.length)return{ok:!1,error:"Invalid FEN: must contain six space-delimited fields"};const r=parseInt(e[5],10);if(isNaN(r)||r<=0)return{ok:!1,error:"Invalid FEN: move number must be a positive integer"};const i=parseInt(e[4],10);if(isNaN(i)||i<0)return{ok:!1,error:"Invalid FEN: half move counter number must be a non-negative integer"};if(!/^(-|[abcdefgh][36])$/.test(e[3]))return{ok:!1,error:"Invalid FEN: en-passant square is invalid"};if(/[^kKqQ-]/.test(e[2]))return{ok:!1,error:"Invalid FEN: castling availability is invalid"};if(!/^(w|b)$/.test(e[1]))return{ok:!1,error:"Invalid FEN: side-to-move is invalid"};const n=e[0].split("/");if(8!==n.length)return{ok:!1,error:"Invalid FEN: piece data does not contain 8 '/'-delimited rows"};for(let t=0;t<n.length;t++){let e=0,r=!1;for(let i=0;i<n[t].length;i++)if(isDigit(n[t][i])){if(r)return{ok:!1,error:"Invalid FEN: piece data is invalid (consecutive number)"};e+=parseInt(n[t][i],10),r=!0}else{if(!/^[prnbqkPRNBQK]$/.test(n[t][i]))return{ok:!1,error:"Invalid FEN: piece data is invalid (invalid piece)"};e+=1,r=!1}if(8!==e)return{ok:!1,error:"Invalid FEN: piece data is invalid (too many squares in rank)"}}if("3"==e[3][1]&&"w"==e[1]||"6"==e[3][1]&&"b"==e[1])return{ok:!1,error:"Invalid FEN: illegal en-passant square"};const s=[{color:"white",regex:/K/g},{color:"black",regex:/k/g}];for(const{color:t,regex:r}of s){if(!r.test(e[0]))return{ok:!1,error:`Invalid FEN: missing ${t} king`};if((e[0].match(r)||[]).length>1)return{ok:!1,error:`Invalid FEN: too many ${t} kings`}}return Array.from(n[0]+n[7]).some(t=>"P"===t.toUpperCase())?{ok:!1,error:"Invalid FEN: some pawns are on the edge rows"}:{ok:!0}}function getDisambiguator(t,e){const r=t.from,i=t.to,n=t.piece;let s=0,o=0,a=0;for(let t=0,h=e.length;t<h;t++){const h=e[t].from,l=e[t].to;n===e[t].piece&&r!==h&&i===l&&(s++,rank(r)===rank(h)&&o++,file(r)===file(h)&&a++)}return s>0?o>0&&a>0?algebraic(r):a>0?algebraic(r).charAt(1):algebraic(r).charAt(0):""}function addMove(t,e,r,i,n,s=void 0,o=BITS.NORMAL){const a=rank(i);if("p"!==n||7!==a&&0!==a)t.push({color:e,from:r,to:i,piece:n,captured:s,flags:o});else for(let a=0;a<PROMOTIONS.length;a++){const h=PROMOTIONS[a];t.push({color:e,from:r,to:i,piece:n,captured:s,promotion:h,flags:o|BITS.PROMOTION})}}function inferPieceType(t){let e=t.charAt(0);if(e>="a"&&e<="h"){if(t.match(/[a-h]\d.*[a-h]\d/))return;return"p"}return e=e.toLowerCase(),"o"===e?"k":e}function strippedSan(t){return t.replace(/=/,"").replace(/[+#]?[?!]*$/,"")}class Chess{_board=new Array(128);_turn="w";_header={};_kings={w:-1,b:-1};_epSquare=-1;_halfMoves=0;_moveNumber=0;_history=[];_comments={};_castling={w:0,b:0};_hash=0n;_positionCount=new Map;constructor(t=DEFAULT_POSITION,{skipValidation:e=!1}={}){this.load(t,{skipValidation:e})}clear({preserveHeaders:t=!1}={}){this._board=new Array(128),this._kings={w:-1,b:-1},this._turn="w",this._castling={w:0,b:0},this._epSquare=-1,this._halfMoves=0,this._moveNumber=1,this._history=[],this._comments={},this._header=t?this._header:{...HEADER_TEMPLATE},this._hash=this._computeHash(),this._positionCount=new Map,this._header.SetUp=null,this._header.FEN=null}load(t,{skipValidation:e=!1,preserveHeaders:r=!1}={}){let i=t.split(/\s+/);if(i.length>=2&&i.length<6){const e=["-","-","0","1"];t=i.concat(e.slice(-(6-i.length))).join(" ")}if(i=t.split(/\s+/),!e){const{ok:e,error:r}=validateFen(t);if(!e)throw new Error(r)}const n=i[0];let s=0;this.clear({preserveHeaders:r});for(let t=0;t<n.length;t++){const e=n.charAt(t);if("/"===e)s+=8;else if(isDigit(e))s+=parseInt(e,10);else{const t=e<"a"?"w":"b";this._put({type:e.toLowerCase(),color:t},algebraic(s)),s++}}this._turn=i[1],i[2].indexOf("K")>-1&&(this._castling.w|=BITS.KSIDE_CASTLE),i[2].indexOf("Q")>-1&&(this._castling.w|=BITS.QSIDE_CASTLE),i[2].indexOf("k")>-1&&(this._castling.b|=BITS.KSIDE_CASTLE),i[2].indexOf("q")>-1&&(this._castling.b|=BITS.QSIDE_CASTLE),this._epSquare="-"===i[3]?-1:Ox88[i[3]],this._halfMoves=parseInt(i[4],10),this._moveNumber=parseInt(i[5],10),this._hash=this._computeHash(),this._updateSetup(t),this._incPositionCount()}fen({forceEnpassantSquare:t=!1}={}){let e=0,r="";for(let t=Ox88.a8;t<=Ox88.h1;t++){if(this._board[t]){e>0&&(r+=e,e=0);const{color:i,type:n}=this._board[t];r+="w"===i?n.toUpperCase():n.toLowerCase()}else e++;t+1&136&&(e>0&&(r+=e),t!==Ox88.h1&&(r+="/"),e=0,t+=8)}let i="";this._castling.w&BITS.KSIDE_CASTLE&&(i+="K"),this._castling.w&BITS.QSIDE_CASTLE&&(i+="Q"),this._castling.b&BITS.KSIDE_CASTLE&&(i+="k"),this._castling.b&BITS.QSIDE_CASTLE&&(i+="q"),i=i||"-";let n="-";if(-1!==this._epSquare)if(t)n=algebraic(this._epSquare);else{const t=this._epSquare+("w"===this._turn?16:-16),e=[t+1,t-1];for(const t of e){if(136&t)continue;const e=this._turn;if(this._board[t]?.color===e&&"p"===this._board[t]?.type){this._makeMove({color:e,from:t,to:this._epSquare,piece:"p",captured:"p",flags:BITS.EP_CAPTURE});const r=!this._isKingAttacked(e);if(this._undoMove(),r){n=algebraic(this._epSquare);break}}}}return[r,this._turn,i,n,this._halfMoves,this._moveNumber].join(" ")}_pieceKey(t){if(!this._board[t])return 0n;const{color:e,type:r}=this._board[t],i={p:0,n:1,b:2,r:3,q:4,k:5}[r];return PIECE_KEYS[{w:0,b:1}[e]][i][t]}_epKey(){return-1===this._epSquare?0n:EP_KEYS[7&this._epSquare]}_castlingKey(){const t=this._castling.w>>5|this._castling.b>>3;return CASTLING_KEYS[t]}_computeHash(){let t=0n;for(let e=Ox88.a8;e<=Ox88.h1;e++)136&e?e+=7:this._board[e]&&(t^=this._pieceKey(e));return t^=this._epKey(),t^=this._castlingKey(),"b"===this._turn&&(t^=SIDE_KEY),t}_updateSetup(t){this._history.length>0||(t!==DEFAULT_POSITION?(this._header.SetUp="1",this._header.FEN=t):(this._header.SetUp=null,this._header.FEN=null))}reset(){this.load(DEFAULT_POSITION)}get(t){return this._board[Ox88[t]]}findPiece(t){const e=[];for(let r=Ox88.a8;r<=Ox88.h1;r++)136&r?r+=7:this._board[r]&&this._board[r]?.color===t.color&&this._board[r].color===t.color&&this._board[r].type===t.type&&e.push(algebraic(r));return e}put({type:t,color:e},r){return!!this._put({type:t,color:e},r)&&(this._updateCastlingRights(),this._updateEnPassantSquare(),this._updateSetup(this.fen()),!0)}_set(t,e){this._hash^=this._pieceKey(t),this._board[t]=e,this._hash^=this._pieceKey(t)}_put({type:t,color:e},r){if(-1===SYMBOLS.indexOf(t.toLowerCase()))return!1;if(!(r in Ox88))return!1;const i=Ox88[r];if("k"==t&&-1!=this._kings[e]&&this._kings[e]!=i)return!1;const n=this._board[i];return n&&"k"===n.type&&(this._kings[n.color]=-1),this._set(i,{type:t,color:e}),"k"===t&&(this._kings[e]=i),!0}_clear(t){this._hash^=this._pieceKey(t),delete this._board[t]}remove(t){const e=this.get(t);return this._clear(Ox88[t]),e&&"k"===e.type&&(this._kings[e.color]=-1),this._updateCastlingRights(),this._updateEnPassantSquare(),this._updateSetup(this.fen()),e}_updateCastlingRights(){this._hash^=this._castlingKey();const t="k"===this._board[Ox88.e1]?.type&&"w"===this._board[Ox88.e1]?.color,e="k"===this._board[Ox88.e8]?.type&&"b"===this._board[Ox88.e8]?.color;t&&"r"===this._board[Ox88.a1]?.type&&"w"===this._board[Ox88.a1]?.color||(this._castling.w&=-65),t&&"r"===this._board[Ox88.h1]?.type&&"w"===this._board[Ox88.h1]?.color||(this._castling.w&=-33),e&&"r"===this._board[Ox88.a8]?.type&&"b"===this._board[Ox88.a8]?.color||(this._castling.b&=-65),e&&"r"===this._board[Ox88.h8]?.type&&"b"===this._board[Ox88.h8]?.color||(this._castling.b&=-33),this._hash^=this._castlingKey()}_updateEnPassantSquare(){if(-1===this._epSquare)return;const t=this._epSquare+("w"===this._turn?-16:16),e=this._epSquare+("w"===this._turn?16:-16),r=[e+1,e-1];if(null!==this._board[t]||null!==this._board[this._epSquare]||this._board[e]?.color!==swapColor(this._turn)||"p"!==this._board[e]?.type)return this._hash^=this._epKey(),void(this._epSquare=-1);r.some(t=>!(136&t)&&this._board[t]?.color===this._turn&&"p"===this._board[t]?.type)||(this._hash^=this._epKey(),this._epSquare=-1)}_attacked(t,e,r){const i=[];for(let n=Ox88.a8;n<=Ox88.h1;n++){if(136&n){n+=7;continue}if(void 0===this._board[n]||this._board[n].color!==t)continue;const s=this._board[n],o=n-e;if(0===o)continue;const a=o+119;if(ATTACKS[a]&PIECE_MASKS[s.type]){if("p"===s.type){if(o>0&&"w"===s.color||o<=0&&"b"===s.color){if(!r)return!0;i.push(algebraic(n))}continue}if("n"===s.type||"k"===s.type){if(r){i.push(algebraic(n));continue}return!0}const t=RAYS[a];let h=n+t,l=!1;for(;h!==e;){if(null!=this._board[h]){l=!0;break}h+=t}if(!l){if(r){i.push(algebraic(n));continue}return!0}}}return!!r&&i}attackers(t,e){return e?this._attacked(e,Ox88[t],!0):this._attacked(this._turn,Ox88[t],!0)}_isKingAttacked(t){const e=this._kings[t];return-1!==e&&this._attacked(swapColor(t),e)}hash(){return this._hash.toString(16)}isAttacked(t,e){return this._attacked(e,Ox88[t])}isCheck(){return this._isKingAttacked(this._turn)}inCheck(){return this.isCheck()}isCheckmate(){return this.isCheck()&&0===this._moves().length}isStalemate(){return!this.isCheck()&&0===this._moves().length}isInsufficientMaterial(){const t={b:0,n:0,r:0,q:0,k:0,p:0},e=[];let r=0,i=0;for(let n=Ox88.a8;n<=Ox88.h1;n++){if(i=(i+1)%2,136&n){n+=7;continue}const s=this._board[n];s&&(t[s.type]=s.type in t?t[s.type]+1:1,"b"===s.type&&e.push(i),r++)}if(2===r)return!0;if(3===r&&(1===t.b||1===t.n))return!0;if(r===t.b+2){let t=0;const r=e.length;for(let i=0;i<r;i++)t+=e[i];if(0===t||t===r)return!0}return!1}isThreefoldRepetition(){return this._getPositionCount(this._hash)>=3}isDrawByFiftyMoves(){return this._halfMoves>=100}isDraw(){return this.isDrawByFiftyMoves()||this.isStalemate()||this.isInsufficientMaterial()||this.isThreefoldRepetition()}isGameOver(){return this.isCheckmate()||this.isDraw()}moves({verbose:t=!1,square:e,piece:r}={}){const i=this._moves({square:e,piece:r});return t?i.map(t=>new Move(this,t)):i.map(t=>this._moveToSan(t,i))}_moves({legal:t=!0,piece:e,square:r}={}){const i=r?r.toLowerCase():void 0,n=e?.toLowerCase(),s=[],o=this._turn,a=swapColor(o);let h=Ox88.a8,l=Ox88.h1,u=!1;if(i){if(!(i in Ox88))return[];h=l=Ox88[i],u=!0}for(let t=h;t<=l;t++){if(136&t){t+=7;continue}if(!this._board[t]||this._board[t].color===a)continue;const{type:e}=this._board[t];let r;if("p"===e){if(n&&n!==e)continue;r=t+PAWN_OFFSETS[o][0],this._board[r]||(addMove(s,o,t,r,"p"),r=t+PAWN_OFFSETS[o][1],SECOND_RANK[o]!==rank(t)||this._board[r]||addMove(s,o,t,r,"p",void 0,BITS.BIG_PAWN));for(let e=2;e<4;e++)r=t+PAWN_OFFSETS[o][e],136&r||(this._board[r]?.color===a?addMove(s,o,t,r,"p",this._board[r].type,BITS.CAPTURE):r===this._epSquare&&addMove(s,o,t,r,"p","p",BITS.EP_CAPTURE))}else{if(n&&n!==e)continue;for(let i=0,n=PIECE_OFFSETS[e].length;i<n;i++){const n=PIECE_OFFSETS[e][i];for(r=t;r+=n,!(136&r);){if(this._board[r]){if(this._board[r].color===o)break;addMove(s,o,t,r,e,this._board[r].type,BITS.CAPTURE);break}if(addMove(s,o,t,r,e),"n"===e||"k"===e)break}}}}if(!(void 0!==n&&"k"!==n||u&&l!==this._kings[o])){if(this._castling[o]&BITS.KSIDE_CASTLE){const t=this._kings[o],e=t+2;this._board[t+1]||this._board[e]||this._attacked(a,this._kings[o])||this._attacked(a,t+1)||this._attacked(a,e)||addMove(s,o,this._kings[o],e,"k",void 0,BITS.KSIDE_CASTLE)}if(this._castling[o]&BITS.QSIDE_CASTLE){const t=this._kings[o],e=t-2;this._board[t-1]||this._board[t-2]||this._board[t-3]||this._attacked(a,this._kings[o])||this._attacked(a,t-1)||this._attacked(a,e)||addMove(s,o,this._kings[o],e,"k",void 0,BITS.QSIDE_CASTLE)}}if(!t||-1===this._kings[o])return s;const c=[];for(let t=0,e=s.length;t<e;t++)this._makeMove(s[t]),this._isKingAttacked(o)||c.push(s[t]),this._undoMove();return c}move(t,{strict:e=!1}={}){let r=null;if("string"==typeof t)r=this._moveFromSan(t,e);else if(null===t)r=this._moveFromSan("--",e);else if("object"==typeof t){const e=this._moves();for(let i=0,n=e.length;i<n;i++)if(t.from===algebraic(e[i].from)&&t.to===algebraic(e[i].to)&&(!("promotion"in e[i])||t.promotion===e[i].promotion)){r=e[i];break}}if(!r)throw"string"==typeof t?new Error(`Invalid move: ${t}`):new Error(`Invalid move: ${JSON.stringify(t)}`);if(this.isCheck()&&r.flags&BITS.NULL_MOVE)throw new Error("Null move not allowed when in check");const i=new Move(this,r);return this._makeMove(r),this._incPositionCount(),i}_push(t){this._history.push({move:t,kings:{b:this._kings.b,w:this._kings.w},turn:this._turn,castling:{b:this._castling.b,w:this._castling.w},epSquare:this._epSquare,halfMoves:this._halfMoves,moveNumber:this._moveNumber})}_movePiece(t,e){this._hash^=this._pieceKey(t),this._board[e]=this._board[t],delete this._board[t],this._hash^=this._pieceKey(e)}_makeMove(t){const e=this._turn,r=swapColor(e);if(this._push(t),t.flags&BITS.NULL_MOVE)return"b"===e&&this._moveNumber++,this._halfMoves++,this._turn=r,void(this._epSquare=-1);if(this._hash^=this._epKey(),this._hash^=this._castlingKey(),t.captured&&(this._hash^=this._pieceKey(t.to)),this._movePiece(t.from,t.to),t.flags&BITS.EP_CAPTURE&&("b"===this._turn?this._clear(t.to-16):this._clear(t.to+16)),t.promotion&&(this._clear(t.to),this._set(t.to,{type:t.promotion,color:e})),"k"===this._board[t.to].type){if(this._kings[e]=t.to,t.flags&BITS.KSIDE_CASTLE){const e=t.to-1,r=t.to+1;this._movePiece(r,e)}else if(t.flags&BITS.QSIDE_CASTLE){const e=t.to+1,r=t.to-2;this._movePiece(r,e)}this._castling[e]=0}if(this._castling[e])for(let r=0,i=ROOKS[e].length;r<i;r++)if(t.from===ROOKS[e][r].square&&this._castling[e]&ROOKS[e][r].flag){this._castling[e]^=ROOKS[e][r].flag;break}if(this._castling[r])for(let e=0,i=ROOKS[r].length;e<i;e++)if(t.to===ROOKS[r][e].square&&this._castling[r]&ROOKS[r][e].flag){this._castling[r]^=ROOKS[r][e].flag;break}if(this._hash^=this._castlingKey(),t.flags&BITS.BIG_PAWN){let i;i="b"===e?t.to-16:t.to+16,(t.to-1&136||"p"!==this._board[t.to-1]?.type||this._board[t.to-1]?.color!==r)&&(t.to+1&136||"p"!==this._board[t.to+1]?.type||this._board[t.to+1]?.color!==r)?this._epSquare=-1:(this._epSquare=i,this._hash^=this._epKey())}else this._epSquare=-1;"p"===t.piece||t.flags&(BITS.CAPTURE|BITS.EP_CAPTURE)?this._halfMoves=0:this._halfMoves++,"b"===e&&this._moveNumber++,this._turn=r,this._hash^=SIDE_KEY}undo(){const t=this._hash,e=this._undoMove();if(e){const r=new Move(this,e);return this._decPositionCount(t),r}return null}_undoMove(){const t=this._history.pop();if(void 0===t)return null;this._hash^=this._epKey(),this._hash^=this._castlingKey();const e=t.move;this._kings=t.kings,this._turn=t.turn,this._castling=t.castling,this._epSquare=t.epSquare,this._halfMoves=t.halfMoves,this._moveNumber=t.moveNumber,this._hash^=this._epKey(),this._hash^=this._castlingKey(),this._hash^=SIDE_KEY;const r=this._turn,i=swapColor(r);if(e.flags&BITS.NULL_MOVE)return e;if(this._movePiece(e.to,e.from),e.piece&&(this._clear(e.from),this._set(e.from,{type:e.piece,color:r})),e.captured)if(e.flags&BITS.EP_CAPTURE){let t;t="b"===r?e.to-16:e.to+16,this._set(t,{type:"p",color:i})}else this._set(e.to,{type:e.captured,color:i});if(e.flags&(BITS.KSIDE_CASTLE|BITS.QSIDE_CASTLE)){let t,r;e.flags&BITS.KSIDE_CASTLE?(t=e.to+1,r=e.to-1):(t=e.to-2,r=e.to+1),this._movePiece(r,t)}return e}pgn({newline:t="\n",maxWidth:e=0}={}){const r=[];let i=!1;for(const e in this._header)this._header[e]&&r.push(`[${e} "${this._header[e]}"]`+t),i=!0;i&&this._history.length&&r.push(t);const n=t=>{const e=this._comments[this.fen()];return void 0!==e&&(t=`${t}${t.length>0?" ":""}{${e}}`),t},s=[];for(;this._history.length>0;)s.push(this._undoMove());const o=[];let a="";for(0===s.length&&o.push(n(""));s.length>0;){a=n(a);const t=s.pop();if(!t)break;if(this._history.length||"b"!==t.color)"w"===t.color&&(a.length&&o.push(a),a=this._moveNumber+".");else{const t=`${this._moveNumber}. ...`;a=a?`${a} ${t}`:t}a=a+" "+this._moveToSan(t,this._moves({legal:!0})),this._makeMove(t)}if(a.length&&o.push(n(a)),o.push(this._header.Result||"*"),0===e)return r.join("")+o.join(" ");const h=function(){return r.length>0&&" "===r[r.length-1]&&(r.pop(),!0)},l=function(i,n){for(const s of n.split(" "))if(s){if(i+s.length>e){for(;h();)i--;r.push(t),i=0}r.push(s),i+=s.length,r.push(" "),i++}return h()&&i--,i};let u=0;for(let i=0;i<o.length;i++)u+o[i].length>e&&o[i].includes("{")?u=l(u,o[i]):(u+o[i].length>e&&0!==i?(" "===r[r.length-1]&&r.pop(),r.push(t),u=0):0!==i&&(r.push(" "),u++),r.push(o[i]),u+=o[i].length);return r.join("")}header(...t){for(let e=0;e<t.length;e+=2)"string"==typeof t[e]&&"string"==typeof t[e+1]&&(this._header[t[e]]=t[e+1]);return this._header}setHeader(t,e){return this._header[t]=e??SEVEN_TAG_ROSTER[t]??null,this.getHeaders()}removeHeader(t){return t in this._header&&(this._header[t]=SEVEN_TAG_ROSTER[t]||null,!0)}getHeaders(){const t={};for(const[e,r]of Object.entries(this._header))null!==r&&(t[e]=r);return t}loadPgn(t,{strict:e=!1,newlineChar:r="\r?\n"}={}){"\r?\n"!==r&&(t=t.replace(new RegExp(r,"g"),"\n"));const i=peg$parse(t);this.reset();const n=i.headers;let s="";for(const t in n)"fen"===t.toLowerCase()&&(s=n[t]),this.header(t,n[t]);if(e){if("1"===n.SetUp){if(!("FEN"in n))throw new Error("Invalid PGN: FEN tag must be supplied with SetUp tag");this.load(n.FEN,{preserveHeaders:!0})}}else s&&this.load(s,{preserveHeaders:!0});let o=i.root;for(;o;){if(o.move){const t=this._moveFromSan(o.move,e);if(null==t)throw new Error(`Invalid move in PGN: ${o.move}`);this._makeMove(t),this._incPositionCount()}void 0!==o.comment&&(this._comments[this.fen()]=o.comment),o=o.variations[0]}const a=i.result;a&&Object.keys(this._header).length&&this._header.Result!==a&&this.setHeader("Result",a)}_moveToSan(t,e){let r="";if(t.flags&BITS.KSIDE_CASTLE)r="O-O";else if(t.flags&BITS.QSIDE_CASTLE)r="O-O-O";else{if(t.flags&BITS.NULL_MOVE)return"--";if("p"!==t.piece){const i=getDisambiguator(t,e);r+=t.piece.toUpperCase()+i}t.flags&(BITS.CAPTURE|BITS.EP_CAPTURE)&&("p"===t.piece&&(r+=algebraic(t.from)[0]),r+="x"),r+=algebraic(t.to),t.promotion&&(r+="="+t.promotion.toUpperCase())}return this._makeMove(t),this.isCheck()&&(this.isCheckmate()?r+="#":r+="+"),this._undoMove(),r}_moveFromSan(t,e=!1){let r=strippedSan(t);if(e||("0-0"===r?r="O-O":"0-0-0"===r&&(r="O-O-O")),"--"==r)return{color:this._turn,from:0,to:0,piece:"k",flags:BITS.NULL_MOVE};let i,n,s,o,a,h=inferPieceType(r),l=this._moves({legal:!0,piece:h});for(let t=0,e=l.length;t<e;t++)if(r===strippedSan(this._moveToSan(l[t],l)))return l[t];if(e)return null;let u=!1;if(n=r.match(/([pnbrqkPNBRQK])?([a-h][1-8])x?-?([a-h][1-8])([qrbnQRBN])?/),n?(i=n[1],s=n[2],o=n[3],a=n[4],1==s.length&&(u=!0)):(n=r.match(/([pnbrqkPNBRQK])?([a-h]?[1-8]?)x?-?([a-h][1-8])([qrbnQRBN])?/),n&&(i=n[1],s=n[2],o=n[3],a=n[4],1==s.length&&(u=!0))),h=inferPieceType(r),l=this._moves({legal:!0,piece:i||h}),!o)return null;for(let t=0,e=l.length;t<e;t++)if(s){if(!(i&&i.toLowerCase()!=l[t].piece||Ox88[s]!=l[t].from||Ox88[o]!=l[t].to||a&&a.toLowerCase()!=l[t].promotion))return l[t];if(u){const e=algebraic(l[t].from);if(!(i&&i.toLowerCase()!=l[t].piece||Ox88[o]!=l[t].to||s!=e[0]&&s!=e[1]||a&&a.toLowerCase()!=l[t].promotion))return l[t]}}else if(r===strippedSan(this._moveToSan(l[t],l)).replace("x",""))return l[t];return null}ascii(){let t="   +------------------------+\n";for(let e=Ox88.a8;e<=Ox88.h1;e++){if(0===file(e)&&(t+=" "+"87654321"[rank(e)]+" |"),this._board[e]){const r=this._board[e].type;t+=" "+("w"===this._board[e].color?r.toUpperCase():r.toLowerCase())+" "}else t+=" . ";e+1&136&&(t+="|\n",e+=8)}return t+="   +------------------------+\n",t+="     a  b  c  d  e  f  g  h",t}perft(t){const e=this._moves({legal:!1});let r=0;const i=this._turn;for(let n=0,s=e.length;n<s;n++)this._makeMove(e[n]),this._isKingAttacked(i)||(t-1>0?r+=this.perft(t-1):r++),this._undoMove();return r}setTurn(t){return this._turn!=t&&(this.move("--"),!0)}turn(){return this._turn}board(){const t=[];let e=[];for(let r=Ox88.a8;r<=Ox88.h1;r++)null==this._board[r]?e.push(null):e.push({square:algebraic(r),type:this._board[r].type,color:this._board[r].color}),r+1&136&&(t.push(e),e=[],r+=8);return t}squareColor(t){if(t in Ox88){const e=Ox88[t];return(rank(e)+file(e))%2==0?"light":"dark"}return null}history({verbose:t=!1}={}){const e=[],r=[];for(;this._history.length>0;)e.push(this._undoMove());for(;;){const i=e.pop();if(!i)break;t?r.push(new Move(this,i)):r.push(this._moveToSan(i,this._moves())),this._makeMove(i)}return r}_getPositionCount(t){return this._positionCount.get(t)??0}_incPositionCount(){this._positionCount.set(this._hash,(this._positionCount.get(this._hash)??0)+1)}_decPositionCount(t){const e=this._positionCount.get(t)??0;1===e?this._positionCount.delete(t):this._positionCount.set(t,e-1)}_pruneComments(){const t=[],e={},r=t=>{t in this._comments&&(e[t]=this._comments[t])};for(;this._history.length>0;)t.push(this._undoMove());for(r(this.fen());;){const e=t.pop();if(!e)break;this._makeMove(e),r(this.fen())}this._comments=e}getComment(){return this._comments[this.fen()]}setComment(t){this._comments[this.fen()]=t.replace("{","[").replace("}","]")}deleteComment(){return this.removeComment()}removeComment(){const t=this._comments[this.fen()];return delete this._comments[this.fen()],t}getComments(){return this._pruneComments(),Object.keys(this._comments).map(t=>({fen:t,comment:this._comments[t]}))}deleteComments(){return this.removeComments()}removeComments(){return this._pruneComments(),Object.keys(this._comments).map(t=>{const e=this._comments[t];return delete this._comments[t],{fen:t,comment:e}})}setCastlingRights(t,e){for(const r of["k","q"])void 0!==e[r]&&(e[r]?this._castling[t]|=SIDES[r]:this._castling[t]&=~SIDES[r]);this._updateCastlingRights();const r=this.getCastlingRights(t);return!(void 0!==e.k&&e.k!==r.k||void 0!==e.q&&e.q!==r.q)}getCastlingRights(t){return{[KING]:0!==(this._castling[t]&SIDES.k),[QUEEN]:0!==(this._castling[t]&SIDES.q)}}moveNumber(){return this._moveNumber}}exports.BISHOP="b",exports.BLACK="b",exports.Chess=Chess,exports.DEFAULT_POSITION=DEFAULT_POSITION,exports.KING="k",exports.KNIGHT="n",exports.Move=Move,exports.PAWN="p",exports.QUEEN="q",exports.ROOK="r",exports.SEVEN_TAG_ROSTER=SEVEN_TAG_ROSTER,exports.SQUARES=SQUARES,exports.WHITE="w",exports.validateFen=validateFen,exports.xoroshiro128=xoroshiro128;
+  return exports.Chess;
+})();
+/* chess puzzles: [start position, goal, the line to play], mined and checked with Stockfish */
+const CH_PUZZLES = [
+  ["8/3k1n2/r4p1p/1p5P/1P6/1KP5/7q/8 b - - 7 43", "m1", "h2a2"],
+  ["8/2k2p2/4b3/1p6/3P2q1/3pK1b1/6B1/7R b - - 5 39", "m1", "g4e2"],
+  ["8/2p3k1/1p1P2p1/5q2/3P2p1/P3K1P1/8/3r4 b - - 6 41", "m1", "f5f3"],
+  ["5k1r/4bp2/7p/5p2/5P2/4K1PP/r7/1q6 b - - 3 37", "m1", "b1e4"],
+  ["5k2/Q7/4B3/2p2PP1/p6P/P4K2/3bN3/5R2 w - - 3 42", "m1", "a7f7"],
+  ["2r1k3/p2p2pp/8/2bq4/P4P2/2K3P1/3B4/R7 b - - 6 34", "m1", "c5a3"],
+  ["5k2/4q2Q/2r3P1/2PpPp2/3P4/7N/6n1/6RK w - - 4 35", "m1", "h7h8"],
+  ["7k/p6p/2p5/3pp3/1Q2p3/1P4PP/4qr2/2K5 b - - 5 42", "m1", "e2c2"],
+  ["7k/2R5/5pp1/Q3pP1p/4P2P/1P4P1/6K1/2B5 w - - 2 42", "m1", "a5a8"],
+  ["1k1r4/p1p4p/1p4p1/8/2b2P2/q7/P1P4P/4KR2 b - - 5 40", "m1", "a3e3"],
+  ["r5k1/8/b6Q/p3Bp1P/P7/8/N3pPP1/R3K3 w - - 0 37", "m1", "h6g7"],
+  ["R7/ppR2p2/np2rk2/5qp1/8/P3b3/1P3N2/5K2 b - - 11 39", "m1", "f5f2"],
+  ["7k/p1p5/1p4Qp/4N3/5P2/P5P1/1P2N1bP/4KR2 w - - 10 37", "m1", "e5f7"],
+  ["r7/1p2k3/7Q/p1p3nB/2N1r2P/7q/PP3KP1/4R3 w - - 2 31", "m1", "h6d6"],
+  ["rn6/p2k3p/2pp2b1/8/6P1/3r3P/PP1RK3/R5q1 b - - 3 31", "m1", "d3e3"],
+  ["8/5Q2/p5rk/1p3B1p/3P1P1P/1PP4P/PB3K2/4R3 w - - 0 35", "m1", "f7g6"],
+  ["r4r2/pp4p1/n2k2P1/8/P2P2q1/1pP5/4bP1P/7K b - - 1 33", "m1", "e2f3"],
+  ["5k2/2Q2p2/p6p/B1PB2pP/P7/4P1P1/P4P2/b1R1K3 w - - 3 41", "m1", "c7f7"],
+  ["r3k3/1pB1bp1p/p5r1/P1p5/3n3P/2q1n3/R3PK2/1Q6 b q - 5 29", "m1", "g6g2"],
+  ["2k5/pb6/3rp3/PBbpq3/2p2B2/6P1/RP1KNr2/5q2 b - - 1 35", "m1", "f2e2"],
+  ["3B1rk1/4n1p1/p1n3p1/3p4/P3b2P/1P4r1/2P2P1q/R2QK3 b Q - 1 28", "m1", "h2f2"],
+  ["7r/ppp1k2p/5n1b/P3p3/NPp5/4qpP1/1P1r3P/R2Q1K1R b - - 2 25", "m1", "e3f2"],
+  ["2R5/1p2k3/1Bp1pp1n/3pN1Q1/1pP5/1Pn1P2P/3P1PP1/1N2KBR1 w - - 0 19", "m1", "b6c5"],
+  ["rk3bnr/p2p4/P4p2/n2N2p1/2p1R3/BP1BP1PP/2PP4/3Q2KR w - - 2 24", "m1", "e4e8"],
+  ["r1bqkb1r/1pp1n3/5p2/p3p1p1/Pn1P3p/N3KPP1/1P1PPN1P/R1BQ1B1R b kq - 0 12", "m1", "d8d4"],
+  ["2r1k2r/1p5p/p3b1np/P2p2P1/7P/2q1p2B/3R4/4K1N1 b k - 3 36", "m2", "c3d2 e1f1 c8c1"],
+  ["8/3q3p/2p1kp1p/7B/1Q1P1P2/2NP1NP1/5K1P/1R6 w - - 7 33", "m2", "b1e1 e6f5 f3h4"],
+  ["1rb5/p4k1r/1pp1p3/2q5/P4pP1/3n4/K6P/RN3RB1 b - - 7 32", "m2", "c5c2 a2a3 c2b2"],
+  ["7r/1r2k1p1/7p/p3Np2/2B5/R3P1PP/1B1R1K2/8 w - - 1 37", "m2", "e5c6 e7e8 d2d8"],
+  ["8/p7/Pp4pk/2R4p/3pn2P/3P1Q2/5P2/1R4K1 w - - 0 43", "m2", "f3f8 h6h7 c5c7"],
+  ["Q1b1k3/5p2/p4b1p/B2B2pP/P1P5/4P1P1/P4P2/2R1K3 w - - 11 38", "m2", "a8c8 e8e7 c8d8"],
+  ["8/p1p1k1p1/2b3P1/8/4N3/3pp1K1/PP1N4/R1rq2R1 w - - 2 38", "t", "g1d1"],
+  ["1r1qkb1r/1pp1p1pp/3p1p2/p2Pn1B1/4P3/2N5/PPP1bPPP/R2QK1NR b KQk - 1 10", "t", "e2d1"],
+  ["3r1br1/1pN1p1pp/4BkpP/p7/5P1P/P2R4/1P1BP3/R3K3 w Q - 4 24", "m2", "d2c3 d8d4 c3d4"],
+  ["5rq1/Qp2B3/4p3/1k2P3/1p1p2P1/1P5R/B4P2/2K5 w - - 0 35", "m2", "a7b7 b5a5 e7b4"],
+  ["rnb1kbnr/p3p2p/3p2p1/1p3pQ1/qPB5/B1P1PN2/P2P1PPP/RN2K2R b kq - 0 10", "t", "b5c4"],
+  ["1r3k2/1P4b1/2pp4/2P4p/p3p1pP/P3K1P1/8/5q2 b - - 0 43", "m2", "g7c3 c5d6 f1f3"],
+  ["rn1qkbnr/pp1bp3/2p3pp/Q2p4/P4p2/1P1P1N1P/2P1PPP1/RNBK1B1R b kq - 1 8", "t", "d8a5"],
+  ["r3k3/3n1p1p/2Q1b3/1p1p4/5B2/7P/P2K4/8 w - - 2 39", "t", "c6a8"],
+  ["rnbq1bn1/2p1p1pr/1p3k1p/p2p1p1Q/5N2/1P1PP1PP/P1P2PB1/RNB1K2R w KQ - 4 10", "m2", "h5g6 f6e5 d3d4"],
+  ["rn1qk1n1/1b1p1pp1/1p2p3/1R2r2p/P2N4/4P3/2PN1PPP/3QKB1R w Kq - 5 17", "t", "b5e5"],
+  ["7r/1p6/pQ2p3/2pPk3/P4pP1/5P2/4PK2/1N5R w - - 3 44", "m2", "b6e6 e5d4 e6e4"],
+  ["rnbq1br1/ppppkpp1/4p3/7p/1P6/5PnN/PBPPP2P/RNQ1KB1R w KQ - 2 8", "t", "h2g3"],
+  ["4k3/6p1/2p1b2p/b2pPp1P/5P1N/6P1/1qQ2P2/6K1 w - - 12 34", "t", "c2b2"],
+  ["2k5/p4pN1/1Rp2P2/1P6/8/2QP1PNb/1B3K2/2R5 w - - 0 38", "m2", "c3c6 c8d8 c6e8"],
+  ["2r2k2/pp2p3/n1p2bpr/6P1/2PQ4/P4PB1/4P3/R2K2N1 b - - 0 24", "t", "f6d4"],
+  ["1n1qk2r/rbpp1ppp/4p3/pp6/1N6/3P1P1P/P2QPNP1/RnB1KBR1 b Qk - 0 12", "t", "b1d2"],
+  ["7r/1Rb3k1/2P2n2/6p1/P1B5/5N2/4P1K1/2q5 b - - 3 36", "m2", "c1h1 g2f2 f6g4"],
+  ["5k2/7R/p3P3/1p6/6RP/2p5/8/2K5 w - - 0 44", "m2", "h7f7 f8e8 g4g8"],
+  ["3r1r2/Npp2k2/6Rp/3p2b1/1n1P1p2/PP2QP1b/1BP4P/1K1R4 b - - 0 25", "t", "f4e3"],
+  ["1rb2rk1/ppp1b3/2nq2pp/3p4/3PNp2/PP3P1N/1BPQ3P/2KR2R1 w - - 0 20", "t", "e4d6"],
+  ["r3kb1r/1b1p1p2/1p2qp2/p1nQ2pp/2P4P/PPN1P3/2P1NPP1/R3KB1R b kq - 0 15", "t", "b7d5"],
+  ["r2k2r1/ppp2q2/3b1n2/3p4/1Q5P/N2PPN1R/PPP3P1/R1B1K3 b Q - 6 21", "t", "d6b4"],
+  ["r3r1k1/2Q5/1p4p1/pB1pNp1p/1B1P1P2/6P1/7P/7K w - - 1 37", "m2", "c7f7 g8h8 e5g6"],
+  ["2b4r/2q1b2k/4B2p/4Np1N/1p1P2pP/1p6/1p5K/5r2 b - - 1 35", "m2", "c7c2 h2g3 c2f2"],
+  ["5k2/2PR4/p2R1B2/2q5/p3pP1p/4Pb2/6rP/1K6 b - - 0 41", "m2", "c5c2 b1a1 c2c1"],
+  ["1r5N/2q3k1/1bP2n2/4Q1p1/2B5/2P5/P2NP3/1R3K2 b - - 2 28", "t", "c7e5"],
+  ["1k2rb1r/4n1p1/4Q3/4N1P1/P7/1P2P2p/3PBN1R/2R1K3 w - - 1 37", "m2", "e5d7 b8a7 e6a6"],
+  ["6k1/5pp1/8/1BP1p3/3pq3/7P/3K1P2/r7 b - - 3 44", "m2", "a1a2 d2d1 e4b1"],
+  ["8/r2kB3/1p6/1N2p3/P1Pb1pp1/3q4/3P4/4K3 b - - 1 45", "m2", "d3b1 e1e2 f4f3"],
+  ["rnb4r/1p3pk1/2p5/p7/2P1Pp2/P1N2P1q/1P2BK2/R7 b - - 3 26", "m2", "h3g3 f2f1 h8h1"],
+  ["r1b3r1/p2k4/1p5b/1q1p2pp/4P3/N1B4N/PPP2PPP/R3K2R w KQ - 0 17", "t", "a3b5"],
+  ["r1bqk1nr/ppp3pp/2n1p3/1Nbp1p2/8/4P3/PPQP1PPP/R1B1KBNR w KQkq - 0 9", "t", "c2c5"],
+  ["8/2p4R/3bk3/2pb4/6pP/P1q2P2/6K1/8 b - - 0 45", "m2", "c3f3 g2g1 f3g2"],
+  ["8/2pk2p1/PP3p2/5n2/P7/3P1b2/3PNK2/R1B4q b - - 4 31", "m2", "h1g2 f2e1 g2e2"],
+  ["2k5/1pp5/p7/P1B1p3/1PP1q2b/6p1/4r3/K5R1 b - - 5 43", "m2", "e4c2 g1d1 c2d1"],
+  ["2N5/1k1BP3/8/p2N4/P2P4/5P2/5K2/R7 w - - 1 42", "m2", "a1b1 b7a8 d5c7"],
+  ["rnbq1rk1/2bp1pp1/p1p1p2p/1p2P3/1PP5/P1nP1NPP/5P2/RNBQKB1R w KQ - 1 12", "t", "b1c3"],
+  ["4k3/Q7/2q2p1r/1b1np1p1/p5Pp/3p1P1P/3R4/2R1K1N1 b - - 3 31", "t", "c6c1"],
+  ["4k3/1p1np2p/3b4/5b2/2r1nPqP/1R4P1/1R5K/8 b - - 1 30", "m2", "g4h3 h2g1 c4c1"],
+  ["6rk/p3Q2p/5p2/1n1p1PR1/7P/8/PP3p2/3R1K2 w - - 1 39", "m2", "e7f6 g8g7 f6g7"],
+  ["1nbqkb1r/2ppppp1/5n1p/pp6/1P2P3/3P4/P1r2PPP/RNBQKBNR w KQk - 0 8", "t", "d1c2"],
+  ["Q2q1k1N/1b1p1P2/8/1p1n4/7R/1P3B2/2n1PP2/R4KN1 w - - 3 35", "m2", "a8d8 f8g7 f7f8q"],
+  ["4k3/p4p1p/2rp1p2/5K2/8/R1B1P3/P3b2q/8 b - - 3 31", "m2", "c6c5 f5e4 h2h4"],
+  ["1r2k2r/4p3/3pPnp1/p1p3P1/2Pn4/P2P3P/5qBK/2B5 b k - 1 28", "m2", "d4f3 h2h1 f2g1"],
+  ["3r1b1k/pp3Q2/1n3P2/2pp4/3P1P2/PP4N1/2PB1KP1/R7 w - - 0 28", "m2", "a1h1 f8h6 h1h6"],
+  ["7Q/pp2pk2/4rp2/8/1PP5/P3B3/5P1P/3RKb2 w - - 5 33", "m2", "h8h7 f7e8 h7g8"],
+  ["r1bqkbnr/2ppp1p1/5p2/Qpn5/1PP3p1/5P1P/P2PP3/RNB1KBNR w KQkq - 1 8", "t", "a5a8"],
+  ["6k1/5r1R/3p1p2/Q4p1R/5B2/P4PP1/1PP2P2/2K2B2 w - - 3 34", "m2", "a5d5 g8f8 d5f7"],
+  ["rn2kbnr/1b1p1ppp/4p3/1q1P4/2Q2BP1/7B/P1PNPP1P/R3K1N1 w Qkq - 1 15", "t", "c4b5"],
+  ["8/4rk2/7R/1Q4p1/1B1rP1P1/P2p4/5b2/R2K1B2 w - - 12 37", "m3", "b5f5 f7g8 b4e7 g8g7 f5g6"],
+  ["5R2/rp4k1/6Pp/1Q6/1P2r1PP/2P5/6P1/7K w - - 3 34", "m3", "b5d7 e4e7 d7e7 g7g6 e7f7"],
+  ["1k2r3/pp1rqpb1/7p/1b4p1/1P1P1P2/P5PP/1Q1K4/2R3N1 b - - 6 31", "m3", "e7e3 d2d1 b5a4 b2b3 e3d3"],
+  ["1n2k2r/5pp1/2pp1b2/1p2q2p/1PP3b1/4B3/2KNNPPP/7R b k - 1 19", "m3", "g4e2 e3d4 e5d4 c4b5 d4b2"],
+  ["2k5/p1p5/2B5/1P6/1P3p2/2P1BNP1/3R4/5K2 w - - 0 32", "m3", "g3f4 a7a6 b5a6 c8b8 d2d8"],
+  ["2b1k3/p4p2/4p2r/4b2P/6P1/2nPP3/q7/5KNR b - - 0 29", "m3", "h6f6 g1f3 f6f3 f1g1 a2f2"],
+  ["rnbqk2r/ppp2p2/3bp3/7p/P5nP/2N2K2/1P1PP1P1/R1BQ1BNR b kq - 1 12", "m3", "d8f6 f3e4 g4f2 e4e3 f6f4"],
+  ["5rkr/pp1b2p1/8/7p/3p1R2/6K1/P1q5/6R1 b - - 0 42", "m3", "h5h4 g3f3 f8f4 f3f4 c2f5"],
+  ["8/2k3B1/1p3p2/3B4/p5Q1/P1N4p/1PP5/R3K1n1 w - - 0 36", "m3", "c3b5 c7b8 g4g3 b8c8 g3c7"],
+  ["r7/p2R4/Pk3p2/n4B1r/2P4p/B3P1P1/2PP4/3Q2KR w - - 1 30", "m3", "d1b1 a5b3 b1b3 b6a6 b3b5"],
+  ["7r/p2k4/3p4/p1p5/1PPbbP2/8/3pK3/8 b - - 2 45", "m3", "h8h2 e2d1 e4f3 d1c2 d2d1q"],
+  ["6k1/8/1R1rp3/p3n1p1/2P3P1/K1P2n2/P2qBP2/8 b - - 5 41", "m3", "d6b6 c4c5 d2b2 a3a4 b2a2"],
+  ["8/1p3k1r/pq1p1n2/3bpP2/PP5P/2r5/RBP1K3/5BR1 b - - 3 27", "m3", "d5f3 e2e1 b6e3 f1e2 e3e2"],
+  ["rnR3nr/p4ppp/1k6/2b5/3Q1PP1/5N1P/PP1PP3/RNB1KB1R w KQ - 1 14", "m3", "d4c5 b6a6 e2e4 a6b7 c8c7"],
+  ["2kr4/pb6/4p3/PBbpq3/2p1N3/2N2pP1/RP5r/2B1K3 b - - 2 31", "m3", "h2h1 e1d2 e5d4 d2c2 d4d3"],
+  ["8/2R1bp1p/p4k2/Pp4p1/3RQ3/6P1/5PKP/8 w - - 6 41", "m3", "e4e7 f6f5 d4d5 f5g6 e7g5"],
+  ["5k2/R7/8/1p3p2/1P5P/P3R3/r4P2/3BK3 w - - 1 39", "m3", "e3c3 a2d2 c3c8 d2d8 c8d8"],
+  ["4r1k1/5Rp1/4Q2p/p7/5P1P/8/P4P2/3R1K2 w - - 0 45", "m3", "e6g6 e8e1 d1e1 a5a4 g6g7"],
+  ["4R3/1r4k1/p4Np1/2P4p/R1P5/6PP/3B1P2/Q5K1 w - - 0 30", "m3", "f6e4 b7b2 d2c3 g7h6 e8h8"],
+  ["8/2k5/1r5p/p1p1NP1P/P1B5/6B1/8/3QK3 w - - 9 42", "m3", "d1d7 c7b8 e5c6 b8a8 d7a7"]
+].map(([fen, kind, line]) => ({ fen, kind, line: line.split(' ') }));
+/* =====================================================================
+   Chess puzzles
+   ===================================================================== */
+
+const chStatsModal = $('#chStatsModal');
+const chHelpModal = $('#chHelpModal');
+const chBoardEl = $('#chBoard');
+
+const CH_LEVELS = CH_PUZZLES.length;
+const CH_GOALS = { m1: 'Mate in 1', m2: 'Mate in 2', m3: 'Mate in 3', t: 'Winning move' };
+const CH_FILES = 'abcdefgh';
+let ch = null;
+let chGame = null;
+let chSel = null;
+let chHintSq = null;
+let chBusy = false;
+let chEntered = false;
+let chStatsTimer = null;
+let chPieceEls = {};
+let chFlip = false;
+let chStats = Object.assign({ solved: 0, best: 0, clean: 0 }, store.get('ch-stats', {}));
+
+// plain shapes drawn for this site, one per piece type
+const CH_SHAPES = {
+  p: '<circle class="body" cx="22.5" cy="11.5" r="5.2"/><path class="body" d="M17.3 19.6h10.4l-1 2.3h-8.4z"/><path class="body" d="M18.7 21.9c-3.3 3-5.1 7-5.5 12.6h18.6c-.4-5.6-2.2-9.6-5.5-12.6z"/><path class="body" d="M12 34.5h21c1 0 1.7.8 1.7 1.8V38H10.3v-1.7c0-1 .7-1.8 1.7-1.8z"/>',
+  r: '<path class="body" d="M14 34.5v-3l2.6-2.6V19.2L13.8 16.6V9h4.3v2.9h3.2V9h2.4v2.9h3.2V9H31.2v7.6l-2.8 2.6v9.7l2.6 2.6v3z"/><path class="line" d="M16.6 19.2h11.8M16.6 28.9h11.8"/><path class="body" d="M12 34.5h21c1 0 1.7.8 1.7 1.8V38H10.3v-1.7c0-1 .7-1.8 1.7-1.8z"/>',
+  n: '<path class="body" d="M13.2 34.5c-.5-8 1.6-12.6 6.2-16.4-2.4.3-4.8-.9-5.9-3.4l4.9-6.2 1.4-3.2 2.3 2.6c1.2-1 2.2-1.7 3.2-2.2l.9 3.3c5.6 2.4 9.6 8.2 9.6 17.1v8.4z"/><circle class="eye" cx="20.8" cy="13.6" r="1.3"/><path class="line" d="M14.1 15.3l3.4 1.5M25.6 9.6c3 1.5 6.2 5.4 7 11"/><path class="body" d="M12 34.5h21c1 0 1.7.8 1.7 1.8V38H10.3v-1.7c0-1 .7-1.8 1.7-1.8z"/>',
+  b: '<circle class="body" cx="22.5" cy="6.6" r="2.7"/><path class="body" d="M22.5 10c5.3 3.7 7.7 8.2 6.7 12.7-.5 2-1.8 3.3-3.3 4.1h-6.8c-1.5-.8-2.8-2.1-3.3-4.1-1-4.5 1.4-9 6.7-12.7z"/><path class="body" d="M16.3 27h12.4v2.3H16.3z"/><path class="body" d="M18.1 29.3c.2 2.2-.4 3.8-2.1 5.2h13c-1.7-1.4-2.3-3-2.1-5.2z"/><path class="line" d="M25.2 14.8l-5.6 6.6"/><path class="body" d="M12 34.5h21c1 0 1.7.8 1.7 1.8V38H10.3v-1.7c0-1 .7-1.8 1.7-1.8z"/>',
+  q: '<path class="body" d="M9.6 14.8l4.5 15.2h16.8l4.5-15.2-6.8 7-3.2-10.3-3.2 9.9-3.2-9.9-3.2 10.3z"/><circle class="body" cx="9.6" cy="13.3" r="2.3"/><circle class="body" cx="15.6" cy="9.8" r="2.3"/><circle class="body" cx="22.5" cy="8.3" r="2.3"/><circle class="body" cx="29.4" cy="9.8" r="2.3"/><circle class="body" cx="35.4" cy="13.3" r="2.3"/><path class="body" d="M13.6 30h17.8v4.5H13.6z"/><path class="line" d="M13.8 32.2h17.4"/><path class="body" d="M12 34.5h21c1 0 1.7.8 1.7 1.8V38H10.3v-1.7c0-1 .7-1.8 1.7-1.8z"/>',
+  k: '<path class="body" d="M21 2.8h3v3h3v3h-3V12h-3V8.8h-3v-3h3z"/><path class="body" d="M22.5 12.5c-6.6 0-11.2 4-11.2 9.4 0 3 1.5 5.2 3.2 6.6V34.5h16V28.5c1.7-1.4 3.2-3.6 3.2-6.6 0-5.4-4.6-9.4-11.2-9.4z"/><path class="line" d="M15.6 28.3h13.8M22.5 12.5v6"/><path class="body" d="M12 34.5h21c1 0 1.7.8 1.7 1.8V38H10.3v-1.7c0-1 .7-1.8 1.7-1.8z"/>'
+};
+
+const chPuzzle = () => CH_PUZZLES[ch.id];
+const chUci = m => m.from + m.to + (m.promotion || '');
+const chSecs = () => Math.max(1, Math.round(((ch.t1 || Date.now()) - (ch.t0 || Date.now())) / 1000));
+
+function chFresh() {
+  const id = lvCur('chess') - 1;
+  return { id, moves: [], wrong: '', hints: 0, t0: 0, t1: 0, status: 'playing' };
+}
+
+const chSave = () => store.set('ch-game', ch);
+
+// replays the saved moves; null if anything in them is not legal
+function chReplay(s) {
+  const g = new Chess(CH_PUZZLES[s.id].fen);
+  for (const u of s.moves) {
+    try { g.move({ from: u.slice(0, 2), to: u.slice(2, 4), promotion: u[4] }); } catch (e) { return null; }
+  }
+  return g;
+}
+
+function chValid(s) {
+  if (!s || !Number.isInteger(s.id) || s.id < 0 || s.id >= CH_LEVELS) return false;
+  if (!Array.isArray(s.moves) || !s.moves.every(u => /^[a-h][1-8][a-h][1-8][qrbn]?$/.test(u))) return false;
+  if (!Number.isInteger(s.hints) || !Number.isFinite(s.t0) || !Number.isFinite(s.t1)) return false;
+  if (!['playing', 'won', 'lost'].includes(s.status)) return false;
+  if (typeof s.wrong !== 'string') s.wrong = '';
+  const g = chReplay(s);
+  if (!g) return false;
+  if (s.status === 'playing' && (s.moves.length % 2 || s.moves.length >= CH_PUZZLES[s.id].line.length)) return false;
+  if (s.status === 'won' && !g.isCheckmate() && s.moves.length < CH_PUZZLES[s.id].line.length) return false;
+  return true;
+}
+
+/* drawing */
+
+function chPieceEl(type, color) {
+  const d = el('div', 'ch-pc ' + color);
+  d.innerHTML = '<svg viewBox="0 0 45 45" aria-hidden="true">' + CH_SHAPES[type] + '</svg>';
+  return d;
+}
+
+const chPos = sq => {
+  const f = CH_FILES.indexOf(sq[0]), r = Number(sq[1]) - 1;
+  return { left: (chFlip ? 7 - f : f) * 12.5 + '%', top: (chFlip ? r : 7 - r) * 12.5 + '%' };
+};
+
+function chBuildBoard() {
+  const side = new Chess(chPuzzle().fen).turn();
+  chFlip = side === 'b';
+  chBoardEl.innerHTML = '';
+  chBoardEl.classList.remove('lost');
+  for (let y = 0; y < 8; y++) {
+    for (let x = 0; x < 8; x++) {
+      const f = chFlip ? 7 - x : x, r = chFlip ? y : 7 - y;
+      const sq = CH_FILES[f] + (r + 1);
+      const cell = el('div', 'ch-sq' + ((f + r) % 2 === 0 ? ' dk' : ''));
+      cell.dataset.sq = sq;
+      if (y === 7) cell.appendChild(el('span', 'co f', CH_FILES[f]));
+      if (x === 0) cell.appendChild(el('span', 'co r', String(r + 1)));
+      chBoardEl.appendChild(cell);
+    }
+  }
+  const layer = el('div', 'ch-pieces');
+  layer.id = 'chPieces';
+  chBoardEl.appendChild(layer);
+}
+
+function chPaintPieces() {
+  const layer = $('#chPieces');
+  layer.innerHTML = '';
+  chPieceEls = {};
+  chGame.board().forEach(row => row.forEach(p => {
+    if (!p) return;
+    const node = chPieceEl(p.type, p.color);
+    const pos = chPos(p.square);
+    node.style.left = pos.left;
+    node.style.top = pos.top;
+    layer.appendChild(node);
+    chPieceEls[p.square] = node;
+  }));
+}
+
+function chKingSquare(color) {
+  for (const row of chGame.board()) for (const p of row) if (p && p.type === 'k' && p.color === color) return p.square;
+  return null;
+}
+
+function chPaintMarks() {
+  const last = ch.moves.length ? ch.moves[ch.moves.length - 1] : '';
+  const targets = chSel ? chGame.moves({ square: chSel, verbose: true }) : [];
+  const sol = ch.status === 'lost' ? chExpected() : '';
+  const kingSq = chGame.inCheck() ? chKingSquare(chGame.turn()) : null;
+  chBoardEl.querySelectorAll('.ch-sq').forEach(cell => {
+    const sq = cell.dataset.sq;
+    const t = targets.find(m => m.to === sq);
+    cell.classList.toggle('last', !!last && (sq === last.slice(0, 2) || sq === last.slice(2, 4)));
+    cell.classList.toggle('sel', sq === chSel);
+    cell.classList.toggle('dot', !!t);
+    cell.classList.toggle('cap', !!t && !!chGame.get(sq));
+    cell.classList.toggle('check', sq === kingSq);
+    cell.classList.toggle('hintsq', sq === chHintSq && ch.status === 'playing');
+    cell.classList.toggle('sol', !!sol && (sq === sol.slice(0, 2) || sq === sol.slice(2, 4)));
+  });
+}
+
+function chPaintInfo() {
+  const p = chPuzzle();
+  const black = new Chess(p.fen).turn() === 'b';
+  $('#chTurn').classList.toggle('black', black);
+  $('#chTurnText').textContent = (black ? 'Black' : 'White') + ' to move';
+  $('#chGoal').textContent = CH_GOALS[p.kind];
+  $('#chHint').disabled = ch.status !== 'playing';
+}
+
+function chSay(text, cls) {
+  const m = $('#chMsg');
+  m.textContent = text || '';
+  m.className = 'ch-msg' + (cls ? ' ' + cls : '');
+}
+
+function chPaintAll() {
+  chGame = chReplay(ch);
+  chBuildBoard();
+  chPaintPieces();
+  chPaintMarks();
+  chPaintInfo();
+  if (ch.status === 'playing') chSay('Your move');
+  else if (ch.status === 'won') chSay(chGame.isCheckmate() ? 'Checkmate!' : 'Solved!', 'good');
+  else chSay('Best was ' + chSan(chExpected()), 'bad');
+}
+
+/* moving */
+
+const chExpected = () => chPuzzle().line[ch.moves.length] || '';
+
+function chSan(uci) {
+  const t = new Chess(chGame.fen());
+  try { return t.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), promotion: uci[4] }).san; } catch (e) { return uci; }
+}
+
+// plays a move on the board, sliding the piece when it is a plain move
+function chShow(mv) {
+  const plain = !/[kqe]/.test(mv.flags) && !mv.promotion;
+  const node = chPieceEls[mv.from];
+  if (!plain || !node) { chPaintPieces(); return; }
+  const taken = chPieceEls[mv.to];
+  if (taken) { taken.classList.add('out'); setTimeout(() => taken.remove(), 220); }
+  const pos = chPos(mv.to);
+  node.style.left = pos.left;
+  node.style.top = pos.top;
+  delete chPieceEls[mv.from];
+  chPieceEls[mv.to] = node;
+}
+
+function chTap(sq) {
+  if (ch.status !== 'playing' || chBusy) return;
+  if (chSel) {
+    const hit = chGame.moves({ square: chSel, verbose: true }).filter(m => m.to === sq);
+    if (hit.length) { chPlay(hit); return; }
+  }
+  const piece = chGame.get(sq);
+  if (piece && piece.color === chGame.turn() && sq !== chSel) {
+    chSel = sq;
+    if (!ch.t0) { ch.t0 = Date.now(); chSave(); }
+    play('key');
+  } else chSel = null;
+  chPaintMarks();
+}
+
+/* dragging: pick a piece up, drop it on a square. A plain tap still works. */
+
+let chDrag = null;
+
+const chSquareAt = (x, y) => {
+  const r = chBoardEl.getBoundingClientRect();
+  const cx = Math.floor(((x - r.left) / r.width) * 8), cy = Math.floor(((y - r.top) / r.height) * 8);
+  if (cx < 0 || cx > 7 || cy < 0 || cy > 7) return null;
+  return CH_FILES[chFlip ? 7 - cx : cx] + (chFlip ? cy + 1 : 8 - cy);
+};
+
+// the square under the pointer: the element it landed on, or the position when a drag holds the pointer
+const chSquareOf = e => {
+  const cell = e.target.closest && e.target.closest('.ch-sq');
+  return cell ? cell.dataset.sq : chSquareAt(e.clientX, e.clientY);
+};
+
+function chDown(e) {
+  if (ch.status !== 'playing' || chBusy || (e.pointerType === 'mouse' && e.button !== 0)) return;
+  const sq = chSquareOf(e);
+  if (!sq) return;
+  const piece = chGame.get(sq);
+  chDrag = { sq, x: e.clientX, y: e.clientY, moved: false, own: !!piece && piece.color === chGame.turn() };
+}
+
+function chMove(e) {
+  const d = chDrag;
+  if (!d || !d.own) return;
+  const dx = e.clientX - d.x, dy = e.clientY - d.y;
+  if (!d.moved) {
+    if (Math.hypot(dx, dy) < 6) return;
+    d.moved = true;
+    d.el = chPieceEls[d.sq];
+    if (!d.el) { chDrag = null; return; }
+    try { chBoardEl.setPointerCapture(e.pointerId); } catch (err) { /* older browsers */ }
+    chSel = d.sq;
+    if (!ch.t0) { ch.t0 = Date.now(); chSave(); }
+    d.el.classList.add('drag');
+    chPaintMarks();
+  }
+  d.el.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(1.15)';
+}
+
+function chUp(e) {
+  const d = chDrag;
+  chDrag = null;
+  if (!d) return;
+  const sq = d.moved ? chSquareAt(e.clientX, e.clientY) : chSquareOf(e);
+  if (!d.moved) { if (sq) chTap(sq); return; }
+  const hit = sq ? chGame.moves({ square: d.sq, verbose: true }).filter(m => m.to === sq) : [];
+  // let go in place: the piece lands where it was dropped instead of sliding from the start
+  d.el.classList.remove('drag');
+  d.el.style.transform = '';
+  if (hit.length) { d.el.style.transition = 'none'; chPlay(hit); requestAnimationFrame(() => { d.el.style.transition = ''; }); return; }
+  chSel = d.sq;
+  chPaintMarks();
+}
+
+function chCancel() {
+  const d = chDrag;
+  chDrag = null;
+  if (d && d.el) { d.el.classList.remove('drag'); d.el.style.transform = ''; }
+}
+
+function chPlay(options) {
+  // a pawn reaching the end becomes a queen, unless the puzzle needs another piece
+  const want = (chExpected()[4]) || 'q';
+  const mv = options.find(m => (m.promotion || 'q') === want) || options[0];
+  const uci = chUci(mv);
+  const expected = chExpected();
+  const kind = chPuzzle().kind;
+  chSel = null;
+  chHintSq = null;
+  chGame.move({ from: mv.from, to: mv.to, promotion: mv.promotion });
+  chShow(mv);
+  const mate = chGame.isCheckmate();
+  const right = uci === expected || (kind !== 't' && mate);
+  if (!right) { chLose(uci, mv); return; }
+  ch.moves.push(uci);
+  const done = mate || ch.moves.length >= chPuzzle().line.length;
+  if (done) { chPaintMarks(); chWin(); return; }
+  // the other side answers
+  const reply = chPuzzle().line[ch.moves.length];
+  ch.moves.push(reply);
+  chSave();
+  play('hint');
+  chSay('Good. Keep going', 'good');
+  chPaintMarks();
+  chBusy = true;
+  setTimeout(() => {
+    const r = chGame.move({ from: reply.slice(0, 2), to: reply.slice(2, 4), promotion: reply[4] });
+    chShow(r);
+    chPaintMarks();
+    chBusy = false;
+  }, reduceMotion ? 80 : 420);
+}
+
+function chWin() {
+  ch.status = 'won';
+  ch.t1 = Date.now();
+  const secs = chSecs();
+  lvWon('chess', ch.id + 1, secs, ch.moves.slice());
+  chStats.solved++;
+  chStats.best = chStats.best ? Math.min(chStats.best, secs) : secs;
+  if (!ch.hints) chStats.clean++;
+  store.set('ch-stats', chStats);
+  chSave();
+  chPaintInfo();
+  chSay(chGame.isCheckmate() ? 'Checkmate!' : 'Solved!', 'good');
+  toast('Solved!', 1500);
+  launchConfetti();
+  play('win');
+  chStatsTimer = setTimeout(chOpenStats, 1800);
+}
+
+function chLose(uci, mv) {
+  chBusy = true;
+  ch.status = 'lost';
+  ch.wrong = uci;
+  ch.t1 = Date.now();
+  // a wrong move uses the level up: no retries
+  lvLost('chess', ch.id + 1, chSecs(), ch.moves.concat(uci));
+  chSave();
+  play('error');
+  chSay('Not the move', 'bad');
+  chPaintInfo();
+  chPaintMarks();
+  setTimeout(() => {
+    // put the piece back and show the move that worked
+    chGame = chReplay(ch);
+    chPaintPieces();
+    chPaintMarks();
+    chSay('Best was ' + chSan(chExpected()), 'bad');
+    chBusy = false;
+  }, reduceMotion ? 300 : 900);
+  chStatsTimer = setTimeout(chOpenStats, reduceMotion ? 700 : 2300);
+}
+
+function chHint() {
+  if (ch.status !== 'playing' || chBusy) return;
+  chHintSq = chExpected().slice(0, 2);
+  ch.hints++;
+  ch.t0 = (ch.t0 || Date.now()) - 30000;
+  chSave();
+  play('hint');
+  toast('Hint used, +30 seconds', 1200);
+  chPaintMarks();
+}
+
+function chOpenStats() {
+  clearTimeout(chStatsTimer);
+  if (activeApp !== 'chess') return;
+  $('#chSolved').textContent = chStats.solved;
+  $('#chBest').textContent = chStats.best ? clockText(chStats.best) : '-';
+  $('#chClean').textContent = chStats.clean;
+  const over = ch.status !== 'playing';
+  $('#chResultLine').textContent = over ? (ch.status === 'won' ? 'Solved · ' + clockText(chSecs()) : 'Best was ' + chSan(chExpected()) + ' · No retries') : '';
+  $('#chEndFooter').classList.toggle('hidden', !over);
+  openModal(chStatsModal);
+}
+
+async function chNewRound() {
+  if (chBusy && ch.status === 'playing') return;
+  chBusy = true;
+  clearTimeout(chStatsTimer);
+  closeModal(chStatsModal);
+  clearToasts();
+  stopConfetti();
+  const main = $('.ch-main');
+  if (!reduceMotion) await main.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'ease-in', fill: 'forwards' }).finished;
+  ch = chFresh();
+  chSel = null;
+  chHintSq = null;
+  chPaintAll();
+  chSave();
+  main.getAnimations().forEach(a => a.cancel());
+  if (!reduceMotion) main.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: 'ease-out' });
+  chBusy = false;
+}
+
+function enterChess() {
+  if (chEntered) return;
+  chEntered = true;
+  if (!store.get('ch-seen-help', false)) {
+    store.set('ch-seen-help', true);
+    setTimeout(() => { if (activeApp === 'chess') openModal(chHelpModal); }, 450);
+  }
+}
+
+function initChess() {
+  const saved = store.get('ch-game', null);
+  ch = chValid(saved) ? saved : chFresh();
+  chPaintAll();
+  chSave();
+  chBoardEl.addEventListener('pointerdown', chDown);
+  chBoardEl.addEventListener('pointermove', chMove);
+  chBoardEl.addEventListener('pointerup', chUp);
+  chBoardEl.addEventListener('pointercancel', chCancel);
+  $('#chHint').addEventListener('click', chHint);
+  $('#chStatsBtn').addEventListener('click', chOpenStats);
+  $('#chHelpBtn').addEventListener('click', () => openModal(chHelpModal));
+  $('#chAgain').addEventListener('click', chNewRound);
+}
 
 /* =====================================================================
    Daily puzzles: dates, the daily.json file, the archive window, and
@@ -11382,6 +12049,7 @@ function lvMax(game) {
   if (game === 'bee') return BEE_PUZZLES.length;
   if (game === 'unwordle') return UW_LEVELS;
   if (game === 'hangman') return HM_LEVELS;
+  if (game === 'chess') return CH_LEVELS;
   if (game === 'wordsearch') return WS_LEVELS;
   return 1;
 }
@@ -11692,6 +12360,7 @@ function clockFor() {
   if (activeApp === 'bee') return { game: 'bee', date: '', t0: bee.t0, t1: bee.t1 };
   if (activeApp === 'unwordle') return { game: 'unwordle', date: '', t0: uw.t0, t1: uw.t1 };
   if (activeApp === 'hangman') return { game: 'hangman', date: '', t0: hm.t0, t1: hm.t1 };
+  if (activeApp === 'chess') return { game: 'chess', date: '', t0: ch.t0, t1: ch.t1 };
   if (activeApp === 'wordsearch') return { game: 'wordsearch', date: '', t0: ws.t0, t1: ws.t1 };
   return null;
 }
@@ -11751,6 +12420,7 @@ function lvContext() {
   }
   if (activeApp === 'wordsearch') return { game: 'wordsearch', level: ws.id + 1, title: 'Word Search', sub: '', fmt: 'time' };
   if (activeApp === 'hangman') return { game: 'hangman', level: hm.id + 1, title: 'Hangman', sub: '', fmt: 'time' };
+  if (activeApp === 'chess') return { game: 'chess', level: ch.id + 1, title: 'Chess Puzzles', sub: CH_GOALS[chPuzzle().kind], fmt: 'time' };
   return null;
 }
 
@@ -11894,6 +12564,7 @@ function lvJump(level) {
   else if (activeApp === 'bee') beeNewRound();
   else if (activeApp === 'unwordle') uwNewRound();
   else if (activeApp === 'hangman') hmNewRound();
+  else if (activeApp === 'chess') chNewRound();
   else if (activeApp === 'wordsearch') wsNewRound();
 }
 
@@ -12163,7 +12834,7 @@ const GAME_LIST = [
   ['wordle', 'Wordle', 'guesses'], ['wordle4', 'Wordle · 4 letters', 'guesses'], ['wordle6', 'Wordle · 6 letters', 'guesses'], ['wordle7', 'Wordle · 7 letters', 'guesses'],
   ['connections', 'Connections', 'misses'], ['connections-u', 'Connections · Unlocked', 'misses'],
   ['sudoku-easy', 'Sudoku · Easy', 'time'], ['sudoku-medium', 'Sudoku · Medium', 'time'], ['sudoku-hard', 'Sudoku · Hard', 'time'],
-  ['mini', 'Mini Crossword', 'time'], ['anagrams', 'Anagrams', 'hints'], ['bee', 'Spelling Bee', 'time'], ['unwordle', 'Unwordle', 'time'], ['hangman', 'Hangman', 'time'], ['wordsearch', 'Word Search', 'time'],
+  ['mini', 'Mini Crossword', 'time'], ['anagrams', 'Anagrams', 'hints'], ['bee', 'Spelling Bee', 'time'], ['unwordle', 'Unwordle', 'time'], ['hangman', 'Hangman', 'time'], ['chess', 'Chess Puzzles', 'time'], ['wordsearch', 'Word Search', 'time'],
   ['daily-flag-world-5min', 'Flags · World · 5 min', 'found'], ['daily-flag-world-timed', 'Flags · World · Timed', 'time'], ['daily-flag-eu-5min', 'Flags · Europe · 5 min', 'found'], ['daily-flag-eu-timed', 'Flags · Europe · Timed', 'time'], ['daily-flag-as-5min', 'Flags · Asia · 5 min', 'found'], ['daily-flag-as-timed', 'Flags · Asia · Timed', 'time'], ['daily-flag-af-5min', 'Flags · Africa · 5 min', 'found'], ['daily-flag-af-timed', 'Flags · Africa · Timed', 'time'], ['daily-flag-am-5min', 'Flags · Americas · 5 min', 'found'], ['daily-flag-am-timed', 'Flags · Americas · Timed', 'time'], ['daily-flag-oc-5min', 'Flags · Oceania · 5 min', 'found'], ['daily-flag-oc-timed', 'Flags · Oceania · Timed', 'time'],
   ['daily-geo-world-5min', 'Countries · World · 5 min', 'found'], ['daily-geo-world-timed', 'Countries · World · Timed', 'time'], ['daily-geo-eu-5min', 'Countries · Europe · 5 min', 'found'], ['daily-geo-eu-timed', 'Countries · Europe · Timed', 'time'], ['daily-geo-as-5min', 'Countries · Asia · 5 min', 'found'], ['daily-geo-as-timed', 'Countries · Asia · Timed', 'time'], ['daily-geo-af-5min', 'Countries · Africa · 5 min', 'found'], ['daily-geo-af-timed', 'Countries · Africa · Timed', 'time'], ['daily-geo-am-5min', 'Countries · Americas · 5 min', 'found'], ['daily-geo-am-timed', 'Countries · Americas · Timed', 'time'],
   ['daily-wordle', 'Daily Wordle', 'time'], ['daily-connections', 'Daily Connections', 'time']
@@ -14510,7 +15181,7 @@ init();
 initConnections();
 initSudoku();
 initMini();
-initAnagrams(); initBee(); initUnwordle(); initHangman(); initGeo(); initWordSearch(); initFlags();
+initAnagrams(); initBee(); initUnwordle(); initHangman(); initGeo(); initWordSearch(); initFlags(); initChess();
 initHub();
 initEditor();
 initDaily(); initLevels(); initProfile(); initManager(); initTourney(); initLook(); initAnim();
