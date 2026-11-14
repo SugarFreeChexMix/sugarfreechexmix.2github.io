@@ -2562,6 +2562,61 @@ body.in-editor .appsbtn { display: none; }
 #edPlForm select.ed-input { flex: 1.3; min-width: 0; }
 #edPlForm input[type=number] { width: 84px; flex: none; }
 #edPlForm .ed-hint { margin: -2px 0 10px; font-size: 0.78rem; color: var(--muted); line-height: 1.35; }
+/* ---------- Manager: cheat scanner ---------- */
+.ed-tabs button { position: relative; }
+.scan-dot { position: absolute; top: 1px; left: 50%; margin-left: 6px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--present); color: #1a1a1b; font-size: 0.6rem; font-weight: 800; line-height: 16px; text-align: center; }
+.scan-dot.hot { background: #e5484d; color: #fff; }
+.scan-dot.hidden { display: none; }
+
+.scan-top { display: flex; gap: 10px; margin-bottom: 4px; }
+.scan-top .scan-stat { flex: 1; }
+.scan-filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; }
+.scan-filters button { height: 32px; padding: 0 12px; border: 1px solid var(--border); border-radius: 999px; background: none; color: var(--sub); font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+.scan-filters button.on { background: var(--border); color: var(--text); }
+.scan-filters .gap { flex: 1; }
+.scan-bulk { margin: 0 0 10px; }
+.scan-bulk button { width: 100%; }
+
+.scan-card { margin-bottom: 12px; padding: 14px; border: 1px solid var(--card-border); border-left: 5px solid var(--filled); border-radius: 14px; background: var(--card); animation: rise 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; transition: opacity 0.25s, transform 0.25s; }
+.scan-card.high { border-left-color: #e5484d; }
+.scan-card.med { border-left-color: var(--present); }
+.scan-card.gone { opacity: 0; transform: translateX(24px); }
+.scan-head { display: flex; align-items: flex-start; gap: 10px; }
+.scan-mid { flex: 1; min-width: 0; }
+.scan-sev { flex: none; margin-top: 2px; padding: 3px 8px; border-radius: 6px; background: var(--filled); color: #fff; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.high .scan-sev { background: #e5484d; }
+.med .scan-sev { background: var(--present); color: #1a1a1b; }
+.scan-who { display: block; max-width: 100%; padding: 0; border: 0; background: none; color: var(--text); font-size: 1.05rem; font-weight: 800; text-align: left; text-decoration: underline; text-decoration-color: var(--filled); text-underline-offset: 3px; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.scan-sub { margin-top: 2px; font-size: 0.8rem; color: var(--sub); }
+.scan-when { flex: none; font-size: 0.72rem; color: var(--muted); }
+
+.scan-why { list-style: none; margin: 12px 0 10px; padding: 0; display: grid; gap: 6px; }
+.scan-why li { position: relative; padding-left: 16px; font-size: 0.86rem; line-height: 1.35; }
+.scan-why li::before { content: ''; position: absolute; left: 2px; top: 0.45em; width: 8px; height: 8px; border-radius: 50%; background: var(--present); }
+.scan-why li.retry::before, .scan-why li.instant::before { background: #e5484d; }
+.scan-why li.quick::before, .scan-why li.timing::before, .scan-why li.new::before { background: var(--filled); }
+
+.scan-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.scan-stat { padding: 8px 10px; border-radius: 10px; background: var(--border); min-width: 0; }
+.scan-stat span { display: block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.scan-stat b { display: block; margin-top: 2px; font-size: 0.9rem; overflow-wrap: anywhere; }
+.scan-stat.hot b { color: #ff7b7f; }
+.scan-label { margin: 12px 0 6px; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.scan-detail { display: flex; flex-wrap: wrap; gap: 6px; }
+.scan-chip { padding: 4px 8px; border-radius: 6px; background: var(--border); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.scan-row { width: 100%; padding: 6px 8px; border-radius: 6px; background: var(--border); font-size: 0.78rem; overflow-wrap: anywhere; }
+.scan-hist { margin: 10px 0 0; font-size: 0.78rem; color: var(--sub); }
+
+.scan-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+.scan-acts button { flex: 1; min-width: 0; height: 38px; padding: 0 10px; border: 1px solid var(--border); border-radius: 10px; background: none; color: var(--text); font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s, border-color 0.2s, transform 0.12s; }
+.scan-acts button:active { transform: scale(0.97); }
+.scan-acts .ok { border-color: var(--correct); color: var(--correct); }
+.scan-acts .bad { border-color: #e5484d; color: #ff7b7f; }
+.scan-acts .rm.armed { background: #e5484d; border-color: #e5484d; color: #fff; }
+.scan-state { flex: 1; font-size: 0.82rem; color: var(--sub); }
+.scan-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.scan-pl { padding: 5px 10px; border: 1px solid var(--border); border-radius: 999px; background: none; color: var(--text); font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+.scan-bulk button { height: 38px; font-size: 0.8rem; }
 /* ---------- finishing touches ---------- */
 .modal { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .card { border-radius: 14px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5); transform: translateY(28px) scale(0.96); transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.25, 1.15); }
@@ -4177,6 +4232,22 @@ h1.hub-title { letter-spacing: 0.01em; }
         <div class="ed-list" id="edTnList"></div>
       </div>
 
+      <div id="edTabScan" class="hidden">
+        <div class="mg-card" id="edScanSum"></div>
+        <p class="ed-note">Flags are only notes for you. Nothing is blocked and players never see them.</p>
+        <div class="scan-filters" id="edScanFilters">
+          <button data-st="open" class="on">Open</button>
+          <button data-st="cleared">Fine</button>
+          <button data-st="cheater">Cheating</button>
+          <button data-st="all">All</button>
+          <span class="gap"></span>
+          <button id="edScanLow" type="button">Hide low</button>
+        </div>
+        <p class="ed-msg" id="edScanMsg"></p>
+        <div class="scan-bulk"><button class="btn btn-ghost" id="edScanBulk" type="button">Clear all low-risk flags</button></div>
+        <div id="edScanList"></div>
+      </div>
+
       <div id="edTabList" class="hidden">
         <div class="mg-card mg-cal">
           <div class="mg-cal-head">
@@ -4264,6 +4335,7 @@ h1.hub-title { letter-spacing: 0.01em; }
     <button data-tab="list"><svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V10h14v10z"/></svg><span>Planner</span></button>
     <button data-tab="players"><svg viewBox="0 0 24 24"><path d="M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2c-2.3 0-7 1.2-7 3.5V19h14v-2.5C15 14.2 10.3 13 8 13zm8 0c-.3 0-.6 0-1 .1 1.2.8 2 1.9 2 3.4V19h6v-2.5c0-2.3-4.7-3.5-7-3.5z"/></svg><span>Players</span></button>
     <button data-tab="events"><svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg><span>Events</span></button>
+    <button data-tab="scan"><svg viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg><span>Scan</span><i class="scan-dot hidden" id="edScanDot"></i></button>
     <button data-tab="site"><svg viewBox="0 0 24 24"><path d="M19.4 13a7.7 7.7 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.6 7.6 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.6 7.6 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.7 7.7 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1c.5.4 1.1.7 1.7 1L11 21h4l.4-2.9c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg><span>Site</span></button>
   </nav>
 </div>
@@ -13280,10 +13352,13 @@ function edTab(name) {
   $('#edTabPlayers').classList.toggle('hidden', name !== 'players');
   $('#edTabSite').classList.toggle('hidden', name !== 'site');
   $('#edTabEvents').classList.toggle('hidden', name !== 'events');
+  $('#edTabScan').classList.toggle('hidden', name !== 'scan');
   $('.ed-main').scrollTop = 0;
   if (name === 'list') edRenderList();
   if (name === 'home') edHomeLoad();
   if (name === 'events') edTnLoad();
+  if (name === 'scan') edScanLoad();
+  if (name === 'home') edScanCounts();
   if (name === 'players' && edAuth && !edPlayers.length) edLoadPlayers();
 }
 
@@ -14471,6 +14546,213 @@ function initManager() {
   setInterval(() => { mgAnnouncement(); mgChampion(); }, 300000);
 }
 /* =====================================================================
+   Manager: cheat scanner. Flags come from the server, nothing here blocks a player.
+   ===================================================================== */
+
+let edScanData = [];
+let edScanStatus = 'open';
+let edScanHideLow = false;
+
+const SCAN_LEVELS = [[5, 'high', 'High'], [3, 'med', 'Medium'], [0, 'low', 'Low']];
+const scanLevel = sev => SCAN_LEVELS.find(l => sev >= l[0]);
+
+// the player sheet reads the players list, so make sure it is loaded
+async function scanOpenPlayer(name) {
+  if (!edPlayers.length) await edLoadPlayers();
+  edOpenPlayer(name);
+}
+
+const scanSay = (text, bad) => mgSay('#edScanMsg', text, bad ? 'bad' : '');
+
+function scanScoreText(f) {
+  if (!f.won) return 'Lost';
+  const fmt = (GAME_LIST.find(g => g[0] === f.game) || [])[2];
+  return fmt && FORMATS[fmt] ? FORMATS[fmt](f.score) : String(f.score);
+}
+
+function scanWhere(game, level) {
+  return game.startsWith('daily-') ? niceDate(dateOfDay(level)) : 'Level ' + level;
+}
+
+const scanGap = s => {
+  if (s === null || s === undefined) return 'First result';
+  if (s < 90) return s + ' s';
+  if (s < 5400) return Math.round(s / 60) + ' min';
+  return Math.round(s / 3600) + ' h';
+};
+
+const scanAge = m => (m < 120 ? m + ' min' : m < 2880 ? Math.round(m / 60) + ' h' : Math.round(m / 1440) + ' days');
+
+// what the player actually did, as chips
+function scanDetail(f) {
+  const d = f.detail;
+  if (!Array.isArray(d) || !d.length) return null;
+  const box = el('div', 'scan-detail');
+  if (f.game.startsWith('connections')) {
+    d.forEach(g => box.appendChild(el('div', 'scan-row', Array.isArray(g) ? g.join(' · ') : String(g))));
+  } else if (f.game === 'chess') {
+    box.appendChild(el('div', 'scan-row', d.join('  ')));
+  } else {
+    d.forEach(w => box.appendChild(el('span', 'scan-chip', String(w))));
+  }
+  return box;
+}
+
+function scanStat(label, value, hot) {
+  const s = el('div', 'scan-stat' + (hot ? ' hot' : ''));
+  s.append(el('span', '', label), el('b', '', value));
+  return s;
+}
+
+async function scanReview(f, status, card) {
+  const res = await edAdmin('admin_scan_review', { p_id: f.id, p_status: status }, scanSay);
+  if (!res.ok) return;
+  scanDrop(f, card);
+}
+
+function scanDrop(f, card) {
+  edScanData = edScanData.filter(x => x.id !== f.id);
+  card.classList.add('gone');
+  setTimeout(() => { card.remove(); if (!$('#edScanList').children.length) edScanRender(); }, 260);
+  edScanCounts();
+}
+
+function scanCard(f) {
+  const lvl = scanLevel(f.severity);
+  const card = el('div', 'scan-card ' + lvl[1]);
+  const head = el('div', 'scan-head');
+  const who = el('button', 'scan-who', f.name);
+  who.type = 'button';
+  who.addEventListener('click', () => scanOpenPlayer(f.name));
+  const sub = el('div', 'scan-sub', (GAME_TITLES[f.game] || f.game) + ' · ' + scanWhere(f.game, f.level));
+  const mid = el('div', 'scan-mid');
+  mid.append(who, sub);
+  head.append(el('span', 'scan-sev', lvl[2]), mid, el('span', 'scan-when', ago(f.created_at)));
+  card.appendChild(head);
+
+  const why = el('ul', 'scan-why');
+  (f.reasons || []).forEach(r => why.appendChild(el('li', r.code, r.text)));
+  card.appendChild(why);
+
+  const s = f.stats || {};
+  const stats = el('div', 'scan-stats');
+  stats.append(
+    scanStat('Result', scanScoreText(f)),
+    scanStat('Attempts on level', String(s.attempts || 1), (s.attempts || 1) > 1),
+    scanStat('Lost it before', s.losses ? s.losses + (s.losses === 1 ? ' time' : ' times') : 'No', !!s.losses),
+    scanStat('Since last result', scanGap(s.gap_s), s.gap_s !== null && s.gap_s !== undefined && s.gap_s < 6),
+    scanStat('Last result', s.prev_game ? (GAME_TITLES[s.prev_game] || s.prev_game) + ' · ' + scanWhere(s.prev_game, s.prev_level) + (s.prev_won ? '' : ' (lost)') : 'None'),
+    scanStat('Account age', s.age_min === null || s.age_min === undefined ? '-' : scanAge(s.age_min), s.age_min < 60),
+    scanStat('Beaten in this game', String(s.beaten || 0)),
+    scanStat('Submitted', new Date(f.created_at).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit' }))
+  );
+  card.appendChild(stats);
+
+  const detail = scanDetail(f);
+  if (detail) {
+    const label = el('div', 'scan-label', f.game.startsWith('connections') ? 'Groups tried' : f.game === 'chess' ? 'Moves' : f.game.startsWith('wordle') ? 'Guesses' : 'What they entered');
+    card.append(label, detail);
+  }
+  if (f.player_open > 1 || f.player_cheater > 0) {
+    card.appendChild(el('p', 'scan-hist', f.name + ' has ' + f.player_open + ' open flag' + (f.player_open === 1 ? '' : 's') + (f.player_cheater ? ' and ' + f.player_cheater + ' marked as cheating' : '') + '.'));
+  }
+
+  const acts = el('div', 'scan-acts');
+  if (f.status === 'open') {
+    const ok = el('button', 'ok', 'Looks fine');
+    const bad = el('button', 'bad', 'Cheating');
+    const rm = el('button', 'rm', 'Remove result');
+    ok.addEventListener('click', () => scanReview(f, 'cleared', card));
+    bad.addEventListener('click', () => scanReview(f, 'cheater', card));
+    armButton(rm, 'Tap again to remove', async () => {
+      const res = await edAdmin('admin_scan_remove', { p_id: f.id }, scanSay);
+      if (res.ok) { scanSay('Removed ' + f.name + "'s result and marked it as cheating."); scanDrop(f, card); }
+    });
+    acts.append(ok, bad, rm);
+  } else {
+    acts.appendChild(el('span', 'scan-state', f.status === 'cheater' ? 'Marked as cheating' : 'Marked as fine'));
+    const re = el('button', '', 'Reopen');
+    re.addEventListener('click', () => scanReview(f, 'open', card));
+    acts.appendChild(re);
+  }
+  card.appendChild(acts);
+  return card;
+}
+
+function edScanRender() {
+  const box = $('#edScanList');
+  box.innerHTML = '';
+  const rows = edScanData.filter(f => !(edScanHideLow && f.status === 'open' && f.severity < 3)).sort((a, b) => (edScanStatus === 'open' ? b.severity - a.severity : 0) || new Date(b.created_at) - new Date(a.created_at));
+  if (!rows.length) {
+    const word = { open: 'Nothing to review. Everything looks normal.', cleared: 'Nothing cleared yet.', cheater: 'No one marked yet.', all: 'No flags yet.' }[edScanStatus];
+    box.appendChild(el('div', 'lb-empty', word));
+    return;
+  }
+  rows.forEach(f => box.appendChild(scanCard(f)));
+}
+
+async function edScanLoad() {
+  if (!$('#edAdminPw').value) { scanSay('Unlock admin first (the box at the top).', true); return; }
+  scanSay('Loading...');
+  const res = await edAdmin('admin_scan_list', { p_status: edScanStatus }, scanSay);
+  if (!res.ok) {
+    if (/admin_scan_list|schema cache|http_404/.test(res.error)) scanSay('Run supabase-update-8.sql in Supabase first.', true);
+    return;
+  }
+  scanSay('');
+  edScanData = Array.isArray(res.data) ? res.data : [];
+  edScanRender();
+  edScanCounts();
+}
+
+async function edScanCounts() {
+  if (!$('#edAdminPw').value) return;
+  const res = await edAdmin('admin_scan_counts', {}, () => {});
+  if (!res.ok || !res.data) return;
+  const c = res.data;
+  const dot = $('#edScanDot');
+  dot.textContent = c.open > 99 ? '99+' : String(c.open);
+  dot.classList.toggle('hidden', !c.open);
+  dot.classList.toggle('hot', c.high > 0);
+  const sum = $('#edScanSum');
+  sum.innerHTML = '';
+  const top = el('div', 'scan-top');
+  top.append(scanStat('Open flags', String(c.open)), scanStat('High risk', String(c.high), c.high > 0));
+  sum.appendChild(top);
+  if (c.players && c.players.length) {
+    sum.appendChild(el('div', 'scan-label', 'Most flagged'));
+    const chips = el('div', 'scan-chips');
+    c.players.forEach(p => {
+      const b = el('button', 'scan-pl', p.name + ' · ' + p.open_n + ' open' + (p.cheater_n ? ' · ' + p.cheater_n + ' caught' : ''));
+      b.type = 'button';
+      b.addEventListener('click', () => scanOpenPlayer(p.name));
+      chips.appendChild(b);
+    });
+    sum.appendChild(chips);
+  }
+}
+
+function initScan() {
+  $('#edScanFilters').addEventListener('click', e => {
+    const b = e.target.closest('button[data-st]');
+    if (!b) return;
+    edScanStatus = b.dataset.st;
+    $('#edScanFilters').querySelectorAll('button[data-st]').forEach(x => x.classList.toggle('on', x === b));
+    edScanLoad();
+  });
+  $('#edScanLow').addEventListener('click', () => {
+    edScanHideLow = !edScanHideLow;
+    $('#edScanLow').classList.toggle('on', edScanHideLow);
+    edScanRender();
+  });
+  armButton($('#edScanBulk'), 'Tap again to clear', async () => {
+    const res = await edAdmin('admin_scan_bulk', { p_max_severity: 2 }, scanSay);
+    if (!res.ok) return;
+    scanSay('Cleared ' + res.data + ' low-risk flag' + (res.data === 1 ? '' : 's') + '.');
+    edScanLoad();
+  });
+}
+/* =====================================================================
    Events: timed tournaments, points tournaments, winner badges and belts
    ===================================================================== */
 
@@ -15184,7 +15466,7 @@ initMini();
 initAnagrams(); initBee(); initUnwordle(); initHangman(); initGeo(); initWordSearch(); initFlags(); initChess();
 initHub();
 initEditor();
-initDaily(); initLevels(); initProfile(); initManager(); initTourney(); initLook(); initAnim();
+initDaily(); initLevels(); initProfile(); initManager(); initScan(); initTourney(); initLook(); initAnim();
 </script>
 </body>
 </html>
